@@ -13,7 +13,7 @@ import java.util.List;
  * @author damA
  */
 public class LogicaIndentificacion {
-    private static List<Usuarios> listaUsuarios = new ArrayList<>();
+    public static List<Usuarios> listaUsuarios = new ArrayList<>();
     
     public static void anadirUsuarios(Usuarios usuarios){
         listaUsuarios.add(usuarios);
@@ -22,4 +22,5 @@ public class LogicaIndentificacion {
     public static List<Usuarios> getListaUsuarios() {
         return listaUsuarios;
     }
+      
 }

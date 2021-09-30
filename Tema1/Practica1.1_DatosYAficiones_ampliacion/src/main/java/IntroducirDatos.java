@@ -289,13 +289,12 @@ public class IntroducirDatos extends javax.swing.JDialog {
 
     private void jButtonAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAceptarActionPerformed
         // TODO add your handling code here:
-        String profesion = null;
-        if (profesion==null){
+        String profesion = jTextFieldProfesion.getText();
+        if (profesion.length()==0){
              JOptionPane.showMessageDialog(this, "Campo profesion esta vacio","Error",JOptionPane.ERROR_MESSAGE);
+             return;
         }
-        else{
-            profesion= jTextFieldProfesion.getText();
-        }
+
         String edad = (String)jComboBoxEdad.getSelectedItem();
         int hermanos = (int)jSpinnerHermanos.getValue();
         String sexo=null;

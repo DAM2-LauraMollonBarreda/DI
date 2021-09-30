@@ -202,8 +202,8 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         } else { 
             int resultado=JOptionPane.showConfirmDialog(this, "¿Esta seguro que desea eliminar?","¿Seguro?", JOptionPane.YES_NO_CANCEL_OPTION);
             if (resultado==JOptionPane.YES_OPTION) {
-                DefaultTableModel dtm = (DefaultTableModel) jTableUsuarios.getModel(); 
-                dtm.removeRow(jTableUsuarios.getSelectedRow());
+                LogicaIndentificacion.listaUsuarios.remove(jTableUsuarios.getSelectedRow());
+                refrescarTabla();
             }else if (resultado==JOptionPane.NO_OPTION) {
                 JOptionPane.showConfirmDialog(this, "Fila no borrada","",JOptionPane.ERROR_MESSAGE);
             }
@@ -222,11 +222,8 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         } else { 
             int resultado=JOptionPane.showConfirmDialog(this, "¿Esta seguro que desea eliminar?","¿Seguro?", JOptionPane.YES_NO_CANCEL_OPTION);
             if (resultado==JOptionPane.YES_OPTION) {
-                DefaultTableModel tableModel = (DefaultTableModel) jTableUsuarios.getModel();
-                 int rowCount = tableModel.getRowCount();
-                 for (int i = 0; i < rowCount; i++) {
-                    tableModel.removeRow(0);  
-                }
+                LogicaIndentificacion.listaUsuarios.clear();
+                refrescarTabla();
             }else if (resultado==JOptionPane.NO_OPTION) {
                 JOptionPane.showConfirmDialog(this, "Fila no borrada","",JOptionPane.ERROR_MESSAGE);
             }
@@ -235,6 +232,8 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             }
         } 
     }
+     
+    
    
 
 }

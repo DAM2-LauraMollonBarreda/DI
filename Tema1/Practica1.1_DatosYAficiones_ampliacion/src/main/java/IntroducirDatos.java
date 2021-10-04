@@ -1,4 +1,5 @@
 
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /*
@@ -95,6 +96,7 @@ public class IntroducirDatos extends javax.swing.JDialog {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        jListDeportes.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jScrollPane4.setViewportView(jListDeportes);
 
         jSliderCompras.setMajorTickSpacing(1);
@@ -306,11 +308,18 @@ public class IntroducirDatos extends javax.swing.JDialog {
         }
         
         String deporte = null;
+        //ArrayList cuallst= new ArrayList();
         String cual= null;
         if (jCheckBoxDeporte.isSelected()) {
            deporte = "Si";
-            if (jListDeportes.getSelectedValue() != null) {
-                cual= jListDeportes.getSelectedValue();
+            if (jListDeportes.getSelectedValuesList() != null) {
+                //cuallst.add(jListDeportes.getSelectedValuesList());
+                cual="";
+                for (String object :jListDeportes.getSelectedValuesList() ) {
+                    
+                    cual = cual + object + "  ";
+                    
+                }
             }
            
         } else {

@@ -139,7 +139,7 @@ public class CargarYGuardar extends javax.swing.JFrame {
         int result = fileChooser.showOpenDialog(this);
         try {
             FileInputStream fis = new FileInputStream(fileName);
-            FileOutputStream fos = new FileOutputStream(result);
+            //FileOutputStream fos = new FileOutputStream(result);
             
         } catch (Exception e) {
         }

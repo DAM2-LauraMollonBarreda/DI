@@ -1,7 +1,14 @@
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -21,7 +28,7 @@ import javax.swing.table.DefaultTableModel;
  * @author damA
  */
 public class PantallaPrincipal extends javax.swing.JFrame {
-
+Conectar conectar = null;
     /**
      * Creates new form PantallaPrincipal
      */
@@ -142,14 +149,34 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void refrescarTabla() {
+        //PARTE SIN BASE DE DATOS 
         DefaultTableModel dtm = new DefaultTableModel();
         dtm.setColumnIdentifiers(new String[]{"Profesion", "Edad" , "Hermanos", "Sexo", "Deporte", "Cual", "Compras" , "Tele" , "Cine"});
-        List<Usuarios> listaUsuarios  = LogicaIndentificacion.getListaUsuarios();
+        /*List<Usuarios> listaUsuarios  = LogicaIndentificacion.getListaUsuarios();
         for(Usuarios usuarios:listaUsuarios){
             dtm.addRow(usuarios.toArrayString());
         }
+        jTableUsuarios.setModel(dtm);*/
         
-        jTableUsuarios.setModel(dtm);
+        //ACCESO A BASE DE DATOS 
+        //Conectamos con la base de datos
+        conectar = new Conectar();
+        Connection conexion = conectar.getConexion();
+        if (conexion != null) {
+            try {
+                Statement s = conexion.createStatement();
+                ResultSet rs = s.executeQuery ("select * from usuarios");
+                while (rs.next()) {
+                    //dtm.addRow(rs);
+                    //dtm.addRow(new Arr);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            }           
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Conoxion fallida");
+        }
     }
 
     private void crearpopupmenu() {
@@ -232,7 +259,8 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             }
         } 
     }
-     
+
+   
     
    
 

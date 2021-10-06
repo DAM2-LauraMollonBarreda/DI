@@ -11,4 +11,11 @@
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
     <name>Practica1.1_DatosYAficiones_Laura</name>
+    <dependencies>
+        <dependency>
+            <groupId>conectorMYSQL</groupId>
+            <artifactId>conectorMYSQL</artifactId>
+            <version>1</version>
+        </dependency>
+    </dependencies>
 </project>

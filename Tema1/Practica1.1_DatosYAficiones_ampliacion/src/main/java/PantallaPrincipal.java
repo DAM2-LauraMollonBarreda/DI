@@ -36,6 +36,7 @@ Conectar conectar = null;
         initComponents();
 
         refrescarTabla();
+        System.out.println("hoa");
         crearpopupmenu();
     }
 
@@ -151,24 +152,38 @@ Conectar conectar = null;
     private void refrescarTabla() {
         //PARTE SIN BASE DE DATOS 
         DefaultTableModel dtm = new DefaultTableModel();
-        dtm.setColumnIdentifiers(new String[]{"Profesion", "Edad" , "Hermanos", "Sexo", "Deporte", "Cual", "Compras" , "Tele" , "Cine"});
+        dtm.setColumnIdentifiers(new String[]{"id","Profesion", "Edad" , "Hermanos", "Sexo", "Deporte", "Cual", "Compras" , "Tele" , "Cine"});
         /*List<Usuarios> listaUsuarios  = LogicaIndentificacion.getListaUsuarios();
         for(Usuarios usuarios:listaUsuarios){
             dtm.addRow(usuarios.toArrayString());
-        }
-        jTableUsuarios.setModel(dtm);*/
+        }*/
+        jTableUsuarios.setModel(dtm);
         
         //ACCESO A BASE DE DATOS 
         //Conectamos con la base de datos
         conectar = new Conectar();
         Connection conexion = conectar.getConexion();
+        String[] usuBd = new String[9];
         if (conexion != null) {
             try {
                 Statement s = conexion.createStatement();
                 ResultSet rs = s.executeQuery ("select * from usuarios");
+                 
                 while (rs.next()) {
                     //dtm.addRow(rs);
-                    //dtm.addRow(new Arr);
+                    
+                    usuBd[0]= rs.getString(1);
+                    usuBd[1]= rs.getString(2);
+                    usuBd[2]= rs.getString(3);
+                    usuBd[3]= rs.getString(4);
+                    usuBd[4]= rs.getString(5);
+                    usuBd[5]= rs.getString(6);
+                    usuBd[6]= rs.getString(7);
+                    usuBd[7]= rs.getString(8);
+                    usuBd[8]= rs.getString(9);
+                    System.out.println(rs.getString(1));
+                    
+                    dtm.addRow(usuBd);
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);

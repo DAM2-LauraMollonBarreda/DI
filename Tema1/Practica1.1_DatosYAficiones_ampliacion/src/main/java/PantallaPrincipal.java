@@ -36,7 +36,6 @@ Conectar conectar = null;
         initComponents();
 
         refrescarTabla();
-        System.out.println("hoa");
         crearpopupmenu();
     }
 
@@ -152,7 +151,7 @@ Conectar conectar = null;
     private void refrescarTabla() {
         //PARTE SIN BASE DE DATOS 
         DefaultTableModel dtm = new DefaultTableModel();
-        dtm.setColumnIdentifiers(new String[]{"id","Profesion", "Edad" , "Hermanos", "Sexo", "Deporte", "Cual", "Compras" , "Tele" , "Cine"});
+        dtm.setColumnIdentifiers(new String[]{"id","Profesion", "Edad" , "Hermanos", "Sexo", "Deporte", /*"Cual",*/ "Compras" , "Tele" , "Cine"});
         /*List<Usuarios> listaUsuarios  = LogicaIndentificacion.getListaUsuarios();
         for(Usuarios usuarios:listaUsuarios){
             dtm.addRow(usuarios.toArrayString());
@@ -181,7 +180,7 @@ Conectar conectar = null;
                     usuBd[6]= rs.getString(7);
                     usuBd[7]= rs.getString(8);
                     usuBd[8]= rs.getString(9);
-                    System.out.println(rs.getString(1));
+
                     
                     dtm.addRow(usuBd);
                 }
@@ -244,7 +243,24 @@ Conectar conectar = null;
         } else { 
             int resultado=JOptionPane.showConfirmDialog(this, "¿Esta seguro que desea eliminar?","¿Seguro?", JOptionPane.YES_NO_CANCEL_OPTION);
             if (resultado==JOptionPane.YES_OPTION) {
-                LogicaIndentificacion.listaUsuarios.remove(jTableUsuarios.getSelectedRow());
+                //LogicaIndentificacion.listaUsuarios.remove(jTableUsuarios.getSelectedRow());
+                //refrescarTabla();
+
+                int fila = jTableUsuarios.getSelectedRow();
+                var id =jTableUsuarios.getModel().getValueAt(fila, 0).toString();
+                
+              
+
+                PreparedStatement ps=null;
+                conectar = new Conectar();
+                Connection conexion = conectar.getConexion();
+                String sSql = "DELETE FROM usuarios WHERE idusuarios ="+id +";";
+                try {
+                    ps = conexion.prepareStatement(sSql);
+                    
+                    ps.execute();
+                } catch (Exception e) {
+                }
                 refrescarTabla();
             }else if (resultado==JOptionPane.NO_OPTION) {
                 JOptionPane.showConfirmDialog(this, "Fila no borrada","",JOptionPane.ERROR_MESSAGE);
@@ -264,8 +280,20 @@ Conectar conectar = null;
         } else { 
             int resultado=JOptionPane.showConfirmDialog(this, "¿Esta seguro que desea eliminar?","¿Seguro?", JOptionPane.YES_NO_CANCEL_OPTION);
             if (resultado==JOptionPane.YES_OPTION) {
-                LogicaIndentificacion.listaUsuarios.clear();
+                /*LogicaIndentificacion.listaUsuarios.clear();
+                refrescarTabla();*/
+                PreparedStatement ps=null;
+                conectar = new Conectar();
+                Connection conexion = conectar.getConexion();
+                String sSql = "DELETE FROM usuarios;";
+                try {
+                    ps = conexion.prepareStatement(sSql);
+                    
+                    ps.execute();
+                } catch (Exception e) {
+                }
                 refrescarTabla();
+                
             }else if (resultado==JOptionPane.NO_OPTION) {
                 JOptionPane.showConfirmDialog(this, "Fila no borrada","",JOptionPane.ERROR_MESSAGE);
             }

@@ -1,5 +1,10 @@
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /*
@@ -13,7 +18,7 @@ import javax.swing.JOptionPane;
  * @author damA
  */
 public class IntroducirDatos extends javax.swing.JDialog {
-
+Conectar conectar = null;
     /**
      * Creates new form IntroducirDatos
      */
@@ -337,6 +342,31 @@ public class IntroducirDatos extends javax.swing.JDialog {
         dispose();
         
         
+        /*INSERTAR A LA BASE DE DATOS LA FILA QUE ESTOY INTRODUCIENDO*/
+        
+        
+        PreparedStatement ps=null;
+        conectar = new Conectar();
+        Connection conexion = conectar.getConexion();
+        
+
+        try {
+          ps = conexion.prepareStatement("insert into usuarios(profesion,edad,hermanos,sexo,deportes,compras,television,cine) values (?,?,?,?,?,?,?,?)");
+          ps.setString(1,profesion);
+          ps.setString(2,edad);
+          ps.setInt(3, hermanos);
+          ps.setString(4, sexo);
+          ps.setString(5, cual);
+          ps.setInt(6, compras);
+          ps.setInt(7, tele);
+          ps.setInt(8, cine);
+          
+          ps.executeUpdate();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(IntroducirDatos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         
         
     }//GEN-LAST:event_jButtonAceptarActionPerformed

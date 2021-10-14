@@ -1,6 +1,7 @@
 
 
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -11,6 +12,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.FileChooserUI;
 
@@ -25,11 +27,14 @@ import javax.swing.plaf.FileChooserUI;
  * @author damA
  */
 public class CargarYGuardar extends javax.swing.JFrame {
-
+    BufferedImage imageScd;
+    Image image;
+    public File Imagen;
     /**
      * Creates new form CargarYGuardar
      */
     public CargarYGuardar() {
+        
         initComponents();
     }
 
@@ -97,64 +102,57 @@ public class CargarYGuardar extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
-    public File fileName = null;
+ 
     private void jButtonCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCargarActionPerformed
+        //Llamamos a filechooser para elegir el fichero
+        JFileChooser fc = new JFileChooser();
+        //Extension para poder elegir solo imagenes
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos de imagen", "jpg", "png", "bmp");
+        //Añadimos filtro al filechooser
+        fc.setFileFilter(filter);
         
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-    
-        FileNameExtensionFilter imgFilter = new FileNameExtensionFilter("JPG & GIF Images", "jpg", "gif"); 
-        fileChooser.setFileFilter(imgFilter);
-
-        int result = fileChooser.showOpenDialog(this);
-
-        if (result != JFileChooser.CANCEL_OPTION) {
-
-        fileName = fileChooser.getSelectedFile();
+        int result = fc.showOpenDialog(this);
         
-
-            if ((fileName == null) || (fileName.getName().equals(""))) {
-                jLabelCargar.setText("...");
-            } else {
-                
-                jLabelCargar.setText(fileName.getAbsolutePath());
-                Image icon;
-                    try {
-                        icon = ImageIO.read(fileName);
-                        icon= icon.getScaledInstance(100,100, icon.SCALE_SMOOTH);
-                        jLabelCargar.setIcon(new ImageIcon(icon));
-                    } catch (IOException ex) {
-                        Logger.getLogger(CargarYGuardar.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                
+        if (result == JFileChooser.APPROVE_OPTION){
+            
+            File f = fc.getSelectedFile();
+            
+            try{
+                imageScd = ImageIO.read(f);
+                image = ImageIO.read(f);
+                image = imageScd.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+                jLabelCargar.setIcon(new ImageIcon(image));
+            }catch(Throwable e){
+                e.printStackTrace();
             }
+        }else if(result == JFileChooser.CANCEL_OPTION){
+            jLabelCargar.setText("No se ha seleccionado ningún archivo.");
         }
+        
         
     }//GEN-LAST:event_jButtonCargarActionPerformed
 
     private void jButtonGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGuardarActionPerformed
         // TODO add your handling code here:
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-        int result = fileChooser.showOpenDialog(this);
-        try {
-            FileInputStream fis = new FileInputStream(fileName);
-            //FileOutputStream fos = new FileOutputStream(result);
-            
-        } catch (Exception e) {
+         // TODO add your handling code here:
+        JFileChooser fc = new JFileChooser();
+        int seleccion = fc.showOpenDialog(this);
+        fc.setDialogTitle("Guardar");
+        
+        if (seleccion == JFileChooser.APPROVE_OPTION) {
+            File f = fc. getSelectedFile();
+            try {
+                ImageIO.write(imageScd, "png", f);
+                JOptionPane.showMessageDialog(this, "La imagen ha sido guardada con exito.", "Imagen guardada", JOptionPane.OK_OPTION);
+           
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+        }else if(seleccion == JFileChooser.CANCEL_OPTION){
+            jLabelCargar.setText("No se ha seleccionado ningún archivo.");
         }
         
-        /*try{
-            fis = new FileInputStream(inFile); //inFile -> Archivo a copiar
-FileOutputStream fos = new FileOutputStream(outFile); //outFile -> Copia del archivo
-FileChannel inChannel = fis.getChannel();
-FileChannel outChannel = fos.getChannel();
-inChannel.transferTo(0, inChannel.size(), outChannel);
-fis.close();
-fos.close();
-}catch (IOException ioe) {
-System.err.println("Error al Generar Copia");
-}*/
+
     }//GEN-LAST:event_jButtonGuardarActionPerformed
     
     

@@ -26,23 +26,21 @@ Conectar conectar = null;
     public Director(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        refrescarTabla();
     }
     
      private void refrescarTabla() {
-        //PARTE SIN BASE DE DATOS 
+     
         DefaultTableModel dtm = new DefaultTableModel();
         dtm.setColumnIdentifiers(new String[]{"idDirector","Nombre", "Apellidos" , "fechaNac"});
-        /*List<Usuarios> listaUsuarios  = LogicaIndentificacion.getListaUsuarios();
-        for(Usuarios usuarios:listaUsuarios){
-            dtm.addRow(usuarios.toArrayString());
-        }*/
+
         jTableDirector.setModel(dtm);
         
         //ACCESO A BASE DE DATOS 
         //Conectamos con la base de datos
         conectar = new Conectar();
         Connection conexion = conectar.getConexion();
-        String[] dircBd = new String[9];
+        String[] dircBd = new String[4];
         if (conexion != null) {
             try {
                 Statement s = conexion.createStatement();
@@ -102,6 +100,11 @@ Conectar conectar = null;
         jScrollPane1.setViewportView(jTableDirector);
 
         jButtonAddDirector.setText("Añadir");
+        jButtonAddDirector.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAddDirectorActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -127,6 +130,13 @@ Conectar conectar = null;
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButtonAddDirectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddDirectorActionPerformed
+        // TODO add your handling code here:
+        AñadirDirector intrDatos = new AñadirDirector(null, true);
+        intrDatos.setVisible(true);
+        refrescarTabla();
+    }//GEN-LAST:event_jButtonAddDirectorActionPerformed
 
     /**
      * @param args the command line arguments

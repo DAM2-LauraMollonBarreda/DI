@@ -1,3 +1,13 @@
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -9,13 +19,14 @@
  * @author damA
  */
 public class Peliculas extends javax.swing.JDialog {
-
+Conectar conectar = null;
     /**
      * Creates new form Peliculas
      */
     public Peliculas(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        refrescarTabla();
     }
 
     /**
@@ -80,6 +91,49 @@ public class Peliculas extends javax.swing.JDialog {
     /**
      * @param args the command line arguments
      */
+    
+    private void refrescarTabla() {
+     
+        DefaultTableModel dtm = new DefaultTableModel();
+        dtm.setColumnIdentifiers(new String[]{"idPelicula","Titulo","Director","Fecha proyeccion","Año de estreno", "Tematica","Precio de entrada","Sala"});
+
+        jTablePelis.setModel(dtm);
+        
+        //ACCESO A BASE DE DATOS 
+        //Conectamos con la base de datos
+        conectar = new Conectar();
+        Connection conexion = conectar.getConexion();
+        String[] peliBD = new String[8];
+        if (conexion != null) {
+            try {
+                Statement s = conexion.createStatement();
+                ResultSet rs = s.executeQuery ("SELECT p.idPelicula,p.titulo,d.nombre as director,p.fechaProyeccion,p.añoEstreno,t.nombre as tematica,p.precioEntrada,s.nombre as sala FROM pelicula as p inner join director as d on p.director = d.idDirector inner join tematica as t on p.tematica=t.idTematica inner join sala as s on p.sala=s.idSala");
+                 
+                while (rs.next()) {
+                    //dtm.addRow(rs);
+                    
+                    peliBD[0]= rs.getString(1);
+                    peliBD[1]= rs.getString(2);
+                    peliBD[2]= rs.getString(3);
+                    peliBD[3]= rs.getString(4);
+                    peliBD[4]= rs.getString(5);
+                    peliBD[5]= rs.getString(6);
+                    peliBD[6]= rs.getString(7);
+                    peliBD[7]= rs.getString(8);
+
+
+
+                    
+                    dtm.addRow(peliBD);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            }           
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Conoxion fallida");
+        }
+    }
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

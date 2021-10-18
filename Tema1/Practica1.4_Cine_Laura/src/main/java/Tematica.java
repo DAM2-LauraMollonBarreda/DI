@@ -1,3 +1,13 @@
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -9,13 +19,14 @@
  * @author damA
  */
 public class Tematica extends javax.swing.JDialog {
-
+Conectar conectar = null;
     /**
      * Creates new form Tematica
      */
     public Tematica(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        refrescarTabla();
     }
 
     /**
@@ -51,6 +62,11 @@ public class Tematica extends javax.swing.JDialog {
         jScrollPane1.setViewportView(jTableTema);
 
         jButtonAddTematica.setText("Añadir");
+        jButtonAddTematica.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAddTematicaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -77,11 +93,53 @@ public class Tematica extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButtonAddTematicaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddTematicaActionPerformed
+        // TODO add your handling code here:
+        AñadirTematica intrDatos = new AñadirTematica(null, true);
+        intrDatos.setVisible(true);
+        refrescarTabla();
+    }//GEN-LAST:event_jButtonAddTematicaActionPerformed
+
     /**
      * @param args the command line arguments
      */
 
+     private void refrescarTabla() {
+     
+        DefaultTableModel dtm = new DefaultTableModel();
+        dtm.setColumnIdentifiers(new String[]{"idTematica","Nombre"});
 
+        jTableTema.setModel(dtm);
+        
+        //ACCESO A BASE DE DATOS 
+        //Conectamos con la base de datos
+        conectar = new Conectar();
+        Connection conexion = conectar.getConexion();
+        String[] temaBd = new String[2];
+        if (conexion != null) {
+            try {
+                Statement s = conexion.createStatement();
+                ResultSet rs = s.executeQuery ("select * from tematica");
+                 
+                while (rs.next()) {
+                    //dtm.addRow(rs);
+                    
+                    temaBd[0]= rs.getString(1);
+                    temaBd[1]= rs.getString(2);
+
+
+
+                    
+                    dtm.addRow(temaBd);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            }           
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "Conoxion fallida");
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAddTematica;
     private javax.swing.JLabel jLabel1;

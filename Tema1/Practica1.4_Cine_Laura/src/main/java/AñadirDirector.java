@@ -2,6 +2,7 @@
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.logging.Level;
@@ -19,11 +20,14 @@ import java.util.logging.Logger;
  */
 public class AñadirDirector extends javax.swing.JDialog {
 Conectar conectar = null;
+
     /**
      * Creates new form AñadirDirector
      */
     public AñadirDirector(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+    
+      
         initComponents();
     }
 
@@ -132,11 +136,19 @@ Conectar conectar = null;
         String sql= "insert into director(nombre,apellidos,fechaNac) values ('"+nombre+"','"+apellidos+"','"+nacimiento+"')";
 
         try {
+            
           ps = conexion.prepareStatement(sql);
-          
-
-          
           ps.executeUpdate();
+          /*ps = conexion.prepareStatement(sql,ps.RETURN_GENERATED_KEYS);
+                 
+          int columnasAfectadas=ps.executeUpdate();
+          int idGenerado;
+          
+          ResultSet generatedKeys = ps.getGeneratedKeys();
+          if (generatedKeys.next()) {
+            idGenerado = generatedKeys.getInt(1);
+          }*/
+         
             
         } catch (SQLException ex) {
             Logger.getLogger(AñadirDirector.class.getName()).log(Level.SEVERE, null, ex);

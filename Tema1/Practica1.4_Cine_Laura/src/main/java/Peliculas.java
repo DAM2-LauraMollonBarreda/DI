@@ -62,17 +62,22 @@ Conectar conectar = null;
         jScrollPane1.setViewportView(jTablePelis);
 
         jButtonAddPeliculas.setText("Añadir");
+        jButtonAddPeliculas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAddPeliculasActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE)
+            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButtonAddPeliculas)
-                .addGap(127, 127, 127))
-            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(66, 66, 66))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -87,6 +92,13 @@ Conectar conectar = null;
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButtonAddPeliculasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddPeliculasActionPerformed
+        // TODO add your handling code here:
+        AñadirPelicula intrDatos = new AñadirPelicula(null, true);
+        intrDatos.setVisible(true);
+        refrescarTabla();
+    }//GEN-LAST:event_jButtonAddPeliculasActionPerformed
 
     /**
      * @param args the command line arguments

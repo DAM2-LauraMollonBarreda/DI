@@ -109,7 +109,7 @@ Conectar conectar = null;
         String nombre = jTextFieldNombre.getText();
         String capa = jTextFieldCapacidad.getText();
         
-        //String fecha = new SimpleDateFormat("yyyy-MM-dd").format(nacimiento);
+
         
         PreparedStatement ps=null;
         conectar = new Conectar();

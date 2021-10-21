@@ -27,95 +27,105 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jMenuBar = new javax.swing.JMenuBar();
-        jMenu = new javax.swing.JMenu();
-        jMenuOtherTables = new javax.swing.JMenu();
-        jMenuItemOtherTaDirector = new javax.swing.JMenuItem();
-        jMenuItemOtherTaSala = new javax.swing.JMenuItem();
-        jMenuItemOtherTaTematica = new javax.swing.JMenuItem();
-        jMenuPelis = new javax.swing.JMenuItem();
+        jButtonPeli = new javax.swing.JButton();
+        jButtonTematica = new javax.swing.JButton();
+        jButtonDirector = new javax.swing.JButton();
+        jButtonSala = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(0, 51, 51));
 
-        jMenu.setText("Acciones");
-
-        jMenuOtherTables.setText("Otras tablas");
-
-        jMenuItemOtherTaDirector.setText("Director");
-        jMenuItemOtherTaDirector.addActionListener(new java.awt.event.ActionListener() {
+        jButtonPeli.setBackground(new java.awt.Color(255, 204, 255));
+        jButtonPeli.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        jButtonPeli.setText("Pelicula");
+        jButtonPeli.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemOtherTaDirectorActionPerformed(evt);
+                jButtonPeliActionPerformed(evt);
             }
         });
-        jMenuOtherTables.add(jMenuItemOtherTaDirector);
 
-        jMenuItemOtherTaSala.setText("Sala");
-        jMenuItemOtherTaSala.addActionListener(new java.awt.event.ActionListener() {
+        jButtonTematica.setBackground(new java.awt.Color(255, 204, 255));
+        jButtonTematica.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        jButtonTematica.setText("Tematica");
+        jButtonTematica.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemOtherTaSalaActionPerformed(evt);
+                jButtonTematicaActionPerformed(evt);
             }
         });
-        jMenuOtherTables.add(jMenuItemOtherTaSala);
 
-        jMenuItemOtherTaTematica.setText("Tematica");
-        jMenuItemOtherTaTematica.addActionListener(new java.awt.event.ActionListener() {
+        jButtonDirector.setBackground(new java.awt.Color(255, 204, 255));
+        jButtonDirector.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        jButtonDirector.setText("Director");
+        jButtonDirector.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemOtherTaTematicaActionPerformed(evt);
+                jButtonDirectorActionPerformed(evt);
             }
         });
-        jMenuOtherTables.add(jMenuItemOtherTaTematica);
 
-        jMenu.add(jMenuOtherTables);
-
-        jMenuPelis.setText("Pelis");
-        jMenuPelis.addActionListener(new java.awt.event.ActionListener() {
+        jButtonSala.setBackground(new java.awt.Color(255, 204, 255));
+        jButtonSala.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        jButtonSala.setText("Sala");
+        jButtonSala.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuPelisActionPerformed(evt);
+                jButtonSalaActionPerformed(evt);
             }
         });
-        jMenu.add(jMenuPelis);
-
-        jMenuBar.add(jMenu);
-
-        setJMenuBar(jMenuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 708, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonPeli, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonTematica, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 146, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonDirector, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonSala, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(29, 29, 29))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 275, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonSala, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonPeli, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonDirector, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonTematica, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(50, 50, 50))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuPelisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuPelisActionPerformed
+    private void jButtonPeliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPeliActionPerformed
         // TODO add your handling code here:
         Peliculas pelis = new Peliculas(this, true);
         pelis.setVisible(true);
-    }//GEN-LAST:event_jMenuPelisActionPerformed
+    }//GEN-LAST:event_jButtonPeliActionPerformed
 
-    private void jMenuItemOtherTaDirectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOtherTaDirectorActionPerformed
-        // TODO add your handling code here:
-        Director direc = new Director(this, true);
-        direc.setVisible(true);
-    }//GEN-LAST:event_jMenuItemOtherTaDirectorActionPerformed
-
-    private void jMenuItemOtherTaSalaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOtherTaSalaActionPerformed
+    private void jButtonSalaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalaActionPerformed
         // TODO add your handling code here:
         Sala sala = new Sala(this,true);
         sala.setVisible(true);
-    }//GEN-LAST:event_jMenuItemOtherTaSalaActionPerformed
+    }//GEN-LAST:event_jButtonSalaActionPerformed
 
-    private void jMenuItemOtherTaTematicaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOtherTaTematicaActionPerformed
+    private void jButtonTematicaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTematicaActionPerformed
         // TODO add your handling code here:
         Tematica tema = new Tematica(this, true);
         tema.setVisible(true);
-    }//GEN-LAST:event_jMenuItemOtherTaTematicaActionPerformed
+    }//GEN-LAST:event_jButtonTematicaActionPerformed
+
+    private void jButtonDirectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDirectorActionPerformed
+        // TODO add your handling code here:
+        Director direc = new Director(this, true);
+        direc.setVisible(true);
+    }//GEN-LAST:event_jButtonDirectorActionPerformed
 
     /**
      * @param args the command line arguments
@@ -153,12 +163,9 @@ public class PantallaPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenu jMenu;
-    private javax.swing.JMenuBar jMenuBar;
-    private javax.swing.JMenuItem jMenuItemOtherTaDirector;
-    private javax.swing.JMenuItem jMenuItemOtherTaSala;
-    private javax.swing.JMenuItem jMenuItemOtherTaTematica;
-    private javax.swing.JMenu jMenuOtherTables;
-    private javax.swing.JMenuItem jMenuPelis;
+    private javax.swing.JButton jButtonDirector;
+    private javax.swing.JButton jButtonPeli;
+    private javax.swing.JButton jButtonSala;
+    private javax.swing.JButton jButtonTematica;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,3 +1,9 @@
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -161,6 +167,8 @@ public class PantallaPrincipal extends javax.swing.JFrame {
             }
         });
     }
+    
+   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonDirector;

@@ -1,11 +1,17 @@
 
+import java.awt.HeadlessException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.table.DefaultTableModel;
 
 /*
@@ -26,6 +32,7 @@ Conectar conectar = null;
     public Peliculas(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        crearpopupmenu();
         refrescarTabla();
     }
 
@@ -168,7 +175,12 @@ Conectar conectar = null;
 
         jTablePelis.setModel(dtm);
         
-        //ACCESO A BASE DE DATOS 
+        buscarDirector(buscar, dtm);
+        
+    }//GEN-LAST:event_jButtonBuDirectorActionPerformed
+
+    public void buscarDirector(String buscar, DefaultTableModel dtm) throws HeadlessException {
+        //ACCESO A BASE DE DATOS
         //Conectamos con la base de datos
         conectar = new Conectar();
         Connection conexion = conectar.getConexion();
@@ -177,7 +189,7 @@ Conectar conectar = null;
             try {
                 Statement s = conexion.createStatement();
                 ResultSet rs = s.executeQuery ("SELECT p.idPelicula,p.titulo,d.nombre as director,p.fechaProyeccion,p.añoEstreno,t.nombre as tematica,p.precioEntrada,s.nombre as sala FROM pelicula as p inner join director as d on p.director = d.idDirector inner join tematica as t on p.tematica=t.idTematica inner join sala as s on p.sala=s.idSala where d.nombre= '"+buscar+"'");
-                 
+                
                 while (rs.next()) {
                     //dtm.addRow(rs);
                     
@@ -189,21 +201,20 @@ Conectar conectar = null;
                     peliBD[5]= rs.getString(6);
                     peliBD[6]= rs.getString(7);
                     peliBD[7]= rs.getString(8);
-
-
-
+                    
+                    
+                    
                     
                     dtm.addRow(peliBD);
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-            }           
+            }
         }
         else{
             JOptionPane.showMessageDialog(this, "Conoxion fallida");
         }
-        
-    }//GEN-LAST:event_jButtonBuDirectorActionPerformed
+    }
 
     private void jButtonBuTematicaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuTematicaActionPerformed
         // TODO add your handling code here:
@@ -215,7 +226,12 @@ Conectar conectar = null;
 
         jTablePelis.setModel(dtm);
         
-        //ACCESO A BASE DE DATOS 
+        buscarTematica(buscar, dtm);
+        
+    }//GEN-LAST:event_jButtonBuTematicaActionPerformed
+
+    public void buscarTematica(String buscar, DefaultTableModel dtm) throws HeadlessException {
+        //ACCESO A BASE DE DATOS
         //Conectamos con la base de datos
         conectar = new Conectar();
         Connection conexion = conectar.getConexion();
@@ -224,7 +240,7 @@ Conectar conectar = null;
             try {
                 Statement s = conexion.createStatement();
                 ResultSet rs = s.executeQuery ("SELECT p.idPelicula,p.titulo,d.nombre as director,p.fechaProyeccion,p.añoEstreno,t.nombre as tematica,p.precioEntrada,s.nombre as sala FROM pelicula as p inner join director as d on p.director = d.idDirector inner join tematica as t on p.tematica=t.idTematica inner join sala as s on p.sala=s.idSala where t.nombre= '"+buscar+"'");
-                 
+                
                 while (rs.next()) {
                     //dtm.addRow(rs);
                     
@@ -236,21 +252,20 @@ Conectar conectar = null;
                     peliBD[5]= rs.getString(6);
                     peliBD[6]= rs.getString(7);
                     peliBD[7]= rs.getString(8);
-
-
-
+                    
+                    
+                    
                     
                     dtm.addRow(peliBD);
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-            }           
+            }
         }
         else{
             JOptionPane.showMessageDialog(this, "Conoxion fallida");
         }
-        
-    }//GEN-LAST:event_jButtonBuTematicaActionPerformed
+    }
 
     private void jButtonBuSalaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuSalaActionPerformed
         // TODO add your handling code here:
@@ -262,7 +277,11 @@ Conectar conectar = null;
 
         jTablePelis.setModel(dtm);
         
-        //ACCESO A BASE DE DATOS 
+        buscarSala(buscar, dtm);
+    }//GEN-LAST:event_jButtonBuSalaActionPerformed
+
+    public void buscarSala(String buscar, DefaultTableModel dtm) throws HeadlessException {
+        //ACCESO A BASE DE DATOS
         //Conectamos con la base de datos
         conectar = new Conectar();
         Connection conexion = conectar.getConexion();
@@ -271,7 +290,7 @@ Conectar conectar = null;
             try {
                 Statement s = conexion.createStatement();
                 ResultSet rs = s.executeQuery ("SELECT p.idPelicula,p.titulo,d.nombre as director,p.fechaProyeccion,p.añoEstreno,t.nombre as tematica,p.precioEntrada,s.nombre as sala FROM pelicula as p inner join director as d on p.director = d.idDirector inner join tematica as t on p.tematica=t.idTematica inner join sala as s on p.sala=s.idSala where s.nombre= '"+buscar+"'");
-                 
+                
                 while (rs.next()) {
                     //dtm.addRow(rs);
                     
@@ -283,20 +302,20 @@ Conectar conectar = null;
                     peliBD[5]= rs.getString(6);
                     peliBD[6]= rs.getString(7);
                     peliBD[7]= rs.getString(8);
-
-
-
+                    
+                    
+                    
                     
                     dtm.addRow(peliBD);
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-            }           
+            }
         }
         else{
             JOptionPane.showMessageDialog(this, "Conoxion fallida");
         }
-    }//GEN-LAST:event_jButtonBuSalaActionPerformed
+    }
 
     /**
      * @param args the command line arguments
@@ -345,6 +364,88 @@ Conectar conectar = null;
         }
     }
     
+    private void crearpopupmenu() {
+        JPopupMenu popupMenu = new JPopupMenu();
+        JMenuItem directorItem = new JMenuItem("Buscar por el director de la pelicula seleccionada");
+        JMenuItem tematicaItem = new JMenuItem("Buscar por la tematica de la pelicula seleccionada");
+
+        
+               
+        popupMenu.add(directorItem);
+        popupMenu.add(tematicaItem);
+        
+        jTablePelis.setComponentPopupMenu(popupMenu);
+        
+        directorItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+               buscarDirector();
+            }
+        });
+
+        tematicaItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+               buscarTematica();
+            }
+        });  
+    }
+    
+    public void buscarDirector(){
+        int cuentaFilasSeleccionadas = jTablePelis.getSelectedRowCount(); 
+
+        if (cuentaFilasSeleccionadas == 0) { 
+            JOptionPane.showMessageDialog(this, "No hay filas seleccionadas","Error",JOptionPane.WARNING_MESSAGE);  
+        } else { 
+            int resultado=JOptionPane.showConfirmDialog(this, "¿Esta seguro que desea buscar por director?","¿Seguro?", JOptionPane.YES_NO_CANCEL_OPTION);
+            if (resultado==JOptionPane.YES_OPTION) {
+                int fila = jTablePelis.getSelectedRow();
+                var director =jTablePelis.getModel().getValueAt(fila, 2).toString();
+                
+                DefaultTableModel dtm = new DefaultTableModel();
+                dtm.setColumnIdentifiers(new String[]{"idPelicula","Titulo","Director","Fecha proyeccion","Año de estreno", "Tematica","Precio de entrada","Sala"});
+
+                jTablePelis.setModel(dtm);
+        
+                buscarDirector(director, dtm);
+                
+                
+            }else if (resultado==JOptionPane.NO_OPTION) {
+                JOptionPane.showConfirmDialog(this, "Fila no borrada","",JOptionPane.ERROR_MESSAGE);
+            }
+            else if (resultado==JOptionPane.CANCEL_OPTION) {
+                JOptionPane.showConfirmDialog(this, "Operacion cancelada","",JOptionPane.WARNING_MESSAGE);
+            }
+        } 
+    }
+    
+    public void buscarTematica(){
+        int cuentaFilasSeleccionadas = jTablePelis.getSelectedRowCount(); 
+
+        if (cuentaFilasSeleccionadas == 0) { 
+            JOptionPane.showMessageDialog(this, "No hay filas seleccionadas","Error",JOptionPane.WARNING_MESSAGE);  
+        } else { 
+            int resultado=JOptionPane.showConfirmDialog(this, "¿Esta seguro que desea buscar por director?","¿Seguro?", JOptionPane.YES_NO_CANCEL_OPTION);
+            if (resultado==JOptionPane.YES_OPTION) {
+                int fila = jTablePelis.getSelectedRow();
+                var tematica =jTablePelis.getModel().getValueAt(fila, 5).toString();
+                
+                DefaultTableModel dtm = new DefaultTableModel();
+                dtm.setColumnIdentifiers(new String[]{"idPelicula","Titulo","Director","Fecha proyeccion","Año de estreno", "Tematica","Precio de entrada","Sala"});
+
+                jTablePelis.setModel(dtm);
+        
+                buscarTematica(tematica, dtm);
+                
+                
+            }else if (resultado==JOptionPane.NO_OPTION) {
+                JOptionPane.showConfirmDialog(this, "Fila no borrada","",JOptionPane.ERROR_MESSAGE);
+            }
+            else if (resultado==JOptionPane.CANCEL_OPTION) {
+                JOptionPane.showConfirmDialog(this, "Operacion cancelada","",JOptionPane.WARNING_MESSAGE);
+            }
+        } 
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAddPeliculas;

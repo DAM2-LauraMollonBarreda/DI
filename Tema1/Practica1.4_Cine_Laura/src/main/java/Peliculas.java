@@ -26,6 +26,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Peliculas extends javax.swing.JDialog {
 Conectar conectar = null;
+int maxNum=0;
+int instancia=0;
     /**
      * Creates new form Peliculas
      */
@@ -54,6 +56,9 @@ Conectar conectar = null;
         jButtonBuTematica = new javax.swing.JButton();
         jButtonBuSala = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        jButtonVerTodas = new javax.swing.JButton();
+        jButtonAnterior = new javax.swing.JButton();
+        jButtonSiguiente = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -112,38 +117,77 @@ Conectar conectar = null;
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel2.setText("Buscar");
 
+        jButtonVerTodas.setBackground(new java.awt.Color(255, 204, 255));
+        jButtonVerTodas.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jButtonVerTodas.setText("Volver a ver todas las peliculas");
+        jButtonVerTodas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonVerTodasActionPerformed(evt);
+            }
+        });
+
+        jButtonAnterior.setBackground(new java.awt.Color(255, 204, 255));
+        jButtonAnterior.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jButtonAnterior.setText("Anterior");
+        jButtonAnterior.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAnteriorActionPerformed(evt);
+            }
+        });
+
+        jButtonSiguiente.setBackground(new java.awt.Color(255, 204, 255));
+        jButtonSiguiente.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jButtonSiguiente.setText("Siguiente");
+        jButtonSiguiente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSiguienteActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 675, Short.MAX_VALUE)
             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jTextFieldBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButtonBuDirector)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButtonBuTematica))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(69, 69, 69)
-                                .addComponent(jButtonAddPeliculas, javax.swing.GroupLayout.PREFERRED_SIZE, 440, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButtonVerTodas, javax.swing.GroupLayout.PREFERRED_SIZE, 440, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jTextFieldBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(jButtonBuDirector)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(jButtonBuTematica))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addGap(69, 69, 69)
+                                    .addComponent(jButtonAddPeliculas, javax.swing.GroupLayout.PREFERRED_SIZE, 440, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(18, 18, 18)
                         .addComponent(jButtonBuSala, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(20, 20, 20))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButtonAnterior)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButtonSiguiente)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1)
-                .addGap(40, 40, 40)
+                .addGap(9, 9, 9)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonAnterior)
+                    .addComponent(jButtonSiguiente))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addComponent(jButtonAddPeliculas)
                 .addGap(20, 20, 20)
                 .addComponent(jLabel2)
@@ -153,7 +197,9 @@ Conectar conectar = null;
                     .addComponent(jButtonBuDirector)
                     .addComponent(jButtonBuTematica)
                     .addComponent(jButtonBuSala))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jButtonVerTodas)
+                .addGap(63, 63, 63))
         );
 
         pack();
@@ -280,6 +326,54 @@ Conectar conectar = null;
         buscarSala(buscar, dtm);
     }//GEN-LAST:event_jButtonBuSalaActionPerformed
 
+    private void jButtonVerTodasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVerTodasActionPerformed
+        refrescarTabla();
+    }//GEN-LAST:event_jButtonVerTodasActionPerformed
+
+    private void jButtonAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAnteriorActionPerformed
+        
+        if (instancia>=3) {
+            instancia = instancia - 3;
+            refrescarTabla();
+        }
+ 
+    }//GEN-LAST:event_jButtonAnteriorActionPerformed
+
+    private void jButtonSiguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSiguienteActionPerformed
+        SacarNumdirectores();
+        if (instancia!=maxNum) {
+            instancia = instancia + 3;
+            refrescarTabla();
+        }
+    }//GEN-LAST:event_jButtonSiguienteActionPerformed
+
+    private void SacarNumdirectores() {
+        conectar = new Conectar();
+        Connection conexion = conectar.getConexion();
+        if (conexion != null) {
+
+            Statement s;
+            try {
+                s = conexion.createStatement();
+                ResultSet rs = s.executeQuery("select count(idPelicula)"
+                                            + "from pelicula");
+
+                while (rs.next()) {
+
+                    maxNum =  rs.getInt(1);
+
+
+                }
+
+
+            } catch (SQLException ex) {
+                Logger.getLogger(Peliculas.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    
+    
     public void buscarSala(String buscar, DefaultTableModel dtm) throws HeadlessException {
         //ACCESO A BASE DE DATOS
         //Conectamos con la base de datos
@@ -336,7 +430,13 @@ Conectar conectar = null;
         if (conexion != null) {
             try {
                 Statement s = conexion.createStatement();
-                ResultSet rs = s.executeQuery ("SELECT p.idPelicula,p.titulo,d.nombre as director,p.fechaProyeccion,p.añoEstreno,t.nombre as tematica,p.precioEntrada,s.nombre as sala FROM pelicula as p inner join director as d on p.director = d.idDirector inner join tematica as t on p.tematica=t.idTematica inner join sala as s on p.sala=s.idSala");
+                ResultSet rs = s.executeQuery ("select p.idPelicula, p.titulo,d.nombre,p.fechaProyeccion,p.añoEstreno,t.nombre,p.precioEntrada,s.nombre\n" +
+                                          "from pelicula p\n" +
+                                          "inner join director d on p.director = d.idDirector\n" +
+                                          "inner join tematica t on p.tematica = t.idTematica\n" +
+                                          "inner join sala s on p.sala = s.idSala\n" +
+                                          "order by p.idPelicula\n" +
+                                          "limit " + instancia + ",3");
                  
                 while (rs.next()) {
                     //dtm.addRow(rs);
@@ -449,9 +549,12 @@ Conectar conectar = null;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAddPeliculas;
+    private javax.swing.JButton jButtonAnterior;
     private javax.swing.JButton jButtonBuDirector;
     private javax.swing.JButton jButtonBuSala;
     private javax.swing.JButton jButtonBuTematica;
+    private javax.swing.JButton jButtonSiguiente;
+    private javax.swing.JButton jButtonVerTodas;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;

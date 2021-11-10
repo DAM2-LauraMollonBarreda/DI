@@ -29,7 +29,8 @@ public class opacidadPropertyEditorSupport extends PropertyEditorSupport {
 
     @Override
     public String getJavaInitializationString() {
-        return super.getJavaInitializationString(); //To change
+        propiedadOpacidad opa = panelOpacidad.getSelectValue();
+        return "new jpanelimagen.propiedadOpacidad("+opa.getOpacidad()+"f)";
     }
     
     //Devuelve los valores que el usuario a introducido

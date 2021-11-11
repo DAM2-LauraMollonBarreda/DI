@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JLabel;
 import javax.swing.Timer;
@@ -46,7 +47,9 @@ public class JLabelReloj extends JLabel implements Serializable {
              
             if(alarma!=null){
                 if (alarma.isActiva()&& comprabar(date,alarma.getHoraFecha())) {
-                    suenaListener.suena();
+                     if (suenaListener!=null) {
+                            suenaListener.suena();
+                        }
                 }
             }
  
@@ -58,12 +61,19 @@ public class JLabelReloj extends JLabel implements Serializable {
 
     
     public boolean comprabar(Date date, Date horaFecha) {
-        if (date==horaFecha) {
+        Calendar calendar1 = Calendar.getInstance();
+        Calendar calendar2 = Calendar.getInstance();
+        calendar1.setTime(date);
+        calendar1.setTime(horaFecha);
+        if (calendar1.get(Calendar.HOUR)==calendar2.get(Calendar.HOUR)&& 
+            calendar1.get(Calendar.MINUTE)== calendar2.get(Calendar.MINUTE)&&
+            calendar1.get(Calendar.SECOND)==calendar2.get(Calendar.SECOND)) 
+        {
             return true;
-        }
-        else{
+        }else{
             return false;
         }
+       
     }
     
     public boolean isHoras24() {
@@ -96,11 +106,26 @@ public class JLabelReloj extends JLabel implements Serializable {
         this.suenaListener = suenaListener;
     }
     
-    
-    
-    
-    
-    
-    
+ 
 }
+
+
+
+
+
+/*PARA COMPROBAR SI FUNCIONA EN EL FORMULARIO METER ESTE CODIGO*/
+
+  /*public NewJFrame() {
+        initComponents();
+        jLabelReloj1.setSuenaListener(new SuenaListener() {
+            @Override
+            public void suena() {
+                msg();
+            }
+        });
+    }
+
+    public void msg() {
+        JOptionPane.showConfirmDialog(this, "La alarma esta sonando");
+    }*/
 

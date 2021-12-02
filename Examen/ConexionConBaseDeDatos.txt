@@ -1,0 +1,19 @@
+public class Conectar {
+    public static final String URL = "jdbc:mysql://servidorifc.iesch.org:3306/cine_di";
+    public static final String USER = "pasAlumno";
+    public static final String PASS= "Admin1234";
+    
+    public Connection getConexion(){
+        Connection con = null;
+        
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con=DriverManager.getConnection(URL, USER, PASS);
+        } catch (Exception ex) {
+               System.out.println("ERROR: " + ex.getMessage());
+        } 
+                
+        
+        return con;
+    }
+}

@@ -3,7 +3,7 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="DIRECTOR" class="java.lang.Integer"/>
+	<parameter name="DIRECTOR" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select * from pelicula where director=$P{DIRECTOR};]]>
 	</queryString>
@@ -51,7 +51,7 @@
 	<detail>
 		<band height="23" splitType="Stretch">
 			<textField>
-				<reportElement x="100" y="0" width="100" height="20" uuid="cef567fb-51a1-4d3a-ac62-b345676dfceb"/>
+				<reportElement x="73" y="3" width="100" height="20" uuid="cef567fb-51a1-4d3a-ac62-b345676dfceb"/>
 				<textFieldExpression><![CDATA[$F{titulo}]]></textFieldExpression>
 			</textField>
 		</band>
@@ -59,7 +59,7 @@
 	<columnFooter>
 		<band height="26" splitType="Stretch">
 			<textField>
-				<reportElement x="146" y="0" width="264" height="20" uuid="9ac2d6ca-9466-4d13-a47f-e83c653c69d0"/>
+				<reportElement x="103" y="0" width="264" height="20" uuid="9ac2d6ca-9466-4d13-a47f-e83c653c69d0"/>
 				<textFieldExpression><![CDATA["Este director tiene "+ $V{idPelicula_1} +" peliculas"]]></textFieldExpression>
 			</textField>
 		</band>

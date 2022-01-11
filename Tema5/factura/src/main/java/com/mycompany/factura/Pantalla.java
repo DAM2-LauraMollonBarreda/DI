@@ -1,3 +1,5 @@
+package com.mycompany.factura;
+
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -85,9 +87,9 @@ public class Pantalla extends javax.swing.JFrame {
             Map parametros = new HashMap();
             parametros.put("DIRECTOR", jComboBoxDirector.getSelectedItem());
             
-            JasperPrint print = JasperFillManager.fillReport("Informes/Parametro.jasper", parametros, conector);
+            JasperPrint print = JasperFillManager.fillReport(".\\src\\main\\java\\Informes\\Parametro.jasper", parametros, conector);
             
-            JasperExportManager.exportReportToPdfFile(print,"Informes/parametros.pdf");
+            JasperExportManager.exportReportToPdfFile(print,"D:\\Parametro.pdf");
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {

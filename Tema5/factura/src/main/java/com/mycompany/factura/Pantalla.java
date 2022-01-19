@@ -1,13 +1,17 @@
 package com.mycompany.factura;
 
-
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -18,18 +22,35 @@ import net.sf.jasperreports.engine.JasperPrint;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author damA
  */
 public class Pantalla extends javax.swing.JFrame {
 
+    Conectar conectar = null;
+
     /**
      * Creates new form Pantalla
      */
     public Pantalla() {
         initComponents();
+        conectar = new Conectar();
+
+        String sql = "select distinct(codigo_pedido) from pedido order by codigo_pedido ASC;";
+        Statement ps = null;
+        ResultSet rs = null;
+        Connection cn = conectar.getConexion();
+
+        try {
+            ps = cn.prepareStatement(sql);
+            rs = ps.executeQuery(sql);
+            while (rs.next()) {
+                jComboBoxPedido.addItem(rs.getString("codigo_pedido").toString());
+            }
+        } catch (Exception e) {
+        }
+
     }
 
     /**
@@ -41,55 +62,90 @@ public class Pantalla extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jComboBoxDirector = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        jComboBoxPedido = new javax.swing.JComboBox<>();
+        jButtonAceptar = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jComboBoxDirector.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4" }));
-
-        jButton1.setText("Aceptar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonAceptar.setText("Aceptar");
+        jButtonAceptar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonAceptarActionPerformed(evt);
             }
         });
+
+        jLabel1.setText("Selecciona el pedido para hacer la factura");
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel2.setText("FACTURA DE GREENGARD");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addComponent(jComboBoxDirector, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(120, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(21, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButtonAceptar, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(jComboBoxPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(23, 23, 23)))
+                .addGap(20, 20, 20))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(22, 22, 22)
+                .addComponent(jLabel2)
+                .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBoxDirector, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(238, Short.MAX_VALUE))
+                    .addComponent(jComboBoxPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addGap(18, 18, 18)
+                .addComponent(jButtonAceptar)
+                .addContainerGap(76, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButtonAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAceptarActionPerformed
         try {
             //Cargar driver
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection conector = DriverManager.getConnection("jdbc:mysql://servidorifc.iesch.org:3306/cine_di", "pasAlumno", "Admin1234");
+            Connection conector = DriverManager.getConnection("jdbc:mysql://servidorifc.iesch.org:3306/jardineria_di ", "pasAlumno", "Admin1234");
             Map parametros = new HashMap();
-            parametros.put("DIRECTOR", jComboBoxDirector.getSelectedItem());
+            parametros.put("pedido", jComboBoxPedido.getSelectedItem());
+
+            JasperPrint print = JasperFillManager.fillReport(".\\src\\main\\java\\Informes\\DetallePedido.jasper", parametros, conector);
+
+            JFileChooser chooser = new JFileChooser();
+
+            //Para que solo de deje escojer archivos pdf
+            chooser.setAcceptAllFileFilterUsed(false);
+            //Ponemos la opcion de pdf en el file chooser 
+            FileNameExtensionFilter filtro = new FileNameExtensionFilter("*.pdf", "pdf");
+            chooser.setFileFilter(filtro);
+
             
-            JasperPrint print = JasperFillManager.fillReport(".\\src\\main\\java\\Informes\\Parametro.jasper", parametros, conector);
-            
-            JasperExportManager.exportReportToPdfFile(print,"D:\\Parametro.pdf");
+            //Abrimos el JFileChooser y guardamos el resultado en seleccion
+            int seleccion = chooser.showOpenDialog(this); 
+            //Si el usuario ha pulsado la opción Aceptar
+            if (seleccion == JFileChooser.APPROVE_OPTION) { 
+                //Guarda la factura creada en el informe en la ruta elegida por el usuario
+                JasperExportManager.exportReportToPdfFile(print, chooser.getSelectedFile().getAbsolutePath()+".pdf");
+                //Muestra un dialogo
+                JOptionPane.showMessageDialog(this, "Factura creada correctamente");
+            }else{
+                JOptionPane.showMessageDialog(this,"No hay fichero selecionado", "Error!",JOptionPane.ERROR_MESSAGE);
+            }
+
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
@@ -97,9 +153,9 @@ public class Pantalla extends javax.swing.JFrame {
         } catch (JRException ex) {
             Logger.getLogger(Pantalla.class.getName()).log(Level.SEVERE, null, ex);
         }
-                
-                
-    }//GEN-LAST:event_jButton1ActionPerformed
+
+
+    }//GEN-LAST:event_jButtonAceptarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -137,7 +193,9 @@ public class Pantalla extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBoxDirector;
+    private javax.swing.JButton jButtonAceptar;
+    private javax.swing.JComboBox<String> jComboBoxPedido;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
 }

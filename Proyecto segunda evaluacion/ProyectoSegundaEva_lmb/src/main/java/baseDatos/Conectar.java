@@ -1,3 +1,5 @@
+package baseDatos;
+
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,9 +15,9 @@ import java.sql.DriverManager;
  * @author damA
  */
 public class Conectar {
-    public static final String URL = "jdbc:mysql://servidorifc.iesch.org:3306/cine_di";
-    public static final String USER = "pasAlumno";
-    public static final String PASS= "Admin1234";
+    public static final String URL = "jdbc:mysql://servidorifc.iesch.org:3306/mantenimiento_mollon";
+    public static final String USER = "2_mollon_l";
+    public static final String PASS= "20e5w";
     
     public Connection getConexion(){
         Connection con = null;

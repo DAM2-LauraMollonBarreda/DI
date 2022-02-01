@@ -34,6 +34,7 @@ public class Autenticacion_pantalla extends javax.swing.JFrame {
      */
     public Autenticacion_pantalla() {
         initComponents();
+        
     }
 
     /**

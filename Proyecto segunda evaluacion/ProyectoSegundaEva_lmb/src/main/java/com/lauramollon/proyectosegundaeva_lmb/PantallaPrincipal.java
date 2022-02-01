@@ -11,11 +11,14 @@ package com.lauramollon.proyectosegundaeva_lmb;
  * @author damA
  */
 public class PantallaPrincipal extends javax.swing.JDialog {
-
+    String usuRol = "";
     /** Creates new form PantallaPrincipal */
     public PantallaPrincipal(java.awt.Frame parent, boolean modal,String rol) {
         super(parent, modal);
+        usuRol = rol;
         initComponents();
+        jMenuProfesores.setVisible(true);
+        System.out.println(usuRol);
     }
 
     /** This method is called from within the constructor to
@@ -33,7 +36,6 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         jMenuBar = new javax.swing.JMenuBar();
         jMenuProfesores = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -61,9 +63,6 @@ public class PantallaPrincipal extends javax.swing.JDialog {
             }
         });
         jMenuBar.add(jMenuProfesores);
-
-        jMenu2.setText("Edit");
-        jMenuBar.add(jMenu2);
 
         setJMenuBar(jMenuBar);
 
@@ -99,8 +98,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuProfesoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuProfesoresActionPerformed
-        // TODO add your handling code here:
-        System.out.println(rol);
+
     }//GEN-LAST:event_jMenuProfesoresActionPerformed
 
     /**
@@ -110,7 +108,6 @@ public class PantallaPrincipal extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JMenu jMenuProfesores;
     private javax.swing.JTable jTable1;

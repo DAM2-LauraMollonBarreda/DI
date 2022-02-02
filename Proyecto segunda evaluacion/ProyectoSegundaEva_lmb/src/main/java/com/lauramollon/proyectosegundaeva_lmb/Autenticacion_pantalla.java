@@ -149,15 +149,14 @@ public class Autenticacion_pantalla extends javax.swing.JFrame {
         char[] arrayC = jPasswordFieldPassAutenticacion.getPassword();
         String pass = new String(arrayC); 
         
-        contectar = new Conectar();
-        Connection conexion = contectar.getConexion();
+        
         
         if (!usu.isBlank()&& !pass.isBlank()) {
-            comprabarLoginBaseDatos(conexion, usu, pass);
+            comprabarLoginBaseDatos(usu, pass);
         }else{
             JOptionPane.showMessageDialog(this, "No puedes dejar campos vacios");
         }
-        
+      
         
     }//GEN-LAST:event_jButtonEntrarActionPerformed
 
@@ -165,7 +164,9 @@ public class Autenticacion_pantalla extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jPasswordFieldPassAutenticacionActionPerformed
 
-    public void comprabarLoginBaseDatos(Connection conexion, String usu, String pass) throws HeadlessException {
+    public void comprabarLoginBaseDatos(String usu, String pass) throws HeadlessException {
+        contectar = new Conectar();
+        Connection conexion = contectar.getConexion();
         if (conexion!=null) {
             try {
                 Statement s = conexion.createStatement();
@@ -196,6 +197,8 @@ public class Autenticacion_pantalla extends javax.swing.JFrame {
                 else{
                     JOptionPane.showMessageDialog(this, "Autenticacion incorrecta ");
                 }
+                
+                conexion.close();
                 
             } catch (SQLException ex) {
                 Logger.getLogger(Autenticacion_pantalla.class.getName()).log(Level.SEVERE, null, ex);

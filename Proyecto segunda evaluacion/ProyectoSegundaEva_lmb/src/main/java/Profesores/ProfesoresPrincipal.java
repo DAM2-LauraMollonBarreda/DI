@@ -6,12 +6,20 @@
 package Profesores;
 
 import baseDatos.Conectar;
+import com.lauramollon.proyectosegundaeva_lmb.Autenticacion_pantalla;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.lang.System.Logger;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -30,6 +38,7 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
         initComponents();
 
         rellenoTabla();
+        crearPopupMenu();
 
     }
 
@@ -47,10 +56,9 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
             try {
                 Statement s = conexion.createStatement();
                 ResultSet rs = s.executeQuery("select p.login,p.nombre_completo,p.email,if(p.activo=1,\"Si\",\"No\"),r.rol,d.departamento_corto from fp_profesor p inner join fp_rol r on r.id_rol=p.id_rol inner join fp_departamento d on d.id_departamento=p.id_departamento;");
-                
+
                 while (rs.next()) {
                     //dtm.addRow(rs);
-
                     profes[0] = rs.getString(1);
                     profes[1] = rs.getString(2);
                     profes[2] = rs.getString(3);
@@ -58,7 +66,6 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
                     profes[4] = rs.getString(5);
                     profes[5] = rs.getString(6);
 
-                    
                     dtm.addRow(profes);
                 }
             } catch (SQLException sQLException) {
@@ -82,9 +89,9 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
 
         jComboBoxFiltro = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
-        jTableUsuarios = new javax.swing.JScrollPane();
-        jTableProfesores = new javax.swing.JTable();
         jButtonInsertar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTableProfesores = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -97,6 +104,13 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
 
         jLabel1.setText("Filtrar por:");
 
+        jButtonInsertar.setText("Nuevo profesor");
+        jButtonInsertar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonInsertarActionPerformed(evt);
+            }
+        });
+
         jTableProfesores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -108,14 +122,7 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jTableUsuarios.setViewportView(jTableProfesores);
-
-        jButtonInsertar.setText("Nuevo profesor");
-        jButtonInsertar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonInsertarActionPerformed(evt);
-            }
-        });
+        jScrollPane1.setViewportView(jTableProfesores);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -125,28 +132,25 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jTableUsuarios, javax.swing.GroupLayout.DEFAULT_SIZE, 725, Short.MAX_VALUE))
+                        .addComponent(jButtonInsertar))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jButtonInsertar))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(39, 39, 39)
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jComboBoxFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addGap(39, 39, 39)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jComboBoxFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 702, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(17, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButtonInsertar)
                 .addGap(18, 18, 18)
-                .addComponent(jTableUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(43, 43, 43)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboBoxFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
@@ -157,20 +161,282 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jComboBoxFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxFiltroActionPerformed
-        
+
     }//GEN-LAST:event_jComboBoxFiltroActionPerformed
 
     private void jButtonInsertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInsertarActionPerformed
-        InsertarProfesor pantallaProfesoresInsertar = new InsertarProfesor(this, true);
-        pantallaProfesoresInsertar.setVisible(true);
+        InsertarProfesor pantallaProfesoresInsertar;
+        try {
+            pantallaProfesoresInsertar = new InsertarProfesor(this, true);
+            pantallaProfesoresInsertar.setVisible(true);
+        } catch (SQLException ex) {
+            java.util.logging.Logger.getLogger(ProfesoresPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        rellenoTabla();
     }//GEN-LAST:event_jButtonInsertarActionPerformed
 
+    private void crearPopupMenu() {
+        JPopupMenu popupMenu = new JPopupMenu();
+        JMenuItem bajaProfesor = new JMenuItem("Baja/alta de este profesor");
+        JMenu rolProfesor = new JMenu("Cambiar rol de este profesor ");
+        JMenuItem root = new JMenuItem("Poner como root");
+        JMenuItem tecnico = new JMenuItem("Poner como tecnico");
+        JMenuItem profesor = new JMenuItem("Poner como profesor");
+        JMenuItem contraseñaProfesor = new JMenuItem("Cambiar contraseña de este profesor");
+
+        popupMenu.add(bajaProfesor);
+
+        popupMenu.add(rolProfesor);
+        rolProfesor.add(root);
+        rolProfesor.add(tecnico);
+        rolProfesor.add(profesor);
+
+        popupMenu.add(contraseñaProfesor);
+
+        jTableProfesores.setComponentPopupMenu(popupMenu);
+
+        bajaProfesor.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                bajaProfesor();
+                rellenoTabla();
+            }
+        });
+
+        root.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                cambiarRolRoot();
+                rellenoTabla();
+            }
+        });
+
+        tecnico.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                cambiarRolTecnico();
+                rellenoTabla();
+            }
+        });
+
+        profesor.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                cambiarRolProfesor();
+                rellenoTabla();
+            }
+        });
+
+        contraseñaProfesor.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                cambiarContraseña();
+            }
+        });
+
+    }
+
+    public void bajaProfesor() {
+        int cuentaFilasSeleccionadas = jTableProfesores.getSelectedRowCount();
+        if (cuentaFilasSeleccionadas == 0) {
+            JOptionPane.showMessageDialog(this, "No hay filas seleccionadas", "Error", JOptionPane.WARNING_MESSAGE);
+        } else {
+            int fila = jTableProfesores.getSelectedRow();
+            String login = jTableProfesores.getModel().getValueAt(fila, 0).toString();
+            String activo = jTableProfesores.getModel().getValueAt(fila, 3).toString();
+
+            if (activo.equals("Si")) {
+
+                try {
+                    PreparedStatement ps = null;
+                    conectar = new Conectar();
+                    Connection conexion = conectar.getConexion();
+
+                    String sql = "UPDATE fp_profesor SET activo='0' WHERE login='" + login + "';";
+
+                    ps = conexion.prepareStatement(sql);
+                    ps.executeUpdate();
+
+                    JOptionPane.showMessageDialog(this, "Este profesor ya no esta activo");
+
+                    conexion.close();
+
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "No se han podido insertar los datos");
+                }
+
+            } else if (activo.equals("No")) {
+                try {
+                    PreparedStatement ps = null;
+                    conectar = new Conectar();
+                    Connection conexion = conectar.getConexion();
+
+                    String sql = "UPDATE fp_profesor SET activo='1' WHERE login='" + login + "';";
+
+                    ps = conexion.prepareStatement(sql);
+                    ps.executeUpdate();
+
+                    JOptionPane.showMessageDialog(this, "Este profesor ya esta activo");
+
+                    conexion.close();
+
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "No se han podido insertar los datos");
+                }
+            }
+        }
+    }
+
+    public void cambiarRolRoot() {
+        int cuentaFilasSeleccionadas = jTableProfesores.getSelectedRowCount();
+        if (cuentaFilasSeleccionadas == 0) {
+            JOptionPane.showMessageDialog(this, "No hay filas seleccionadas", "Error", JOptionPane.WARNING_MESSAGE);
+        } else {
+            int fila = jTableProfesores.getSelectedRow();
+            String login = jTableProfesores.getModel().getValueAt(fila, 0).toString();
+            String rol = jTableProfesores.getModel().getValueAt(fila, 4).toString();
+
+            if (rol.equals("root")) {
+                JOptionPane.showMessageDialog(this, "Este usuario ya es root");
+
+            } else {
+                try {
+                    PreparedStatement ps = null;
+                    conectar = new Conectar();
+                    Connection conexion = conectar.getConexion();
+
+                    String sql = "UPDATE fp_profesor SET id_rol='1' WHERE login='" + login + "';";
+
+                    ps = conexion.prepareStatement(sql);
+                    ps.executeUpdate();
+
+                    JOptionPane.showMessageDialog(this, "Este profesor ya es root");
+
+                    conexion.close();
+
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "No se han podido insertar los datos");
+                }
+            }
+        }
+    }
+
+    public void cambiarRolTecnico() {
+        int cuentaFilasSeleccionadas = jTableProfesores.getSelectedRowCount();
+        if (cuentaFilasSeleccionadas == 0) {
+            JOptionPane.showMessageDialog(this, "No hay filas seleccionadas", "Error", JOptionPane.WARNING_MESSAGE);
+        } else {
+
+            int fila = jTableProfesores.getSelectedRow();
+            String login = jTableProfesores.getModel().getValueAt(fila, 0).toString();
+            String rol = jTableProfesores.getModel().getValueAt(fila, 4).toString();
+
+            if (rol.equals("tecnico")) {
+                JOptionPane.showMessageDialog(this, "Este usuario ya es tecnico");
+
+            } else {
+                try {
+                    PreparedStatement ps = null;
+                    conectar = new Conectar();
+                    Connection conexion = conectar.getConexion();
+
+                    String sql = "UPDATE fp_profesor SET id_rol='2' WHERE login='" + login + "';";
+
+                    ps = conexion.prepareStatement(sql);
+                    ps.executeUpdate();
+
+                    JOptionPane.showMessageDialog(this, "Este profesor ya es tecnico");
+
+                    conexion.close();
+
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "No se han podido insertar los datos");
+                }
+            }
+
+        }
+    }
+
+    public void cambiarRolProfesor() {
+        int cuentaFilasSeleccionadas = jTableProfesores.getSelectedRowCount();
+        if (cuentaFilasSeleccionadas == 0) {
+            JOptionPane.showMessageDialog(this, "No hay filas seleccionadas", "Error", JOptionPane.WARNING_MESSAGE);
+        } else {
+            int fila = jTableProfesores.getSelectedRow();
+            String login = jTableProfesores.getModel().getValueAt(fila, 0).toString();
+            String rol = jTableProfesores.getModel().getValueAt(fila, 4).toString();
+
+            if (rol.equals("profesor")) {
+                JOptionPane.showMessageDialog(this, "Este usuario ya tiene los permisos de profesor");
+
+            } else {
+                try {
+                    PreparedStatement ps = null;
+                    conectar = new Conectar();
+                    Connection conexion = conectar.getConexion();
+
+                    String sql = "UPDATE fp_profesor SET id_rol='3' WHERE login='" + login + "';";
+
+                    ps = conexion.prepareStatement(sql);
+                    ps.executeUpdate();
+
+                    JOptionPane.showMessageDialog(this, "Este usuario ya tiene los permisos de profesor");
+
+                    conexion.close();
+
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "No se han podido insertar los datos");
+                }
+            }
+        }
+    }
+
+    public void cambiarContraseña() {
+        int cuentaFilasSeleccionadas = jTableProfesores.getSelectedRowCount();
+        if (cuentaFilasSeleccionadas == 0) {
+            JOptionPane.showMessageDialog(this, "No hay filas seleccionadas", "Error", JOptionPane.WARNING_MESSAGE);
+        } else {
+            int resultado=JOptionPane.showConfirmDialog(this, "¿Esta seguro que desea resetear la contraseña a la de por defecto?","¿Seguro?", JOptionPane.YES_NO_CANCEL_OPTION);
+            if (resultado==JOptionPane.YES_OPTION) {
+            int fila = jTableProfesores.getSelectedRow();
+            String login = jTableProfesores.getModel().getValueAt(fila, 0).toString();
+            
+            try {
+                    PreparedStatement ps = null;
+                    conectar = new Conectar();
+                    Connection conexion = conectar.getConexion();
+
+                    String sql = "UPDATE fp_profesor SET password='iesChomon' WHERE login='" + login + "';";
+
+                    ps = conexion.prepareStatement(sql);
+                    ps.executeUpdate();
+
+                    JOptionPane.showMessageDialog(this, "Ya tiene la contraseña cambiada");
+
+                    conexion.close();
+
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "No se han podido insertar los datos");
+                }
+                
+                
+                
+                
+            }else if (resultado==JOptionPane.NO_OPTION) {
+                JOptionPane.showConfirmDialog(this, "Fila no borrada","",JOptionPane.ERROR_MESSAGE);
+            }
+            else if (resultado==JOptionPane.CANCEL_OPTION) {
+                JOptionPane.showConfirmDialog(this, "Operacion cancelada","",JOptionPane.WARNING_MESSAGE);
+            }
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonInsertar;
     private javax.swing.JComboBox<String> jComboBoxFiltro;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableProfesores;
-    private javax.swing.JScrollPane jTableUsuarios;
     // End of variables declaration//GEN-END:variables
+
 }

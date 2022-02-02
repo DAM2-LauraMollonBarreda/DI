@@ -6,6 +6,8 @@
 
 package com.lauramollon.proyectosegundaeva_lmb;
 
+import Profesores.ProfesoresPrincipal;
+
 /**
  *
  * @author damA
@@ -17,8 +19,24 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         super(parent, modal);
         usuRol = rol;
         initComponents();
-        jMenuProfesores.setVisible(true);
-        System.out.println(usuRol);
+        
+        controlUsuarios();
+        
+
+    }
+
+    //METODO PARA OCULTAR DEPENDIENDO DEL USUARIO QUE ES EL QUE ESTA CONECTADO
+    public void controlUsuarios() {
+        //SI EL USUARO ES ROOT
+        if (usuRol.equals("root")) {
+            jMenuItemProfesores.setVisible(true);
+            //SI EL USUARIO ES TECNICO
+        }else if(usuRol.equals("tecnico")){
+            jMenuItemProfesores.setVisible(false);
+            //SI EL USUARIO ES PROFESOR
+        }else if (usuRol.equals("profesor")){
+            jMenuItemProfesores.setVisible(false);
+        }
     }
 
     /** This method is called from within the constructor to
@@ -30,39 +48,28 @@ public class PantallaPrincipal extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTableUsuarios = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jLabel1 = new javax.swing.JLabel();
         jMenuBar = new javax.swing.JMenuBar();
-        jMenuProfesores = new javax.swing.JMenu();
+        jMenuGo = new javax.swing.JMenu();
+        jMenuItemProfesores = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jTableUsuarios.setViewportView(jTable1);
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Departamento", "Cursos que da" }));
-
-        jLabel1.setText("Filtrar por:");
-
-        jMenuProfesores.setText("Profesores");
-        jMenuProfesores.addActionListener(new java.awt.event.ActionListener() {
+        jMenuGo.setText("Ir a..");
+        jMenuGo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuProfesoresActionPerformed(evt);
+                jMenuGoActionPerformed(evt);
             }
         });
-        jMenuBar.add(jMenuProfesores);
+
+        jMenuItemProfesores.setText("Profesores");
+        jMenuItemProfesores.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemProfesoresActionPerformed(evt);
+            }
+        });
+        jMenuGo.add(jMenuItemProfesores);
+
+        jMenuBar.add(jMenuGo);
 
         setJMenuBar(jMenuBar);
 
@@ -70,48 +77,33 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTableUsuarios, javax.swing.GroupLayout.DEFAULT_SIZE, 724, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(35, 35, 35)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+            .addGap(0, 744, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addComponent(jTableUsuarios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addContainerGap(57, Short.MAX_VALUE))
+            .addGap(0, 501, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuProfesoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuProfesoresActionPerformed
+    private void jMenuGoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuGoActionPerformed
 
-    }//GEN-LAST:event_jMenuProfesoresActionPerformed
+    }//GEN-LAST:event_jMenuGoActionPerformed
+
+    private void jMenuItemProfesoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemProfesoresActionPerformed
+        ProfesoresPrincipal pantallaProfesores = new ProfesoresPrincipal(this, true);
+        pantallaProfesores.setVisible(true);
+    }//GEN-LAST:event_jMenuItemProfesoresActionPerformed
 
     /**
      * @param args the command line arguments
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBar;
-    private javax.swing.JMenu jMenuProfesores;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JScrollPane jTableUsuarios;
+    private javax.swing.JMenu jMenuGo;
+    private javax.swing.JMenuItem jMenuItemProfesores;
     // End of variables declaration//GEN-END:variables
 
 }

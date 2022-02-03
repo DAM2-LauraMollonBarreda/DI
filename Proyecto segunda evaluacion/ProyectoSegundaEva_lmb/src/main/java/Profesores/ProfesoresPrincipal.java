@@ -5,6 +5,7 @@
  */
 package Profesores;
 
+import Incidencias.InsertarIncidencia;
 import baseDatos.Conectar;
 import com.lauramollon.proyectosegundaeva_lmb.Autenticacion_pantalla;
 import java.awt.event.ActionEvent;
@@ -21,6 +22,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -33,7 +36,7 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
     /**
      * Creates new form Profesores_principal
      */
-    public ProfesoresPrincipal(javax.swing.JDialog parent, boolean modal) {
+    public ProfesoresPrincipal(javax.swing.JDialog parent, boolean modal) throws SQLException {
         super(parent, modal);
         initComponents();
 
@@ -42,10 +45,16 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
 
     }
 
-    public void rellenoTabla() {
+    public void rellenoTabla() throws SQLException {
         DefaultTableModel dtm = new DefaultTableModel();
+        //Creamos las columnas que tendra la tabla
         dtm.setColumnIdentifiers(new String[]{"Usuario", "Nombre completo", "Email", "Activo", "Rol", "Departamento"});
+        //Elemento para ordenar la tabla
+        TableRowSorter<TableModel> elQueOrdena = new TableRowSorter<TableModel>(dtm);
+        //Ordenamos la tabla segun las columnas
+        jTableProfesores.setRowSorter(elQueOrdena);
 
+        //Añadimos las columnas a la tabla
         jTableProfesores.setModel(dtm);
 
         conectar = new Conectar();
@@ -67,10 +76,14 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
                     profes[5] = rs.getString(6);
 
                     dtm.addRow(profes);
+
                 }
             } catch (SQLException sQLException) {
                 JOptionPane.showMessageDialog(this, "Datos no cargados");
+
             }
+
+            conexion.close();
 
         } else {
             JOptionPane.showMessageDialog(this, "Conoxion fallida");
@@ -87,22 +100,11 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jComboBoxFiltro = new javax.swing.JComboBox<>();
-        jLabel1 = new javax.swing.JLabel();
         jButtonInsertar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableProfesores = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        jComboBoxFiltro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Departamento", "Cursos que da", "Rol" }));
-        jComboBoxFiltro.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBoxFiltroActionPerformed(evt);
-            }
-        });
-
-        jLabel1.setText("Filtrar por:");
 
         jButtonInsertar.setText("Nuevo profesor");
         jButtonInsertar.addActionListener(new java.awt.event.ActionListener() {
@@ -134,11 +136,6 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
                         .addContainerGap()
                         .addComponent(jButtonInsertar))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jComboBoxFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 702, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(25, Short.MAX_VALUE))
@@ -146,36 +143,31 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(jButtonInsertar)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(43, 43, 43)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBoxFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addContainerGap())
+                .addContainerGap(88, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBoxFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxFiltroActionPerformed
-
-    }//GEN-LAST:event_jComboBoxFiltroActionPerformed
-
     private void jButtonInsertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInsertarActionPerformed
+
         InsertarProfesor pantallaProfesoresInsertar;
         try {
             pantallaProfesoresInsertar = new InsertarProfesor(this, true);
             pantallaProfesoresInsertar.setVisible(true);
+            rellenoTabla();
         } catch (SQLException ex) {
             java.util.logging.Logger.getLogger(ProfesoresPrincipal.class.getName()).log(Level.SEVERE, null, ex);
         }
-        rellenoTabla();
+
+
     }//GEN-LAST:event_jButtonInsertarActionPerformed
 
-    private void crearPopupMenu() {
+    private void crearPopupMenu() throws SQLException {
         JPopupMenu popupMenu = new JPopupMenu();
         JMenuItem bajaProfesor = new JMenuItem("Baja/alta de este profesor");
         JMenu rolProfesor = new JMenu("Cambiar rol de este profesor ");
@@ -198,8 +190,12 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
         bajaProfesor.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                bajaProfesor();
-                rellenoTabla();
+                try {
+                    bajaProfesor();
+                    rellenoTabla();
+                } catch (SQLException ex) {
+                    java.util.logging.Logger.getLogger(ProfesoresPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -207,7 +203,11 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 cambiarRolRoot();
-                rellenoTabla();
+                try {
+                    rellenoTabla();
+                } catch (SQLException ex) {
+                    java.util.logging.Logger.getLogger(ProfesoresPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -215,7 +215,11 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 cambiarRolTecnico();
-                rellenoTabla();
+                try {
+                    rellenoTabla();
+                } catch (SQLException ex) {
+                    java.util.logging.Logger.getLogger(ProfesoresPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -223,7 +227,11 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 cambiarRolProfesor();
-                rellenoTabla();
+                try {
+                    rellenoTabla();
+                } catch (SQLException ex) {
+                    java.util.logging.Logger.getLogger(ProfesoresPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
 
@@ -396,12 +404,12 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
         if (cuentaFilasSeleccionadas == 0) {
             JOptionPane.showMessageDialog(this, "No hay filas seleccionadas", "Error", JOptionPane.WARNING_MESSAGE);
         } else {
-            int resultado=JOptionPane.showConfirmDialog(this, "¿Esta seguro que desea resetear la contraseña a la de por defecto?","¿Seguro?", JOptionPane.YES_NO_CANCEL_OPTION);
-            if (resultado==JOptionPane.YES_OPTION) {
-            int fila = jTableProfesores.getSelectedRow();
-            String login = jTableProfesores.getModel().getValueAt(fila, 0).toString();
-            
-            try {
+            int resultado = JOptionPane.showConfirmDialog(this, "¿Esta seguro que desea resetear la contraseña a la de por defecto?", "¿Seguro?", JOptionPane.YES_NO_CANCEL_OPTION);
+            if (resultado == JOptionPane.YES_OPTION) {
+                int fila = jTableProfesores.getSelectedRow();
+                String login = jTableProfesores.getModel().getValueAt(fila, 0).toString();
+
+                try {
                     PreparedStatement ps = null;
                     conectar = new Conectar();
                     Connection conexion = conectar.getConexion();
@@ -418,23 +426,17 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
                 } catch (SQLException ex) {
                     JOptionPane.showMessageDialog(this, "No se han podido insertar los datos");
                 }
-                
-                
-                
-                
-            }else if (resultado==JOptionPane.NO_OPTION) {
-                JOptionPane.showConfirmDialog(this, "Fila no borrada","",JOptionPane.ERROR_MESSAGE);
-            }
-            else if (resultado==JOptionPane.CANCEL_OPTION) {
-                JOptionPane.showConfirmDialog(this, "Operacion cancelada","",JOptionPane.WARNING_MESSAGE);
+
+            } else if (resultado == JOptionPane.NO_OPTION) {
+                JOptionPane.showConfirmDialog(this, "Fila no borrada", "", JOptionPane.ERROR_MESSAGE);
+            } else if (resultado == JOptionPane.CANCEL_OPTION) {
+                JOptionPane.showConfirmDialog(this, "Operacion cancelada", "", JOptionPane.WARNING_MESSAGE);
             }
         }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonInsertar;
-    private javax.swing.JComboBox<String> jComboBoxFiltro;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableProfesores;
     // End of variables declaration//GEN-END:variables

@@ -189,7 +189,7 @@ public class InsertarProfesor extends javax.swing.JDialog {
         String[] departamento = depar.split("-");
         String idDepartamento = departamento[0];
 
-        String permiso = jComboBoxDepartamento.getSelectedItem().toString();
+        String permiso = jComboBoxRol.getSelectedItem().toString();
         String[] rol = permiso.split("-");
         String idRol = rol[0];
         

@@ -69,6 +69,7 @@ public class Autenticacion_pantalla extends javax.swing.JFrame {
 
         jLabel4.setText("Contraseña");
 
+        jPasswordFieldPassAutenticacion.setText("1234");
         jPasswordFieldPassAutenticacion.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         jPasswordFieldPassAutenticacion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -76,6 +77,7 @@ public class Autenticacion_pantalla extends javax.swing.JFrame {
             }
         });
 
+        jTextFieldUsuarioAutenticacion.setText("pp");
         jTextFieldUsuarioAutenticacion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldUsuarioAutenticacionActionPerformed(evt);
@@ -186,13 +188,12 @@ public class Autenticacion_pantalla extends javax.swing.JFrame {
                 
                 if (usu.equals(resultadoUsuBase)&& pass.equals(resultadoPassBase)) {
                     if (resultadoActivoBase==1) {
-                         PantallaPrincipal pantallaPrincipal = new PantallaPrincipal(this, true, rol);
+                         PantallaPrincipal pantallaPrincipal = new PantallaPrincipal(this, true, rol,usu);
                          pantallaPrincipal.setVisible(true);
                     }else{
-                         JOptionPane.showMessageDialog(this, "Ya no formas parte del instituto");
+                        JOptionPane.showMessageDialog(this, "Ya no formas parte del instituto");
                     }
-                    
-                    
+                       
                 }
                 else{
                     JOptionPane.showMessageDialog(this, "Autenticacion incorrecta ");

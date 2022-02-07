@@ -9,6 +9,7 @@ import Incidencias.InsertarIncidencia;
 import Incidencias.MostrarIncidencias;
 import Profesores.ProfesoresPrincipal;
 import baseDatos.Conectar;
+import java.awt.Component;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,7 +17,10 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -43,6 +47,8 @@ public class PantallaPrincipal extends javax.swing.JDialog {
 
         controlUsuarios();
         rellenoTabla();
+        autoagustarColumnas(jTableMisIncidencias);
+        jTableMisIncidencias.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
     }
 
@@ -140,13 +146,15 @@ public class PantallaPrincipal extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButtonInsertarIncidencia, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(42, 42, 42)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 817, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(125, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 921, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(21, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jButtonInsertarIncidencia, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(79, 79, 79))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -155,9 +163,9 @@ public class PantallaPrincipal extends javax.swing.JDialog {
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(80, 80, 80)
+                .addGap(56, 56, 56)
                 .addComponent(jButtonInsertarIncidencia)
-                .addContainerGap(239, Short.MAX_VALUE))
+                .addContainerGap(88, Short.MAX_VALUE))
         );
 
         pack();
@@ -256,6 +264,32 @@ public class PantallaPrincipal extends javax.swing.JDialog {
     }
 
 
+    private void autoagustarColumnas(JTable table) {
+    //Se obtiene el modelo de la columna
+    TableColumnModel columnModel = table.getColumnModel();
+    //Se obtiene el total de las columnas
+    for (int column = 0; column < table.getColumnCount(); column++) {
+        //Establecemos un valor minimo para el ancho de la columna
+        int width = 150; //Min Width
+        //Obtenemos el numero de filas de la tabla
+        for (int row = 0; row < table.getRowCount(); row++) {
+            //Obtenemos el renderizador de la tabla
+            TableCellRenderer renderer = table.getCellRenderer(row, column);
+            //Creamos un objeto para preparar el renderer
+            Component comp = table.prepareRenderer(renderer, row, column);
+            //Establecemos el width segun el valor maximo del ancho de la columna
+            width = Math.max(comp.getPreferredSize().width + 1, width);
+
+        }
+        //Se establece una condicion para no sobrepasar el valor de 300
+        //Esto es Opcional
+        if (width > 300) {
+            width = 300;
+        }
+        //Se establece el ancho de la columna
+        columnModel.getColumn(column).setPreferredWidth(width);
+    }
+}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonInsertarIncidencia;
     private javax.swing.JLabel jLabel1;

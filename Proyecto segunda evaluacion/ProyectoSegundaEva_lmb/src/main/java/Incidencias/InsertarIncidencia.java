@@ -9,8 +9,16 @@ import baseDatos.Conectar;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -20,15 +28,20 @@ public class InsertarIncidencia extends javax.swing.JDialog {
 
     Conectar contectar = null;
     String usu = "";
+    String id = "";
 
     /**
      * Creates new form InsertarIncidencia
      */
-    public InsertarIncidencia(javax.swing.JDialog parent, boolean modal, String usuario) {
+    public InsertarIncidencia(javax.swing.JDialog parent, boolean modal, String usuario) throws SQLException {
         super(parent, modal);
         initComponents();
         usu = usuario;
-        jTextFieldDescripcion.setText(usu);
+        consultarUbicacion(jComboBoxUbicacion);
+        consultarEstado(jComboBoxEstado);
+        consultarUrgencia(jComboBoxUrgencia);
+        consultarId();
+
     }
 
     public void consultarUbicacion(JComboBox comboBox) {
@@ -49,6 +62,7 @@ public class InsertarIncidencia extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, e);
         }
     }
+
     public void consultarUrgencia(JComboBox comboBox) {
         PreparedStatement ps = null;
         contectar = new Conectar();
@@ -67,6 +81,7 @@ public class InsertarIncidencia extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, e);
         }
     }
+
     public void consultarEstado(JComboBox comboBox) {
         PreparedStatement ps = null;
         contectar = new Conectar();
@@ -85,25 +100,38 @@ public class InsertarIncidencia extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, e);
         }
     }
-    /*public void consultarIdUsuario(JComboBox comboBox) {
-        PreparedStatement ps = null;
+
+    public void consultarId() throws SQLException {
+
         contectar = new Conectar();
         Connection conexion = contectar.getConexion();
-        String sql = "SELECT id_estado,estado FROM mantenimiento_mollon.man_estado;";
-        try {
-            ps = conexion.prepareStatement(sql);
-            ResultSet result = ps.executeQuery();
+        String[] idArray = new String[1];
+        if (conexion != null) {
 
-            while (result.next()) {
-                comboBox.addItem(result.getString("id_estado") + "-" + result.getString("estado"));
+            try {
+                Statement s = conexion.createStatement();
+                ResultSet rs = s.executeQuery("SELECT id_profesor FROM mantenimiento_mollon.fp_profesor where login='" + usu + "';");
+
+                while (rs.next()) {
+                    idArray[0] = rs.getString(1);
+                }
+                id = idArray[0];
+                
+            } catch (SQLException sQLException) {
+                JOptionPane.showMessageDialog(this, "Datos no cargados");
+
             }
 
             conexion.close();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Conoxion fallida");
         }
-    }*/
-    
+
+    }
+
+
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -113,43 +141,37 @@ public class InsertarIncidencia extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jTextFieldNombreProfesor = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         jLabel2 = new javax.swing.JLabel();
-        jTextFieldDescripcion = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jCalendar = new com.toedter.calendar.JCalendar();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        jComboBoxEstado = new javax.swing.JComboBox<>();
         jComboBoxUbicacion = new javax.swing.JComboBox<>();
         jComboBoxUrgencia = new javax.swing.JComboBox<>();
-        jTextFieldObservaciones = new javax.swing.JTextField();
         jButtonInsertarIncidencia = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextFieldDescripcion = new javax.swing.JTextArea();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextFieldObservaciones = new javax.swing.JTextArea();
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        jLabel1.setText("Nombre del profesor ");
 
         jLabel2.setText("Descripcion");
 
         jLabel3.setText("Estado");
-
-        jLabel4.setText("Fecha de creacion");
 
         jLabel5.setText("Urgencia");
 
         jLabel6.setText("Ubicacion");
 
         jLabel7.setText("Observaciones");
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jComboBoxUbicacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jComboBoxUrgencia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jButtonInsertarIncidencia.setText("Insertar incidencia");
         jButtonInsertarIncidencia.addActionListener(new java.awt.event.ActionListener() {
@@ -158,63 +180,59 @@ public class InsertarIncidencia extends javax.swing.JDialog {
             }
         });
 
+        jTextFieldDescripcion.setColumns(20);
+        jTextFieldDescripcion.setRows(5);
+        jScrollPane2.setViewportView(jTextFieldDescripcion);
+
+        jTextFieldObservaciones.setColumns(20);
+        jTextFieldObservaciones.setRows(5);
+        jScrollPane3.setViewportView(jTextFieldObservaciones);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButtonInsertarIncidencia, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(61, 61, 61)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel2)
-                                        .addComponent(jLabel3))
-                                    .addGap(5, 5, 5))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addContainerGap()
-                                    .addComponent(jLabel4)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(60, 60, 60)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel7)
-                                    .addComponent(jLabel6)
-                                    .addComponent(jLabel5)))
-                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextFieldNombreProfesor)
-                            .addComponent(jTextFieldDescripcion, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
-                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jComboBoxUbicacion, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jCalendar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jComboBoxUrgencia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jTextFieldObservaciones))))
-                .addContainerGap(48, Short.MAX_VALUE))
+                        .addGap(61, 61, 61)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3))
+                        .addGap(34, 34, 34))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(60, 60, 60)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel5))
+                        .addGap(18, 18, 18)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jComboBoxEstado, 0, 231, Short.MAX_VALUE)
+                    .addComponent(jComboBoxUbicacion, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jComboBoxUrgencia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane3))
+                .addGap(96, 96, 96))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jButtonInsertarIncidencia, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(67, 67, 67))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jTextFieldNombreProfesor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(21, 21, 21)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextFieldDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(21, 21, 21)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(82, 82, 82)
+                        .addComponent(jLabel2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
-                    .addComponent(jCalendar, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(jComboBoxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(jComboBoxUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -223,37 +241,86 @@ public class InsertarIncidencia extends javax.swing.JDialog {
                     .addComponent(jLabel5)
                     .addComponent(jComboBoxUrgencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldObservaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7))
-                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(jLabel7)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addComponent(jButtonInsertarIncidencia)
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addGap(28, 28, 28))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonInsertarIncidenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInsertarIncidenciaActionPerformed
-        
+
+        String descripcion = jTextFieldDescripcion.getText();
+
+        Date objDate = new Date(); // Sistema actual La fecha y la hora se asignan a objDate 
+        String strDateFormat = "YYYY-MM-dd hh:mm:ss"; // El formato de fecha está especificado  
+        SimpleDateFormat objSDF = new SimpleDateFormat(strDateFormat); // La cadena de formato de fecha se pasa como un argumento al objeto 
+
+        String fechaCreacion = objSDF.format(objDate);
+
+        String observaciones = jTextFieldObservaciones.getText();
+
+        String est = jComboBoxEstado.getSelectedItem().toString();
+        String[] estado = est.split("-");
+        String idEstado = estado[0];
+
+        String ubi = jComboBoxUbicacion.getSelectedItem().toString();
+        String[] ubicacion = ubi.split("-");
+        String idUbicacion = ubicacion[0];
+
+        String urg = jComboBoxUrgencia.getSelectedItem().toString();
+        String[] urgencia = urg.split("-");
+        String idUrgencia = urgencia[0];
+
+        //INSERTAR PROFESOR
+        try {
+            PreparedStatement ps = null;
+            contectar = new Conectar();
+            Connection conexion = contectar.getConexion();
+
+            String sql = "INSERT INTO mantenimiento_mollon.man_incidencias (id_profesor_crea, descripcion, id_estado, fecha, nivel_urgencia, id_ubicacion, observaciones)"
+                    + " VALUES ('" + id + "', '" + descripcion + "',  '" + idEstado + "', '" + fechaCreacion + "', '" + idUbicacion + "', '" + idUbicacion + "', '" + observaciones + "');";
+
+            ps = conexion.prepareStatement(sql);
+            ps.executeUpdate();
+
+            JOptionPane.showMessageDialog(this, "Incidencia creada con el usuario " + usu);
+
+            conexion.close();
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "No se han podido insertar los datos");
+            System.out.println(ex);
+        }
+
+        dispose();
+
+
     }//GEN-LAST:event_jButtonInsertarIncidenciaActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonInsertarIncidencia;
-    private com.toedter.calendar.JCalendar jCalendar;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> jComboBoxEstado;
     private javax.swing.JComboBox<String> jComboBoxUbicacion;
     private javax.swing.JComboBox<String> jComboBoxUrgencia;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JTextField jTextFieldDescripcion;
-    private javax.swing.JTextField jTextFieldNombreProfesor;
-    private javax.swing.JTextField jTextFieldObservaciones;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jTextFieldDescripcion;
+    private javax.swing.JTextArea jTextFieldObservaciones;
     // End of variables declaration//GEN-END:variables
+
 }

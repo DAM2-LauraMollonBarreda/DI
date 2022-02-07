@@ -189,7 +189,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
 
     private void jButtonInsertarIncidenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInsertarIncidenciaActionPerformed
         try {
-            InsertarIncidencia pantallaIncidenciaInsertar = new InsertarIncidencia(this, true);
+            InsertarIncidencia pantallaIncidenciaInsertar = new InsertarIncidencia(this, true,usuario);
             pantallaIncidenciaInsertar.setVisible(true);
             rellenoTabla();
         } catch (SQLException ex) {

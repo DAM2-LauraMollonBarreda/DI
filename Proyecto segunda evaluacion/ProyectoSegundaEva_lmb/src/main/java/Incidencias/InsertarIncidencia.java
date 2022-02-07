@@ -5,20 +5,105 @@
  */
 package Incidencias;
 
+import baseDatos.Conectar;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author damA
  */
 public class InsertarIncidencia extends javax.swing.JDialog {
 
+    Conectar contectar = null;
+    String usu = "";
+
     /**
      * Creates new form InsertarIncidencia
      */
-    public InsertarIncidencia(javax.swing.JDialog parent, boolean modal) {
+    public InsertarIncidencia(javax.swing.JDialog parent, boolean modal, String usuario) {
         super(parent, modal);
         initComponents();
+        usu = usuario;
+        jTextFieldDescripcion.setText(usu);
     }
 
+    public void consultarUbicacion(JComboBox comboBox) {
+        PreparedStatement ps = null;
+        contectar = new Conectar();
+        Connection conexion = contectar.getConexion();
+        String sql = "SELECT id_ubicacion,ubicacion FROM mantenimiento_mollon.man_ubicacion;";
+        try {
+            ps = conexion.prepareStatement(sql);
+            ResultSet result = ps.executeQuery();
+
+            while (result.next()) {
+                comboBox.addItem(result.getString("id_ubicacion") + "-" + result.getString("ubicacion"));
+            }
+
+            conexion.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+    public void consultarUrgencia(JComboBox comboBox) {
+        PreparedStatement ps = null;
+        contectar = new Conectar();
+        Connection conexion = contectar.getConexion();
+        String sql = "SELECT id_urgencia,urgencia FROM mantenimiento_mollon.man_urgencia;";
+        try {
+            ps = conexion.prepareStatement(sql);
+            ResultSet result = ps.executeQuery();
+
+            while (result.next()) {
+                comboBox.addItem(result.getString("id_urgencia") + "-" + result.getString("urgencia"));
+            }
+
+            conexion.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+    public void consultarEstado(JComboBox comboBox) {
+        PreparedStatement ps = null;
+        contectar = new Conectar();
+        Connection conexion = contectar.getConexion();
+        String sql = "SELECT id_estado,estado FROM mantenimiento_mollon.man_estado;";
+        try {
+            ps = conexion.prepareStatement(sql);
+            ResultSet result = ps.executeQuery();
+
+            while (result.next()) {
+                comboBox.addItem(result.getString("id_estado") + "-" + result.getString("estado"));
+            }
+
+            conexion.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+    /*public void consultarIdUsuario(JComboBox comboBox) {
+        PreparedStatement ps = null;
+        contectar = new Conectar();
+        Connection conexion = contectar.getConexion();
+        String sql = "SELECT id_estado,estado FROM mantenimiento_mollon.man_estado;";
+        try {
+            ps = conexion.prepareStatement(sql);
+            ResultSet result = ps.executeQuery();
+
+            while (result.next()) {
+                comboBox.addItem(result.getString("id_estado") + "-" + result.getString("estado"));
+            }
+
+            conexion.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }*/
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -28,24 +113,147 @@ public class InsertarIncidencia extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+        jTextFieldNombreProfesor = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jTextFieldDescripcion = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jCalendar = new com.toedter.calendar.JCalendar();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jComboBoxUbicacion = new javax.swing.JComboBox<>();
+        jComboBoxUrgencia = new javax.swing.JComboBox<>();
+        jTextFieldObservaciones = new javax.swing.JTextField();
+        jButtonInsertarIncidencia = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        jLabel1.setText("Nombre del profesor ");
+
+        jLabel2.setText("Descripcion");
+
+        jLabel3.setText("Estado");
+
+        jLabel4.setText("Fecha de creacion");
+
+        jLabel5.setText("Urgencia");
+
+        jLabel6.setText("Ubicacion");
+
+        jLabel7.setText("Observaciones");
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jComboBoxUbicacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jComboBoxUrgencia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jButtonInsertarIncidencia.setText("Insertar incidencia");
+        jButtonInsertarIncidencia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonInsertarIncidenciaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButtonInsertarIncidencia, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(61, 61, 61)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel2)
+                                        .addComponent(jLabel3))
+                                    .addGap(5, 5, 5))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addContainerGap()
+                                    .addComponent(jLabel4)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(60, 60, 60)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel5)))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jTextFieldNombreProfesor)
+                            .addComponent(jTextFieldDescripcion, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
+                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jComboBoxUbicacion, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jCalendar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jComboBoxUrgencia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jTextFieldObservaciones))))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jTextFieldNombreProfesor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(21, 21, 21)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jTextFieldDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(21, 21, 21)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addComponent(jCalendar, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jComboBoxUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(22, 22, 22)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jComboBoxUrgencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldObservaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
+                .addGap(18, 18, 18)
+                .addComponent(jButtonInsertarIncidencia)
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButtonInsertarIncidenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInsertarIncidenciaActionPerformed
+        
+    }//GEN-LAST:event_jButtonInsertarIncidenciaActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonInsertarIncidencia;
+    private com.toedter.calendar.JCalendar jCalendar;
+    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> jComboBoxUbicacion;
+    private javax.swing.JComboBox<String> jComboBoxUrgencia;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JTextField jTextFieldDescripcion;
+    private javax.swing.JTextField jTextFieldNombreProfesor;
+    private javax.swing.JTextField jTextFieldObservaciones;
     // End of variables declaration//GEN-END:variables
 }

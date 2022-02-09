@@ -5,18 +5,29 @@
  */
 package com.lauramollon.proyectosegundaeva_lmb;
 
+import Incidencias.Estadistica;
 import Incidencias.InsertarIncidencia;
+import Incidencias.ModificaMiIncidencia;
 import Incidencias.MostrarIncidencias;
 import Profesores.ProfesoresPrincipal;
 import baseDatos.Conectar;
 import java.awt.Component;
+import static java.awt.Frame.MAXIMIZED_BOTH;
+import java.awt.GraphicsEnvironment;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -41,12 +52,14 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         super(parent, modal);
         usuRol = rol;
         usuario = usu;
+
         initComponents();
-
-
+        //PARA ACOPLAR LA PANTALLA A TODO NUESTRO MONITOR
+        //this.setBounds(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds()); 
 
         controlUsuarios();
         rellenoTabla();
+        crearPopupMenu();
         autoagustarColumnas(jTableMisIncidencias);
         jTableMisIncidencias.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
@@ -58,14 +71,21 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         if (usuRol.equals("root")) {
             jMenuItemProfesores.setVisible(true);
             jMenuItemIncidencias.setVisible(true);
+            jMenuItemEstadisticaMes.setVisible(true);
+            jMenuIncidencias.setVisible(true);
             //SI EL USUARIO ES TECNICO
         } else if (usuRol.equals("tecnico")) {
             jMenuItemProfesores.setVisible(false);
             jMenuItemIncidencias.setVisible(true);
+            jMenuItemEstadisticaMes.setVisible(false);
+            jMenuIncidencias.setVisible(true);
             //SI EL USUARIO ES PROFESOR
         } else if (usuRol.equals("profesor")) {
             jMenuItemProfesores.setVisible(false);
-            jMenuItemIncidencias.setVisible(true);
+            jMenuItemIncidencias.setVisible(false);
+            jMenuItemEstadisticaMes.setVisible(false);
+            jMenuIncidencias.setVisible(false);
+
         }
     }
 
@@ -84,10 +104,13 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         jMenuBar = new javax.swing.JMenuBar();
         jMenuGo = new javax.swing.JMenu();
+        jMenuIncidencias = new javax.swing.JMenu();
         jMenuItemIncidencias = new javax.swing.JMenuItem();
+        jMenuItemEstadisticaMes = new javax.swing.JMenuItem();
         jMenuItemProfesores = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jButtonInsertarIncidencia.setText("Crear incidecia");
         jButtonInsertarIncidencia.addActionListener(new java.awt.event.ActionListener() {
@@ -107,6 +130,11 @@ public class PantallaPrincipal extends javax.swing.JDialog {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTableMisIncidencias.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTableMisIncidenciasKeyReleased(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTableMisIncidencias);
 
         jLabel1.setText("Tus incidencias son...");
@@ -118,13 +146,25 @@ public class PantallaPrincipal extends javax.swing.JDialog {
             }
         });
 
-        jMenuItemIncidencias.setText("Mostrar todas incidencias");
+        jMenuIncidencias.setText("Incidencias");
+
+        jMenuItemIncidencias.setText("Mostrar");
         jMenuItemIncidencias.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItemIncidenciasActionPerformed(evt);
             }
         });
-        jMenuGo.add(jMenuItemIncidencias);
+        jMenuIncidencias.add(jMenuItemIncidencias);
+
+        jMenuItemEstadisticaMes.setText("Grafico de incidencias por mes");
+        jMenuItemEstadisticaMes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemEstadisticaMesActionPerformed(evt);
+            }
+        });
+        jMenuIncidencias.add(jMenuItemEstadisticaMes);
+
+        jMenuGo.add(jMenuIncidencias);
 
         jMenuItemProfesores.setText("Profesores");
         jMenuItemProfesores.addActionListener(new java.awt.event.ActionListener() {
@@ -143,18 +183,16 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(42, 42, 42)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 921, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(21, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jButtonInsertarIncidencia, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(79, 79, 79))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButtonInsertarIncidencia, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(42, 42, 42)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1299, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -162,10 +200,10 @@ public class PantallaPrincipal extends javax.swing.JDialog {
                 .addGap(12, 12, 12)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(56, 56, 56)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 471, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(81, 81, 81)
                 .addComponent(jButtonInsertarIncidencia)
-                .addContainerGap(88, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         pack();
@@ -205,10 +243,23 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jButtonInsertarIncidenciaActionPerformed
 
+    private void jMenuItemEstadisticaMesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemEstadisticaMesActionPerformed
+        try {
+            Estadistica pantallaIncidencias = new Estadistica(this, true);
+            pantallaIncidencias.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(MostrarIncidencias.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jMenuItemEstadisticaMesActionPerformed
+
+    private void jTableMisIncidenciasKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTableMisIncidenciasKeyReleased
+
+    }//GEN-LAST:event_jTableMisIncidenciasKeyReleased
+
     public void rellenoTabla() throws SQLException {
         DefaultTableModel dtm = new DefaultTableModel();
         //Creamos las columnas que tendra la tabla
-        dtm.setColumnIdentifiers(new String[]{"Creada por", "Descripcion", "Descripcion tecnica", "Horas de reparacion", "Estado", "Lazmiento", "Inicio reparacion", "Fin reparacion", "Nivel", "Clase", "Edificio", "Observaciones"});
+        dtm.setColumnIdentifiers(new String[]{"Numero incidencia","Creada por", "Descripcion", "Descripcion tecnica", "Horas de reparacion", "Estado", "Lazmiento", "Inicio reparacion", "Fin reparacion", "Nivel", "Clase", "Edificio", "Observaciones"});
         //Elemento para ordenar la tabla
         TableRowSorter<TableModel> elQueOrdena = new TableRowSorter<TableModel>(dtm);
         //Ordenamos la tabla segun las columnas
@@ -219,12 +270,12 @@ public class PantallaPrincipal extends javax.swing.JDialog {
 
         conectar = new Conectar();
         Connection conexion = conectar.getConexion();
-        String[] incidencia = new String[12];
+        String[] incidencia = new String[13];
         if (conexion != null) {
 
             try {
                 Statement s = conexion.createStatement();
-                ResultSet rs = s.executeQuery("select p.nombre_completo,inc.descripcion,inc.desc_tecnica,inc.horas, \n"
+                ResultSet rs = s.executeQuery("select inc.id_incidencia,p.nombre_completo,inc.descripcion,inc.desc_tecnica,inc.horas, \n"
                         + "est.estado,inc.fecha,inc.fecha_ini_rep,inc.fecha_fin_rep,ur.urgencia,\n"
                         + "ub.ubicacion,ed.edificio,inc.observaciones\n"
                         + "from man_incidencias inc\n"
@@ -249,6 +300,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
                     incidencia[9] = rs.getString(10);
                     incidencia[10] = rs.getString(11);
                     incidencia[11] = rs.getString(12);
+                    incidencia[12] = rs.getString(13);
 
                     dtm.addRow(incidencia);
                 }
@@ -263,38 +315,82 @@ public class PantallaPrincipal extends javax.swing.JDialog {
 
     }
 
-
     private void autoagustarColumnas(JTable table) {
-    //Se obtiene el modelo de la columna
-    TableColumnModel columnModel = table.getColumnModel();
-    //Se obtiene el total de las columnas
-    for (int column = 0; column < table.getColumnCount(); column++) {
-        //Establecemos un valor minimo para el ancho de la columna
-        int width = 150; //Min Width
-        //Obtenemos el numero de filas de la tabla
-        for (int row = 0; row < table.getRowCount(); row++) {
-            //Obtenemos el renderizador de la tabla
-            TableCellRenderer renderer = table.getCellRenderer(row, column);
-            //Creamos un objeto para preparar el renderer
-            Component comp = table.prepareRenderer(renderer, row, column);
-            //Establecemos el width segun el valor maximo del ancho de la columna
-            width = Math.max(comp.getPreferredSize().width + 1, width);
+        //Se obtiene el modelo de la columna
+        TableColumnModel columnModel = table.getColumnModel();
+        //Se obtiene el total de las columnas
+        for (int column = 0; column < table.getColumnCount(); column++) {
+            //Establecemos un valor minimo para el ancho de la columna
+            int width = 150; //Min Width
+            //Obtenemos el numero de filas de la tabla
+            for (int row = 0; row < table.getRowCount(); row++) {
+                //Obtenemos el renderizador de la tabla
+                TableCellRenderer renderer = table.getCellRenderer(row, column);
+                //Creamos un objeto para preparar el renderer
+                Component comp = table.prepareRenderer(renderer, row, column);
+                //Establecemos el width segun el valor maximo del ancho de la columna
+                width = Math.max(comp.getPreferredSize().width + 1, width);
 
+            }
+            //Se establece una condicion para no sobrepasar el valor de 300
+            //Esto es Opcional
+            if (width > 300) {
+                width = 300;
+            }
+            //Se establece el ancho de la columna
+            columnModel.getColumn(column).setPreferredWidth(width);
         }
-        //Se establece una condicion para no sobrepasar el valor de 300
-        //Esto es Opcional
-        if (width > 300) {
-            width = 300;
-        }
-        //Se establece el ancho de la columna
-        columnModel.getColumn(column).setPreferredWidth(width);
     }
-}
+
+    private void crearPopupMenu() throws SQLException {
+        JPopupMenu popupMenu = new JPopupMenu();
+        JMenuItem modificar = new JMenuItem("Modificar esta incidencia");
+
+        popupMenu.add(modificar);
+
+        jTableMisIncidencias.setComponentPopupMenu(popupMenu);
+
+        modificar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                try {
+                    modificarIncidencia();
+                } catch (SQLException ex) {
+                    java.util.logging.Logger.getLogger(ProfesoresPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+        });
+
+    }
+
+    public void modificarIncidencia() throws SQLException {
+       int cuentaFilasSeleccionadas = jTableMisIncidencias.getSelectedRowCount();
+        if (cuentaFilasSeleccionadas == 0) {
+            JOptionPane.showMessageDialog(this, "No hay filas seleccionadas", "Error", JOptionPane.WARNING_MESSAGE);
+        } else {
+            int fila = jTableMisIncidencias.getSelectedRow();
+            String idIncidencia = jTableMisIncidencias.getModel().getValueAt(fila, 0).toString();
+            String descripcion = jTableMisIncidencias.getModel().getValueAt(fila, 2).toString();
+            String observaciones = jTableMisIncidencias.getModel().getValueAt(fila, 12).toString();
+            
+            
+            ModificaMiIncidencia modificarMiIncidencia = new ModificaMiIncidencia(this, true,usuario,descripcion,observaciones,idIncidencia);
+            modificarMiIncidencia.setVisible(true);
+            
+            rellenoTabla();
+
+            
+        }
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonInsertarIncidencia;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JMenu jMenuGo;
+    private javax.swing.JMenu jMenuIncidencias;
+    private javax.swing.JMenuItem jMenuItemEstadisticaMes;
     private javax.swing.JMenuItem jMenuItemIncidencias;
     private javax.swing.JMenuItem jMenuItemProfesores;
     private javax.swing.JScrollPane jScrollPane1;

@@ -49,9 +49,7 @@ public class Estadistica extends javax.swing.JDialog {
             try {
                 DefaultCategoryDataset datos = new DefaultCategoryDataset();
                 Statement s = conexion.createStatement();
-                ResultSet rs = s.executeQuery("SELECT MonthName(fecha) AS mes, count(*) AS numFilas"
-                        + "FROM man_incidencias"
-                        + "GROUP BY mes");
+                ResultSet rs = s.executeQuery("SELECT MonthName(fecha) AS mes, count(*) AS numFilas FROM man_incidencias GROUP BY mes");
 
                 while (rs.next()) {
                     //dtm.addRow(rs);
@@ -63,7 +61,7 @@ public class Estadistica extends javax.swing.JDialog {
                 //Se guarda el grafico
                 BufferedImage image = grafico_barras.createBufferedImage(814, 542);
 
-                //Se crea la imagen y se agrega a la etiqueta
+                //Se crea la imagen y se agrega al label creado desde diseño
                 grafico.setIcon(new ImageIcon(image));
 
                 pack();

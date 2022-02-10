@@ -28,7 +28,7 @@ public class ModificaIncidencia extends javax.swing.JDialog {
     String idIn = "";
     String descripcion = "";
     String descTecnica = "";
-    String horas = "";
+    int horas;
     String estado = "";
     Date fecha;
     Date fechaInicio;
@@ -242,10 +242,11 @@ public class ModificaIncidencia extends javax.swing.JDialog {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(19, 19, 19)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel12)
-                            .addComponent(jDateChooserFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jDateChooserFecha, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel10)
+                                .addComponent(jLabel12)))
                         .addGap(23, 23, 23)
                         .addComponent(jLabelUrgencia)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -280,29 +281,61 @@ public class ModificaIncidencia extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonModificarIncidenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarIncidenciaActionPerformed
-        /*String descripcion = jTextFieldDescripcion.getText();
 
-        String observaciones = jTextFieldObservaciones.getText();
+        String strDateTimeFormat = "YYYY-MM-dd hh:mm:ss"; // El formato de fecha está especificado  
+        SimpleDateFormat objdateTimeSDF = new SimpleDateFormat(strDateTimeFormat); // La cadena de formato de fecha se pasa como un argumento al objeto 
+        
+        String strDateFormat = "YYYY-MM-dd"; // El formato de fecha está especificado  
+        SimpleDateFormat objdateSDF = new SimpleDateFormat(strDateFormat); // La cadena de formato de fecha se pasa como un argumento al objeto 
+       
+        String usuarioIns= jTextFieldUsuario.getText();
+        
+        String descripcionIns = jTextFieldDescripcion.getText();
+        
+        String estadoIns = jComboBoxEstado.getSelectedItem().toString();
+        String[] estado = estadoIns.split("-");
+        String idEstadoIns = estado[0];
+        
+        Date fechaDate= jDateChooserFecha.getDate();
+        String fechaIns = objdateTimeSDF.format(fechaDate);
 
-        String est = jComboBoxEstado.getSelectedItem().toString();
-        String[] estado = est.split("-");
-        String idEstado = estado[0];
-
-        String ubi = jComboBoxUbicacion.getSelectedItem().toString();
-        String[] ubicacion = ubi.split("-");
-        String idUbicacion = ubicacion[0];
-
+        
         String urg = jComboBoxUrgencia.getSelectedItem().toString();
         String[] urgencia = urg.split("-");
         String idUrgencia = urgencia[0];
 
-        try {
+        String ubi = jComboBoxUbicacion.getSelectedItem().toString();
+        String[] ubicacion = ubi.split("-");
+        String idUbicacion = ubicacion[0];
+        
+        String descTecIns =jTextFieldDescripcionTec.getText();
+        
+        String horasString =jTextFieldHoras.getText();
+        int horasIns = Integer.parseInt (horasString);
+        
+        Date fechaIncioDate=jDateChooserFechaIncio.getDate();
+        String fechaIncioIns = objdateSDF.format(fechaIncioDate);
+        
+        Date fechaFinDate=jDateChooserFechaFin.getDate();
+        String fechaFinIns =objdateSDF.format(fechaFinDate);
+        
+        String observacionesIns=jTextFieldObservaciones.getText();
+        
+        
+
+        
+
+
+
+
+       try {
             PreparedStatement ps = null;
             conectar = new Conectar();
             Connection conexion = conectar.getConexion();
 
-            String sql = "UPDATE man_incidencias SET descripcion='" + descripcion + "', id_estado ='" + idEstado + "', nivel_urgencia = '" + idUrgencia + "', \n"
-                    + "id_ubicacion = '" + idUbicacion + "', observaciones = '" + observaciones + "' \n"
+            String sql = "UPDATE man_incidencias SET descripcion='"+descripcionIns+"',desc_tecnica='"+descTecIns+"', \n"
+                    + " horas='"+horasIns+"',id_estado='"+idEstadoIns+"',fecha='"+fechaIns+"',fecha_ini_rep='"+fechaIncioIns+"',fecha_fin_rep='"+fechaFinIns+"',"
+                    + "nivel_urgencia='"+idUrgencia+"',id_ubicacion='"+idUbicacion+"',observaciones='"+observacionesIns+"'\n"
                     + "WHERE (id_incidencia = '" + idIn + "');";
 
             ps = conexion.prepareStatement(sql);
@@ -314,9 +347,10 @@ public class ModificaIncidencia extends javax.swing.JDialog {
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "No se han podido insertar los datos");
+            System.err.println(ex);
         }
 
-        dispose();*/
+        dispose();
 
     }//GEN-LAST:event_jButtonModificarIncidenciaActionPerformed
 
@@ -380,7 +414,7 @@ public class ModificaIncidencia extends javax.swing.JDialog {
                     usu=rs.getString(1);
                     descripcion= rs.getString(2);
                     descTecnica= rs.getString(3);
-                    horas= rs.getString(4);
+                    horas= rs.getInt(4);
                     estado= rs.getString(5);
                     fecha= rs.getDate(6);
                     fechaInicio= rs.getDate(7);
@@ -402,10 +436,11 @@ public class ModificaIncidencia extends javax.swing.JDialog {
     }
 
     private void atribuirVariables() {
+        
         jTextFieldUsuario.setText(usu);
         jTextFieldDescripcion.setText(descripcion);
         jTextFieldDescripcionTec.setText(descTecnica);
-        jTextFieldHoras.setText(horas);
+        jTextFieldHoras.setText(String.valueOf(horas));
         jLabelEstado.setText("El estado anterior era: "+estado);
         jDateChooserFecha.setDate(fecha);
         jDateChooserFechaIncio.setDate(fechaInicio);

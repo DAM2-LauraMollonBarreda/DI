@@ -7,7 +7,7 @@ package com.lauramollon.proyectosegundaeva_lmb;
 
 import Incidencias.Estadistica;
 import Incidencias.InsertarIncidencia;
-import Incidencias.ModificaMiIncidencia;
+import Incidencias.ModificaIncidencia;
 import Incidencias.MostrarIncidencias;
 import Profesores.ProfesoresPrincipal;
 import baseDatos.Conectar;
@@ -226,7 +226,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
 
     private void jMenuItemIncidenciasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemIncidenciasActionPerformed
         try {
-            MostrarIncidencias pantallaIncidencias = new MostrarIncidencias(this, true);
+            MostrarIncidencias pantallaIncidencias = new MostrarIncidencias(this, true,usuRol);
             pantallaIncidencias.setVisible(true);
         } catch (SQLException ex) {
             Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
@@ -371,11 +371,10 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         } else {
             int fila = jTableMisIncidencias.getSelectedRow();
             String idIncidencia = jTableMisIncidencias.getModel().getValueAt(fila, 0).toString();
-            String descripcion = jTableMisIncidencias.getModel().getValueAt(fila, 2).toString();
-            String observaciones = jTableMisIncidencias.getModel().getValueAt(fila, 12).toString();
+
+           
             
-            
-            ModificaMiIncidencia modificarMiIncidencia = new ModificaMiIncidencia(this, true,usuario,descripcion,observaciones,idIncidencia);
+            ModificaIncidencia modificarMiIncidencia = new ModificaIncidencia(this, true,idIncidencia,usuRol);
             modificarMiIncidencia.setVisible(true);
             
             rellenoTabla();

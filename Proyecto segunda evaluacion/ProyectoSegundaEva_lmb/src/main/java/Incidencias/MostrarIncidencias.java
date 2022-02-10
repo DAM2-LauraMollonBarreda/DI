@@ -39,15 +39,19 @@ import org.jfree.data.category.DefaultCategoryDataset;
 public class MostrarIncidencias extends javax.swing.JDialog {
 
     Conectar conectar = null;
+    String rolUsu = "";
 
     /**
      * Creates new form MostrarIncidencias
      */
-    public MostrarIncidencias(javax.swing.JDialog parent, boolean modal) throws SQLException {
+    public MostrarIncidencias(javax.swing.JDialog parent, boolean modal,String usuRol) throws SQLException {
         super(parent, modal);
         initComponents();
+        rolUsu=usuRol;
+
 
         rellenoTabla();
+        crearPopupMenu();
     }
 
     /**
@@ -112,12 +116,12 @@ public class MostrarIncidencias extends javax.swing.JDialog {
 
         conectar = new Conectar();
         Connection conexion = conectar.getConexion();
-        String[] incidencia = new String[12];
+        String[] incidencia = new String[13];
         if (conexion != null) {
 
             try {
                 Statement s = conexion.createStatement();
-                ResultSet rs = s.executeQuery("select p.nombre_completo,inc.descripcion,inc.desc_tecnica,inc.horas, \n"
+                ResultSet rs = s.executeQuery("select inc.id_incidencia,p.nombre_completo,inc.descripcion,inc.desc_tecnica,inc.horas, \n"
                         + "est.estado,inc.fecha,inc.fecha_ini_rep,inc.fecha_fin_rep,ur.urgencia,\n"
                         + "ub.ubicacion,ed.edificio,inc.observaciones\n"
                         + "from man_incidencias inc\n"
@@ -141,6 +145,7 @@ public class MostrarIncidencias extends javax.swing.JDialog {
                     incidencia[9] = rs.getString(10);
                     incidencia[10] = rs.getString(11);
                     incidencia[11] = rs.getString(12);
+                    incidencia[12] = rs.getString(13);
 
                     dtm.addRow(incidencia);
                 }
@@ -155,7 +160,7 @@ public class MostrarIncidencias extends javax.swing.JDialog {
 
     }
 
-    private void crearPopupMenu() throws SQLException {
+   private void crearPopupMenu() throws SQLException {
         JPopupMenu popupMenu = new JPopupMenu();
         JMenuItem modificar = new JMenuItem("Modificar esta incidencia");
 
@@ -167,14 +172,34 @@ public class MostrarIncidencias extends javax.swing.JDialog {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 try {
-                    
-                    rellenoTabla();
+                    modificarIncidencia();
                 } catch (SQLException ex) {
                     java.util.logging.Logger.getLogger(ProfesoresPrincipal.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
 
         });
+
+    }
+
+    public void modificarIncidencia() throws SQLException {
+       int cuentaFilasSeleccionadas = jTableIncidencias.getSelectedRowCount();
+        if (cuentaFilasSeleccionadas == 0) {
+            JOptionPane.showMessageDialog(this, "No hay filas seleccionadas", "Error", JOptionPane.WARNING_MESSAGE);
+        } else {
+            int fila = jTableIncidencias.getSelectedRow();
+            String idIncidencia = jTableIncidencias.getModel().getValueAt(fila, 0).toString();
+            System.out.println(idIncidencia);
+
+            
+            
+            ModificaIncidencia modificarMiIncidencia = new ModificaIncidencia(this, true,idIncidencia,rolUsu);
+            modificarMiIncidencia.setVisible(true);
+            
+            rellenoTabla();
+
+            
+        }
     }
 
     
@@ -184,4 +209,7 @@ public class MostrarIncidencias extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableIncidencias;
     // End of variables declaration//GEN-END:variables
+    
+
+
 }

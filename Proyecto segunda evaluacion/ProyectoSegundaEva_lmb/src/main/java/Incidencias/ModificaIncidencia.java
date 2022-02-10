@@ -20,36 +20,41 @@ import javax.swing.JOptionPane;
  *
  * @author damA
  */
-public class ModificaMiIncidencia extends javax.swing.JDialog {
+public class ModificaIncidencia extends javax.swing.JDialog {
 
-    Conectar contectar = null;
+    Conectar conectar = null;
     String usu = "";
-    String id = "";
-    String des = "";
-    String obs = "";
+    String rolUsu = "";
     String idIn = "";
+    String descripcion = "";
+    String descTecnica = "";
+    String horas = "";
+    String estado = "";
+    Date fecha;
+    Date fechaInicio;
+    Date fechaFin ;
+    String urgencia = "";
+    String ubicacion = "";
+    String observaciones = "";
 
     /**
      * Creates new form ModificaMiIncidencia
      */
-    public ModificaMiIncidencia(javax.swing.JDialog parent, boolean modal, String usuario, String descripcion, String observaciones, String idIncidencia) throws SQLException {
+    public ModificaIncidencia(javax.swing.JDialog parent, boolean modal, String idIncidencia, String usuRol) throws SQLException {
         super(parent, modal);
         initComponents();
 
-        usu = usuario;
-        des = descripcion;
-        obs = observaciones;
+
         idIn = idIncidencia;
-        
-        
+        rolUsu = usuRol;
 
-        jTextFieldDescripcion.setText(des);
-        jTextFieldObservaciones.setText(obs);
-
-        consultarUbicacion(jComboBoxUbicacion);
+        buscarIncidencia();
+        atribuirVariables();
+        activarBotones();
         consultarEstado(jComboBoxEstado);
+        consultarUbicacion(jComboBoxUbicacion);
         consultarUrgencia(jComboBoxUrgencia);
-        consultarId();
+
     }
 
     /**
@@ -74,6 +79,22 @@ public class ModificaMiIncidencia extends javax.swing.JDialog {
         jLabel7 = new javax.swing.JLabel();
         jComboBoxEstado = new javax.swing.JComboBox<>();
         jComboBoxUbicacion = new javax.swing.JComboBox<>();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jTextFieldUsuario = new javax.swing.JTextField();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTextFieldDescripcionTec = new javax.swing.JTextArea();
+        jDateChooserFechaIncio = new com.toedter.calendar.JDateChooser();
+        jDateChooserFechaFin = new com.toedter.calendar.JDateChooser();
+        jTextFieldHoras = new javax.swing.JTextField();
+        jLabelEstado = new javax.swing.JLabel();
+        jLabelUrgencia = new javax.swing.JLabel();
+        jLabelUbicacion = new javax.swing.JLabel();
+        jDateChooserFecha = new com.toedter.calendar.JDateChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -89,7 +110,7 @@ public class ModificaMiIncidencia extends javax.swing.JDialog {
         jTextFieldDescripcion.setRows(5);
         jScrollPane2.setViewportView(jTextFieldDescripcion);
 
-        jLabel2.setText("Descripcion");
+        jLabel2.setText("Duracion reparacion");
 
         jTextFieldObservaciones.setColumns(20);
         jTextFieldObservaciones.setLineWrap(true);
@@ -104,73 +125,162 @@ public class ModificaMiIncidencia extends javax.swing.JDialog {
 
         jLabel7.setText("Observaciones");
 
+        jLabel4.setText("Descripcion tecnica");
+
+        jLabel8.setText("Descripcion");
+
+        jLabel9.setText("Usuario que crea la incidencia");
+
+        jLabel10.setText("Fecha creacion");
+
+        jLabel12.setText("Fecha inicio de reparacion");
+
+        jLabel13.setText("Fecha de fin de reparacion");
+
+        jTextFieldUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldUsuarioActionPerformed(evt);
+            }
+        });
+
+        jTextFieldDescripcionTec.setColumns(20);
+        jTextFieldDescripcionTec.setLineWrap(true);
+        jTextFieldDescripcionTec.setRows(5);
+        jScrollPane4.setViewportView(jTextFieldDescripcionTec);
+
+        jLabelEstado.setForeground(new java.awt.Color(255, 51, 51));
+
+        jLabelUrgencia.setForeground(new java.awt.Color(255, 51, 51));
+
+        jLabelUbicacion.setForeground(new java.awt.Color(255, 51, 51));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jComboBoxUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabelEstado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jComboBoxEstado, 0, 231, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel10))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jComboBoxUrgencia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabelUbicacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabelUrgencia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jDateChooserFecha, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(81, 81, 81)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel13)
+                    .addComponent(jLabel7))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(61, 61, 61)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(60, 60, 60)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel5))))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jComboBoxEstado, 0, 231, Short.MAX_VALUE)
-                    .addComponent(jComboBoxUbicacion, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jComboBoxUrgencia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2)
-                    .addComponent(jScrollPane3))
-                .addGap(96, 96, 96))
+                        .addGap(0, 9, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldHoras, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jDateChooserFechaIncio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jDateChooserFechaFin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(53, 53, 53))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jButtonModificarIncidencia, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(67, 67, 67))
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel9)
+                .addGap(85, 85, 85)
+                .addComponent(jTextFieldUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(239, 239, 239))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(152, 152, 152)
+                .addComponent(jButtonModificarIncidencia, javax.swing.GroupLayout.PREFERRED_SIZE, 515, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(39, 39, 39)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
+                .addGap(45, 45, 45)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(82, 82, 82)
-                        .addComponent(jLabel2))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel8)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
                 .addGap(18, 18, 18)
+                .addComponent(jLabelEstado)
+                .addGap(3, 3, 3)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
+                    .addComponent(jLabel2)
+                    .addComponent(jTextFieldHoras, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBoxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jComboBoxUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(22, 22, 22)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jComboBoxUrgencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(32, 32, 32)
-                        .addComponent(jLabel7)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
-                .addComponent(jButtonModificarIncidencia)
-                .addGap(28, 28, 28))
+                        .addGap(25, 25, 25)
+                        .addComponent(jDateChooserFechaIncio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel12)
+                            .addComponent(jDateChooserFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(23, 23, 23)
+                        .addComponent(jLabelUrgencia)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jComboBoxUrgencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel13))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(21, 21, 21)
+                                        .addComponent(jLabelUbicacion)
+                                        .addGap(2, 2, 2)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(jComboBoxUbicacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel6)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(30, 30, 30)
+                                        .addComponent(jLabel7)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButtonModificarIncidencia)
+                                .addGap(30, 30, 30))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jDateChooserFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(32, 32, 32)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(126, Short.MAX_VALUE))))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonModificarIncidenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarIncidenciaActionPerformed
-        String descripcion = jTextFieldDescripcion.getText();
+        /*String descripcion = jTextFieldDescripcion.getText();
 
         String observaciones = jTextFieldObservaciones.getText();
 
@@ -188,13 +298,12 @@ public class ModificaMiIncidencia extends javax.swing.JDialog {
 
         try {
             PreparedStatement ps = null;
-            contectar = new Conectar();
-            Connection conexion = contectar.getConexion();
+            conectar = new Conectar();
+            Connection conexion = conectar.getConexion();
 
-
-            String sql = "UPDATE man_incidencias SET descripcion='"+descripcion+"', id_estado ='"+idEstado+"', nivel_urgencia = '"+idUrgencia+"', \n"
-                    + "id_ubicacion = '"+idUbicacion+"', observaciones = '"+observaciones+"' \n"
-                    + "WHERE (id_incidencia = '"+idIn+"');";
+            String sql = "UPDATE man_incidencias SET descripcion='" + descripcion + "', id_estado ='" + idEstado + "', nivel_urgencia = '" + idUrgencia + "', \n"
+                    + "id_ubicacion = '" + idUbicacion + "', observaciones = '" + observaciones + "' \n"
+                    + "WHERE (id_incidencia = '" + idIn + "');";
 
             ps = conexion.prepareStatement(sql);
             ps.executeUpdate();
@@ -202,20 +311,116 @@ public class ModificaMiIncidencia extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Incidencia modificada");
 
             conexion.close();
-            
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "No se han podido insertar los datos");
         }
-        
-        dispose();
+
+        dispose();*/
 
     }//GEN-LAST:event_jButtonModificarIncidenciaActionPerformed
 
-    public void consultarUbicacion(JComboBox comboBox) {
+    private void jTextFieldUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldUsuarioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldUsuarioActionPerformed
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonModificarIncidencia;
+    private javax.swing.JComboBox<String> jComboBoxEstado;
+    private javax.swing.JComboBox<String> jComboBoxUbicacion;
+    private javax.swing.JComboBox<String> jComboBoxUrgencia;
+    private com.toedter.calendar.JDateChooser jDateChooserFecha;
+    private com.toedter.calendar.JDateChooser jDateChooserFechaFin;
+    private com.toedter.calendar.JDateChooser jDateChooserFechaIncio;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabelEstado;
+    private javax.swing.JLabel jLabelUbicacion;
+    private javax.swing.JLabel jLabelUrgencia;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JTextArea jTextFieldDescripcion;
+    private javax.swing.JTextArea jTextFieldDescripcionTec;
+    private javax.swing.JTextField jTextFieldHoras;
+    private javax.swing.JTextArea jTextFieldObservaciones;
+    private javax.swing.JTextField jTextFieldUsuario;
+    // End of variables declaration//GEN-END:variables
+
+    private void buscarIncidencia() throws SQLException {
+        conectar = new Conectar();
+        Connection conexion = conectar.getConexion();
+        String[] incidencia = new String[13];
+        if (conexion != null) {
+
+            try {
+                Statement s = conexion.createStatement();
+                ResultSet rs = s.executeQuery("select p.nombre_completo,inc.descripcion,inc.desc_tecnica,inc.horas, \n"
+                        + "est.estado,inc.fecha,inc.fecha_ini_rep,inc.fecha_fin_rep,ur.urgencia,\n"
+                        + "ub.ubicacion,inc.observaciones\n"
+                        + "from man_incidencias inc\n"
+                        + "inner join fp_profesor p on p.id_profesor=inc.id_profesor_crea\n"
+                        + "inner join man_estado est on est.id_estado = inc.id_estado\n"
+                        + "inner join man_urgencia ur on ur.id_urgencia=inc.nivel_urgencia\n"
+                        + "inner join man_ubicacion ub on ub.id_ubicacion=inc.id_ubicacion\n"
+                        + "where inc.id_incidencia='" + idIn + "'");
+
+                while (rs.next()) {
+                    //dtm.addRow(rs);
+                    usu=rs.getString(1);
+                    descripcion= rs.getString(2);
+                    descTecnica= rs.getString(3);
+                    horas= rs.getString(4);
+                    estado= rs.getString(5);
+                    fecha= rs.getDate(6);
+                    fechaInicio= rs.getDate(7);
+                    fechaFin= rs.getDate(8);
+                    urgencia= rs.getString(9);
+                    ubicacion= rs.getString(10);
+                    observaciones= rs.getString(11);
+
+                }
+            } catch (SQLException sQLException) {
+                JOptionPane.showMessageDialog(this, "Datos no cargados");
+            }
+            conexion.close();
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Conoxion fallida");
+        }
+
+    }
+
+    private void atribuirVariables() {
+        jTextFieldUsuario.setText(usu);
+        jTextFieldDescripcion.setText(descripcion);
+        jTextFieldDescripcionTec.setText(descTecnica);
+        jTextFieldHoras.setText(horas);
+        jLabelEstado.setText("El estado anterior era: "+estado);
+        jDateChooserFecha.setDate(fecha);
+        jDateChooserFechaIncio.setDate(fechaInicio);
+        jDateChooserFechaFin.setDate(fechaFin);
+        jLabelUrgencia.setText("La urgencia anterior era: " + urgencia);
+        jLabelUbicacion.setText("La ubicaiocn anterior era: " + ubicacion);
+        jTextFieldObservaciones.setText(observaciones);
+        
+    }
+    
+    
+     public void consultarUbicacion(JComboBox comboBox) {
         PreparedStatement ps = null;
-        contectar = new Conectar();
-        Connection conexion = contectar.getConexion();
+        conectar = new Conectar();
+        Connection conexion = conectar.getConexion();
         String sql = "SELECT id_ubicacion,ubicacion FROM mantenimiento_mollon.man_ubicacion;";
         try {
             ps = conexion.prepareStatement(sql);
@@ -233,8 +438,8 @@ public class ModificaMiIncidencia extends javax.swing.JDialog {
 
     public void consultarUrgencia(JComboBox comboBox) {
         PreparedStatement ps = null;
-        contectar = new Conectar();
-        Connection conexion = contectar.getConexion();
+        conectar = new Conectar();
+        Connection conexion = conectar.getConexion();
         String sql = "SELECT id_urgencia,urgencia FROM mantenimiento_mollon.man_urgencia;";
         try {
             ps = conexion.prepareStatement(sql);
@@ -252,8 +457,8 @@ public class ModificaMiIncidencia extends javax.swing.JDialog {
 
     public void consultarEstado(JComboBox comboBox) {
         PreparedStatement ps = null;
-        contectar = new Conectar();
-        Connection conexion = contectar.getConexion();
+        conectar = new Conectar();
+        Connection conexion = conectar.getConexion();
         String sql = "SELECT id_estado,estado FROM mantenimiento_mollon.man_estado;";
         try {
             ps = conexion.prepareStatement(sql);
@@ -269,49 +474,26 @@ public class ModificaMiIncidencia extends javax.swing.JDialog {
         }
     }
 
-    public void consultarId() throws SQLException {
+    private void activarBotones() {
+         //SI EL USUARO ES ROOT
+        if (rolUsu.equals("root")) {
+            jTextFieldUsuario.setEditable(false);
+            jDateChooserFecha.setEnabled(false);
+            //SI EL USUARIO ES TECNICO
+        } else if (rolUsu.equals("tecnico")) {
+            jTextFieldUsuario.setEnabled(false);
+            jDateChooserFecha.setEnabled(false);
+            //SI EL USUARIO ES PROFESOR
+        } else if (rolUsu.equals("profesor")) {
+            jTextFieldUsuario.setEnabled(false);
+            jTextFieldDescripcionTec.setEnabled(false);
+            jTextFieldHoras.setEnabled(false);
+            jDateChooserFechaIncio.setEnabled(false);
+            jDateChooserFechaFin.setEnabled(false);
+            jDateChooserFecha.setEnabled(false);
+            
+            
 
-        contectar = new Conectar();
-        Connection conexion = contectar.getConexion();
-        String[] idArray = new String[1];
-        if (conexion != null) {
-
-            try {
-                Statement s = conexion.createStatement();
-                ResultSet rs = s.executeQuery("SELECT id_profesor FROM mantenimiento_mollon.fp_profesor where login='" + usu + "';");
-
-                while (rs.next()) {
-                    idArray[0] = rs.getString(1);
-                }
-                id = idArray[0];
-
-            } catch (SQLException sQLException) {
-                JOptionPane.showMessageDialog(this, "Datos no cargados");
-
-            }
-
-            conexion.close();
-
-        } else {
-            JOptionPane.showMessageDialog(this, "Conoxion fallida");
         }
-
     }
-
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonModificarIncidencia;
-    private javax.swing.JComboBox<String> jComboBoxEstado;
-    private javax.swing.JComboBox<String> jComboBoxUbicacion;
-    private javax.swing.JComboBox<String> jComboBoxUrgencia;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextArea jTextFieldDescripcion;
-    private javax.swing.JTextArea jTextFieldObservaciones;
-    // End of variables declaration//GEN-END:variables
 }

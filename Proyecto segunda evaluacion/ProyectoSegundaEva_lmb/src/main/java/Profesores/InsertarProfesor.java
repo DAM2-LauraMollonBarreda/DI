@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  *
@@ -175,7 +176,10 @@ public class InsertarProfesor extends javax.swing.JDialog {
         String usurio = jTextFieldUsuario.getText();
         String nombreCompleto = jTextFieldNombreCompleto.getText();
         String email = jTextFieldEmail.getText();
-        String pass = jTextFieldContraseña.getText();
+        //Guardo la contraseña metida por el usuario
+        String passReco = jTextFieldContraseña.getText();
+        //La encripto
+        String pass = DigestUtils.md5Hex(passReco);
 
         boolean activo = jCheckBoxActivo.isSelected();
         int activoNum = 0;

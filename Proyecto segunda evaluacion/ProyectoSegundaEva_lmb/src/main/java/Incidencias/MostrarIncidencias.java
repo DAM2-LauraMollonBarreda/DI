@@ -65,6 +65,11 @@ public class MostrarIncidencias extends javax.swing.JDialog {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableIncidencias = new javax.swing.JTable();
+        jButtonActividad = new javax.swing.JButton();
+        jButtonQuitarFiltro = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jButtonRol = new javax.swing.JButton();
+        jButtonDepartamento = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -83,13 +88,56 @@ public class MostrarIncidencias extends javax.swing.JDialog {
         jTableIncidencias.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jScrollPane1.setViewportView(jTableIncidencias);
 
+        jButtonActividad.setText("Profesor");
+        jButtonActividad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonActividadActionPerformed(evt);
+            }
+        });
+
+        jButtonQuitarFiltro.setText("Quitar filtros");
+        jButtonQuitarFiltro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonQuitarFiltroActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Filtrar por: ");
+
+        jButtonRol.setText("Urgencia");
+        jButtonRol.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRolActionPerformed(evt);
+            }
+        });
+
+        jButtonDepartamento.setText("Estado");
+        jButtonDepartamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonDepartamentoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1109, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1109, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonRol)
+                        .addGap(42, 42, 42)
+                        .addComponent(jButtonDepartamento)
+                        .addGap(37, 37, 37)
+                        .addComponent(jButtonActividad)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonQuitarFiltro)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -97,11 +145,41 @@ public class MostrarIncidencias extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGap(34, 34, 34)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(47, Short.MAX_VALUE))
+                .addGap(30, 30, 30)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(jButtonRol))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButtonDepartamento)
+                        .addComponent(jButtonActividad)
+                        .addComponent(jButtonQuitarFiltro)))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButtonActividadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonActividadActionPerformed
+
+    }//GEN-LAST:event_jButtonActividadActionPerformed
+
+    private void jButtonQuitarFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonQuitarFiltroActionPerformed
+        try {
+            rellenoTabla();
+        } catch (SQLException ex) {
+            java.util.logging.Logger.getLogger(ProfesoresPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButtonQuitarFiltroActionPerformed
+
+    private void jButtonRolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRolActionPerformed
+       
+
+    }//GEN-LAST:event_jButtonRolActionPerformed
+
+    private void jButtonDepartamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDepartamentoActionPerformed
+      
+    }//GEN-LAST:event_jButtonDepartamentoActionPerformed
    public void rellenoTabla() throws SQLException {
         DefaultTableModel dtm = new DefaultTableModel();
         //Creamos las columnas que tendra la tabla
@@ -162,7 +240,7 @@ public class MostrarIncidencias extends javax.swing.JDialog {
 
    private void crearPopupMenu() throws SQLException {
         JPopupMenu popupMenu = new JPopupMenu();
-        JMenuItem modificar = new JMenuItem("Modificar esta incidencia");
+        JMenuItem modificar = new JMenuItem("Reparar esta incidencia");
 
         popupMenu.add(modificar);
 
@@ -206,6 +284,11 @@ public class MostrarIncidencias extends javax.swing.JDialog {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonActividad;
+    private javax.swing.JButton jButtonDepartamento;
+    private javax.swing.JButton jButtonQuitarFiltro;
+    private javax.swing.JButton jButtonRol;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableIncidencias;
     // End of variables declaration//GEN-END:variables

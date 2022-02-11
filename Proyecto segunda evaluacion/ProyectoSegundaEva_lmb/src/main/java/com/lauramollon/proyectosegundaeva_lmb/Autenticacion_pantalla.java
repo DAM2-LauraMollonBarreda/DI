@@ -17,6 +17,7 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  *
@@ -148,9 +149,10 @@ public class Autenticacion_pantalla extends javax.swing.JFrame {
 
     private void jButtonEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEntrarActionPerformed
         String usu = jTextFieldUsuarioAutenticacion.getText();
-        char[] arrayC = jPasswordFieldPassAutenticacion.getPassword();
-        String pass = new String(arrayC); 
-        
+
+        String arr = jPasswordFieldPassAutenticacion.getText();
+        //Encripto las contraseñas
+        String pass = DigestUtils.md5Hex(arr);
         
         
         if (!usu.isBlank()&& !pass.isBlank()) {

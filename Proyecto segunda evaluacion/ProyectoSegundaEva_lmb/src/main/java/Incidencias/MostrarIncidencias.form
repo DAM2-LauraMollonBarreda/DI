@@ -33,11 +33,11 @@
                       <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="jButtonRol" min="-2" max="-2" attributes="0"/>
+                      <Component id="jButtonUrgencia" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
-                      <Component id="jButtonDepartamento" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
-                      <Component id="jButtonActividad" min="-2" max="-2" attributes="0"/>
+                      <Component id="jButtonEstado" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
+                      <Component id="jButtonProfesor" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="jButtonQuitarFiltro" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -55,11 +55,11 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                       <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jButtonRol" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jButtonUrgencia" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                      <Component id="jButtonDepartamento" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jButtonActividad" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jButtonEstado" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jButtonProfesor" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jButtonQuitarFiltro" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -94,12 +94,12 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JButton" name="jButtonActividad">
+    <Component class="javax.swing.JButton" name="jButtonProfesor">
       <Properties>
         <Property name="text" type="java.lang.String" value="Profesor"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonActividadActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonProfesorActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jButtonQuitarFiltro">
@@ -115,20 +115,20 @@
         <Property name="text" type="java.lang.String" value="Filtrar por: "/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButtonRol">
+    <Component class="javax.swing.JButton" name="jButtonUrgencia">
       <Properties>
         <Property name="text" type="java.lang.String" value="Urgencia"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonRolActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonUrgenciaActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButtonDepartamento">
+    <Component class="javax.swing.JButton" name="jButtonEstado">
       <Properties>
         <Property name="text" type="java.lang.String" value="Estado"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonDepartamentoActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonEstadoActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

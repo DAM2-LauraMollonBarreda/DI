@@ -148,15 +148,22 @@ public class Autenticacion_pantalla extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldUsuarioAutenticacionActionPerformed
 
     private void jButtonEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEntrarActionPerformed
+        //Guardo en varibles, lo escrito por el usuario
         String usu = jTextFieldUsuarioAutenticacion.getText();
 
         String arr = jPasswordFieldPassAutenticacion.getText();
         //Encripto las contraseñas
         String pass = DigestUtils.md5Hex(arr);
         
-        
+        //Si lo campos no estan vacios 
         if (!usu.isBlank()&& !pass.isBlank()) {
-            comprabarLoginBaseDatos(usu, pass);
+            try {
+                comprabarLoginBaseDatos(usu, pass);
+            } catch (HeadlessException ex) {
+                Logger.getLogger(Autenticacion_pantalla.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(Autenticacion_pantalla.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }else{
             JOptionPane.showMessageDialog(this, "No puedes dejar campos vacios");
         }
@@ -168,45 +175,57 @@ public class Autenticacion_pantalla extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jPasswordFieldPassAutenticacionActionPerformed
 
-    public void comprabarLoginBaseDatos(String usu, String pass) throws HeadlessException {
+    public void comprabarLoginBaseDatos(String usu, String pass) throws HeadlessException, SQLException {
+        //Llamo a la clase para conectar 
         contectar = new Conectar();
         Connection conexion = contectar.getConexion();
+        //Si la conexion no es nula
         if (conexion!=null) {
             try {
                 Statement s = conexion.createStatement();
+                //Guardo la consulta para ejecutar
                 ResultSet rs_login= s.executeQuery("select p.login,p.password,p.activo, rol.rol from fp_profesor p inner join fp_rol rol on rol.id_rol= p.id_rol where login = '"+usu+"'");
                 
+                //Variables para guardar el resultado de los datos cojidos de la base de datos
                 String resultadoUsuBase="";
                 String resultadoPassBase="";
                 int resultadoActivoBase=0;
                 String rol="";
                 
+                //Mientras queden datos que extraer
                 while (rs_login.next()) {
+                    //Guardar en cada una de las variables creadas antes los datos que se estan extrallendo
                     resultadoUsuBase = rs_login.getString(1);
                     resultadoPassBase = rs_login.getString(2);
                     resultadoActivoBase = rs_login.getInt(3);
                     rol = rs_login.getString(4);
                 }
                 
+                //Si la contraseña y el usuario metidos por el usuario son igual a la de la base de datos
                 if (usu.equals(resultadoUsuBase)&& pass.equals(resultadoPassBase)) {
+                    //Comprobamos que el usuario esta activo
                     if (resultadoActivoBase==1) {
+                        //Habrimos la pantalla principal 
                          PantallaPrincipal pantallaPrincipal = new PantallaPrincipal(this, true, rol,usu);
                          pantallaPrincipal.setVisible(true);
                     }else{
+                        //Si no esta activo mostramos un mensaje 
                         JOptionPane.showMessageDialog(this, "Ya no formas parte del instituto");
-                    }
-                       
+                    }    
                 }
                 else{
+                    //Si los datos no han sido metidos correctamente mostramos mensaje
                     JOptionPane.showMessageDialog(this, "Autenticacion incorrecta ");
                 }
-                
+                //Cerramos la conexion
                 conexion.close();
                 
             } catch (SQLException ex) {
                 Logger.getLogger(Autenticacion_pantalla.class.getName()).log(Level.SEVERE, null, ex);
+                conexion.close();
             }
         }
+        //Si la conxion no esta bien realizada
         else{
             JOptionPane.showMessageDialog(this, "Revisa tu conexion");
         }

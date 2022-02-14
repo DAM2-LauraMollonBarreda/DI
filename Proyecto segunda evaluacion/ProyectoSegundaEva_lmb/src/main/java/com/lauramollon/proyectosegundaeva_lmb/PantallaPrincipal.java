@@ -41,6 +41,7 @@ import javax.swing.table.TableRowSorter;
  */
 public class PantallaPrincipal extends javax.swing.JDialog {
 
+    //Variables que usuaremos durante todo el programa
     String usuRol = "";
     String usuario = "";
     Conectar conectar = null;
@@ -50,6 +51,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
      */
     public PantallaPrincipal(java.awt.Frame parent, boolean modal, String rol, String usu) throws SQLException {
         super(parent, modal);
+        //Guardamos en la variables creadas a nivel de clase los datos que traemos desde la pantalla de autenticacion
         usuRol = rol;
         usuario = usu;
 
@@ -216,6 +218,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
     private void jMenuItemProfesoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemProfesoresActionPerformed
 
         try {
+            //Si se presiona el item se abre la pantalla de mostrar todos los profesores (dependiende del usuario)
             ProfesoresPrincipal pantallaProfesores = new ProfesoresPrincipal(this, true);
             pantallaProfesores.setVisible(true);
         } catch (SQLException ex) {
@@ -226,6 +229,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
 
     private void jMenuItemIncidenciasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemIncidenciasActionPerformed
         try {
+            //Si se presiona el item se abre la pantalla de mostrar todas las incidencias (dependiendo del usuario)
             MostrarIncidencias pantallaIncidencias = new MostrarIncidencias(this, true,usuRol);
             pantallaIncidencias.setVisible(true);
         } catch (SQLException ex) {
@@ -235,6 +239,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
 
     private void jButtonInsertarIncidenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInsertarIncidenciaActionPerformed
         try {
+            //Si se presiona el boton se abre la pantalla de insertar incidencia
             InsertarIncidencia pantallaIncidenciaInsertar = new InsertarIncidencia(this, true,usuario);
             pantallaIncidenciaInsertar.setVisible(true);
             rellenoTabla();
@@ -245,6 +250,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
 
     private void jMenuItemEstadisticaMesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemEstadisticaMesActionPerformed
         try {
+            //Si se presiona el item se habre la pantalla del grafico de las incidencias del mes
             Estadistica pantallaIncidencias = new Estadistica(this, true);
             pantallaIncidencias.setVisible(true);
         } catch (SQLException ex) {
@@ -257,6 +263,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
     }//GEN-LAST:event_jTableMisIncidenciasKeyReleased
 
     public void rellenoTabla() throws SQLException {
+        //Creamos el modelo de la tabla
         DefaultTableModel dtm = new DefaultTableModel();
         //Creamos las columnas que tendra la tabla
         dtm.setColumnIdentifiers(new String[]{"Numero incidencia","Creada por", "Descripcion", "Descripcion tecnica", "Horas de reparacion", "Estado", "Lazmiento", "Inicio reparacion", "Fin reparacion", "Nivel", "Clase", "Edificio", "Observaciones"});
@@ -268,13 +275,18 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         //Añadimos las columnas a la tabla
         jTableMisIncidencias.setModel(dtm);
 
+        //Llamamos a la clase conectar
         conectar = new Conectar();
+        //Creamos la conxion
         Connection conexion = conectar.getConexion();
+        //Creamos el array para guardar los datos cojidos de la base de datos
         String[] incidencia = new String[13];
+        //Si la conexion esta bien echa
         if (conexion != null) {
 
             try {
                 Statement s = conexion.createStatement();
+                //Guardamos la consulta ha hacer
                 ResultSet rs = s.executeQuery("select inc.id_incidencia,p.nombre_completo,inc.descripcion,inc.desc_tecnica,inc.horas, \n"
                         + "est.estado,inc.fecha,inc.fecha_ini_rep,inc.fecha_fin_rep,ur.urgencia,\n"
                         + "ub.ubicacion,ed.edificio,inc.observaciones\n"
@@ -285,9 +297,10 @@ public class PantallaPrincipal extends javax.swing.JDialog {
                         + "inner join man_ubicacion ub on ub.id_ubicacion=inc.id_ubicacion\n"
                         + "inner join man_edificio ed on ed.id_edificio=ub.id_edificio\n"
                         + "where p.login='" + usuario + "'");
-
+                //Mientras queden datos 
                 while (rs.next()) {
-                    //dtm.addRow(rs);
+                    //Guardamos los datos en el array creado antes
+                    
                     incidencia[0] = rs.getString(1);
                     incidencia[1] = rs.getString(2);
                     incidencia[2] = rs.getString(3);
@@ -301,15 +314,18 @@ public class PantallaPrincipal extends javax.swing.JDialog {
                     incidencia[10] = rs.getString(11);
                     incidencia[11] = rs.getString(12);
                     incidencia[12] = rs.getString(13);
-
+                    
+                    //Metemos en las filas del modelo (tabla) los datos extraidos
                     dtm.addRow(incidencia);
                 }
             } catch (SQLException sQLException) {
+                
                 JOptionPane.showMessageDialog(this, "Datos no cargados");
             }
             conexion.close();
 
         } else {
+            //Si la conexion esta mal echa muestra mensaje por pantalla
             JOptionPane.showMessageDialog(this, "Conoxion fallida");
         }
 
@@ -343,17 +359,21 @@ public class PantallaPrincipal extends javax.swing.JDialog {
     }
 
     private void crearPopupMenu() throws SQLException {
+        //Creamos el popmenu y insertamos los campos
         JPopupMenu popupMenu = new JPopupMenu();
         JMenuItem modificar = new JMenuItem("Modificar esta incidencia");
 
         popupMenu.add(modificar);
 
+        //Añadidos el popupmenu a la tabla
         jTableMisIncidencias.setComponentPopupMenu(popupMenu);
 
+        //Cuando se clike sobre el el item modifica esta incidencia
         modificar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 try {
+                    //Llamamo al metodo para actualizar la incidencia
                     modificarIncidencia();
                 } catch (SQLException ex) {
                     java.util.logging.Logger.getLogger(ProfesoresPrincipal.class.getName()).log(Level.SEVERE, null, ex);
@@ -361,19 +381,22 @@ public class PantallaPrincipal extends javax.swing.JDialog {
             }
 
         });
-
     }
 
     public void modificarIncidencia() throws SQLException {
+        //Guarmamos la fila que esta seleccionada en una variable
        int cuentaFilasSeleccionadas = jTableMisIncidencias.getSelectedRowCount();
+       //Si no hay fila seleccionada
         if (cuentaFilasSeleccionadas == 0) {
+            //Muestra mensaje de error
             JOptionPane.showMessageDialog(this, "No hay filas seleccionadas", "Error", JOptionPane.WARNING_MESSAGE);
         } else {
+            //Guarda la fila seleccionada 
             int fila = jTableMisIncidencias.getSelectedRow();
+            //Guarda el valor de la fila en una variable
             String idIncidencia = jTableMisIncidencias.getModel().getValueAt(fila, 0).toString();
-
-           
             
+            //Pasamos a la pantalla de modicar la incidencia y le pasamos el id de la incidencia y el rol
             ModificaIncidencia modificarMiIncidencia = new ModificaIncidencia(this, true,idIncidencia,usuRol);
             modificarMiIncidencia.setVisible(true);
             

@@ -238,7 +238,6 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
     private void jButtonRolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRolActionPerformed
         try {
             consultarRol();
-            System.out.println("Profesores.ProfesoresPrincipal.jButtonRolActionPerformed()"+opcionRol);
             if (opcionRol != null) {
                 filtrarPorRol();
             }

@@ -13,6 +13,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
@@ -32,7 +34,7 @@ public class ModificaIncidencia extends javax.swing.JDialog {
     String estado = "";
     Date fecha;
     Date fechaInicio;
-    Date fechaFin ;
+    Date fechaFin;
     String urgencia = "";
     String ubicacion = "";
     String observaciones = "";
@@ -43,7 +45,6 @@ public class ModificaIncidencia extends javax.swing.JDialog {
     public ModificaIncidencia(javax.swing.JDialog parent, boolean modal, String idIncidencia, String usuRol) throws SQLException {
         super(parent, modal);
         initComponents();
-
 
         idIn = idIncidencia;
         rolUsu = usuRol;
@@ -284,22 +285,19 @@ public class ModificaIncidencia extends javax.swing.JDialog {
 
         String strDateTimeFormat = "YYYY-MM-dd hh:mm:ss"; // El formato de fecha está especificado  
         SimpleDateFormat objdateTimeSDF = new SimpleDateFormat(strDateTimeFormat); // La cadena de formato de fecha se pasa como un argumento al objeto 
-        
+
         String strDateFormat = "YYYY-MM-dd"; // El formato de fecha está especificado  
         SimpleDateFormat objdateSDF = new SimpleDateFormat(strDateFormat); // La cadena de formato de fecha se pasa como un argumento al objeto 
-       
-        String usuarioIns= jTextFieldUsuario.getText();
-        
+
+        String usuarioIns = jTextFieldUsuario.getText();
+
         String descripcionIns = jTextFieldDescripcion.getText();
-        
+
         String estadoIns = jComboBoxEstado.getSelectedItem().toString();
         String[] estado = estadoIns.split("-");
         String idEstadoIns = estado[0];
-        
-        Date fechaDate= jDateChooserFecha.getDate();
-        String fechaIns = objdateTimeSDF.format(fechaDate);
 
-        
+
         String urg = jComboBoxUrgencia.getSelectedItem().toString();
         String[] urgencia = urg.split("-");
         String idUrgencia = urgencia[0];
@@ -307,47 +305,67 @@ public class ModificaIncidencia extends javax.swing.JDialog {
         String ubi = jComboBoxUbicacion.getSelectedItem().toString();
         String[] ubicacion = ubi.split("-");
         String idUbicacion = ubicacion[0];
-        
-        String descTecIns =jTextFieldDescripcionTec.getText();
-        
-        String horasString =jTextFieldHoras.getText();
-        int horasIns = Integer.parseInt (horasString);
-        
-        Date fechaIncioDate=jDateChooserFechaIncio.getDate();
-        String fechaIncioIns = objdateSDF.format(fechaIncioDate);
-        
-        Date fechaFinDate=jDateChooserFechaFin.getDate();
-        String fechaFinIns =objdateSDF.format(fechaFinDate);
-        
-        String observacionesIns=jTextFieldObservaciones.getText();
-        
-        
+
+        String descTecIns = jTextFieldDescripcionTec.getText();
+
+        String horasString = jTextFieldHoras.getText();
+        int horasIns = Integer.parseInt(horasString);
+
+        String fechaIncioIns;
+        if (jDateChooserFechaIncio.getDate() != null) {
+            fechaIncioIns = objdateSDF.format(jDateChooserFechaIncio.getDate());
+        } else {
+            fechaIncioIns = null;
+        }
+
+        String fechaFinIns;
+        if (jDateChooserFechaFin.getDate() != null) {
+            fechaFinIns = objdateSDF.format(jDateChooserFechaFin.getDate());
+        } else {
+            fechaFinIns = null;
+        }
+
+        String observacionesIns = jTextFieldObservaciones.getText();
 
         
-
-
-
-
-       try {
-            PreparedStatement ps = null;
+        try {
             conectar = new Conectar();
             Connection conexion = conectar.getConexion();
+            // Le pasamos la consulta
+            String sql = "update man_incidencias set \n"
+                    + "     descripcion = ?, \n"
+                    + "    desc_tecnica = ?, \n"
+                    + "    horas = ?, \n"
+                    + "    id_estado = ?, \n"
+                    + "    fecha_ini_rep = ?, \n"
+                    + "    fecha_fin_rep = ?, \n"
+                    + "    nivel_urgencia = ?, \n"
+                    + "    id_ubicacion = ?, \n"
+                    + "    observaciones = ? \n"
+                    + "where id_incidencia = " + idIn + ";";
 
-            String sql = "UPDATE man_incidencias SET descripcion='"+descripcionIns+"',desc_tecnica='"+descTecIns+"', \n"
-                    + " horas='"+horasIns+"',id_estado='"+idEstadoIns+"',fecha='"+fechaIns+"',fecha_ini_rep='"+fechaIncioIns+"',fecha_fin_rep='"+fechaFinIns+"',"
-                    + "nivel_urgencia='"+idUrgencia+"',id_ubicacion='"+idUbicacion+"',observaciones='"+observacionesIns+"'\n"
-                    + "WHERE (id_incidencia = '" + idIn + "');";
-
+            PreparedStatement ps = null;
             ps = conexion.prepareStatement(sql);
+
+            ps.setString(1, descripcion);
+            ps.setString(2, descripcionIns);
+            ps.setInt(3, horas);
+            ps.setInt(4, Integer.parseInt(idEstadoIns));
+            ps.setString(5, fechaIncioIns);
+            ps.setString(6, fechaFinIns);
+            ps.setInt(7, Integer.parseInt(idEstadoIns));
+            ps.setInt(8, Integer.parseInt(idUbicacion));
+            ps.setString(9, observacionesIns);
+
+
+
             ps.executeUpdate();
-
             JOptionPane.showMessageDialog(this, "Incidencia modificada");
-
+            
             conexion.close();
 
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "No se han podido insertar los datos");
-            System.err.println(ex);
+             JOptionPane.showMessageDialog(this, "No se han podido insertar los datos");
         }
 
         dispose();
@@ -411,17 +429,17 @@ public class ModificaIncidencia extends javax.swing.JDialog {
 
                 while (rs.next()) {
                     //dtm.addRow(rs);
-                    usu=rs.getString(1);
-                    descripcion= rs.getString(2);
-                    descTecnica= rs.getString(3);
-                    horas= rs.getInt(4);
-                    estado= rs.getString(5);
-                    fecha= rs.getDate(6);
-                    fechaInicio= rs.getDate(7);
-                    fechaFin= rs.getDate(8);
-                    urgencia= rs.getString(9);
-                    ubicacion= rs.getString(10);
-                    observaciones= rs.getString(11);
+                    usu = rs.getString(1);
+                    descripcion = rs.getString(2);
+                    descTecnica = rs.getString(3);
+                    horas = rs.getInt(4);
+                    estado = rs.getString(5);
+                    fecha = rs.getDate(6);
+                    fechaInicio = rs.getDate(7);
+                    fechaFin = rs.getDate(8);
+                    urgencia = rs.getString(9);
+                    ubicacion = rs.getString(10);
+                    observaciones = rs.getString(11);
 
                 }
             } catch (SQLException sQLException) {
@@ -436,23 +454,22 @@ public class ModificaIncidencia extends javax.swing.JDialog {
     }
 
     private void atribuirVariables() {
-        
+
         jTextFieldUsuario.setText(usu);
         jTextFieldDescripcion.setText(descripcion);
         jTextFieldDescripcionTec.setText(descTecnica);
         jTextFieldHoras.setText(String.valueOf(horas));
-        jLabelEstado.setText("El estado anterior era: "+estado);
+        jLabelEstado.setText("El estado anterior era: " + estado);
         jDateChooserFecha.setDate(fecha);
         jDateChooserFechaIncio.setDate(fechaInicio);
         jDateChooserFechaFin.setDate(fechaFin);
         jLabelUrgencia.setText("La urgencia anterior era: " + urgencia);
         jLabelUbicacion.setText("La ubicaiocn anterior era: " + ubicacion);
         jTextFieldObservaciones.setText(observaciones);
-        
+
     }
-    
-    
-     public void consultarUbicacion(JComboBox comboBox) {
+
+    public void consultarUbicacion(JComboBox comboBox) {
         PreparedStatement ps = null;
         conectar = new Conectar();
         Connection conexion = conectar.getConexion();
@@ -510,7 +527,7 @@ public class ModificaIncidencia extends javax.swing.JDialog {
     }
 
     private void activarBotones() {
-         //SI EL USUARO ES ROOT
+        //SI EL USUARO ES ROOT
         if (rolUsu.equals("root")) {
             jTextFieldUsuario.setEditable(false);
             jDateChooserFecha.setEnabled(false);
@@ -526,8 +543,6 @@ public class ModificaIncidencia extends javax.swing.JDialog {
             jDateChooserFechaIncio.setEnabled(false);
             jDateChooserFechaFin.setEnabled(false);
             jDateChooserFecha.setEnabled(false);
-            
-            
 
         }
     }

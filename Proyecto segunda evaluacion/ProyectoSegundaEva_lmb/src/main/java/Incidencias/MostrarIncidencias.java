@@ -26,6 +26,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -43,18 +44,18 @@ public class MostrarIncidencias extends javax.swing.JDialog {
 
     Conectar conectar = null;
     String rolUsu = "";
-    Object opcionUrgencia="";
-    Object opcionEstado="";
+    Object opcionUrgencia = "";
+    Object opcionEstado = "";
     Object opcionProfesor = "";
+    TableRowSorter<TableModel> elQueOrdena;
+
     /**
      * Creates new form MostrarIncidencias
      */
-    public MostrarIncidencias(javax.swing.JDialog parent, boolean modal,String usuRol) throws SQLException {
+    public MostrarIncidencias(javax.swing.JDialog parent, boolean modal, String usuRol) throws SQLException {
         super(parent, modal);
         initComponents();
-        rolUsu=usuRol;
-        
-
+        rolUsu = usuRol;
 
         rellenoTabla();
         crearPopupMenu();
@@ -166,19 +167,18 @@ public class MostrarIncidencias extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //INICIO FILTROS
     private void jButtonProfesorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonProfesorActionPerformed
         try {
             consultarProfesor();
             if (opcionProfesor != null) {
-                filtrarProfesor();
+                elQueOrdena.setRowFilter(RowFilter.regexFilter("(?i)" + opcionProfesor, 1));
             }
         } catch (HeadlessException ex) {
             java.util.logging.Logger.getLogger(ProfesoresPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(MostrarIncidencias.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButtonProfesorActionPerformed
-    public void consultarProfesor() {  
+    public void consultarProfesor() {
         PreparedStatement ps = null;
         conectar = new Conectar();
         Connection conexion = conectar.getConexion();
@@ -199,89 +199,22 @@ public class MostrarIncidencias extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, e);
         }
     }
-    public void filtrarProfesor() throws SQLException {
-        DefaultTableModel dtm = new DefaultTableModel();
-        //Creamos las columnas que tendra la tabla
-        dtm.setColumnIdentifiers(new String[]{"Numero de incidencia","Creada por", "Descripcion", "Descripcion tecnica", "Horas de reparacion", "Estado", "Lazmiento", "Inicio reparacion", "Fin reparacion", "Nivel", "Clase", "Edificio", "Observaciones"});
-        //Elemento para ordenar la tabla
-        TableRowSorter<TableModel> elQueOrdena = new TableRowSorter<TableModel>(dtm);
-        //Ordenamos la tabla segun las columnas
-        jTableIncidencias.setRowSorter(elQueOrdena);
 
-        //Añadimos las columnas a la tabla
-        jTableIncidencias.setModel(dtm);
-
-        conectar = new Conectar();
-        Connection conexion = conectar.getConexion();
-        String[] incidencia = new String[13];
-        if (conexion != null) {
-
-            try {
-                Statement s = conexion.createStatement();
-                ResultSet rs = s.executeQuery("select inc.id_incidencia,p.nombre_completo,inc.descripcion,inc.desc_tecnica,inc.horas,\n" +
-"est.estado,inc.fecha,inc.fecha_ini_rep,inc.fecha_fin_rep,ur.urgencia,\n" +
-"                        ub.ubicacion,ed.edificio,inc.observaciones\n" +
-"                        from man_incidencias inc\n" +
-"                        inner join fp_profesor p on p.id_profesor=inc.id_profesor_crea\n" +
-"                        inner join man_estado est on est.id_estado = inc.id_estado\n" +
-"                        inner join man_urgencia ur on ur.id_urgencia=inc.nivel_urgencia\n" +
-"                        inner join man_ubicacion ub on ub.id_ubicacion=inc.id_ubicacion\n" +
-"                        inner join man_edificio ed on ed.id_edificio=ub.id_edificio\n" +
-"                        where p.nombre_completo='"+opcionProfesor+"';");
-
-                while (rs.next()) {
-                    //dtm.addRow(rs);
-                    incidencia[0] = rs.getString(1);
-                    incidencia[1] = rs.getString(2);
-                    incidencia[2] = rs.getString(3);
-                    incidencia[3] = rs.getString(4);
-                    incidencia[4] = rs.getString(5);
-                    incidencia[5] = rs.getString(6);
-                    incidencia[6] = rs.getString(7);
-                    incidencia[7] = rs.getString(8);
-                    incidencia[8] = rs.getString(9);
-                    incidencia[9] = rs.getString(10);
-                    incidencia[10] = rs.getString(11);
-                    incidencia[11] = rs.getString(12);
-                    incidencia[12] = rs.getString(13);
-
-                    dtm.addRow(incidencia);
-                }
-            } catch (SQLException sQLException) {
-                JOptionPane.showMessageDialog(this, "Datos no cargados");
-            }
-            conexion.close();
-
-        } else {
-            JOptionPane.showMessageDialog(this, "Conoxion fallida");
-        }
-
-    }
-    
-    
-    
     private void jButtonQuitarFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonQuitarFiltroActionPerformed
-        try {
-            rellenoTabla();
-        } catch (SQLException ex) {
-            java.util.logging.Logger.getLogger(ProfesoresPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        elQueOrdena.setRowFilter(RowFilter.regexFilter("", 0));
     }//GEN-LAST:event_jButtonQuitarFiltroActionPerformed
 
-    
     private void jButtonUrgenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUrgenciaActionPerformed
         try {
             consultarUrgencia();
             if (opcionUrgencia != null) {
-                filtrarUrgencia();
+                elQueOrdena.setRowFilter(RowFilter.regexFilter("(?i)" + opcionUrgencia, 9));
             }
         } catch (HeadlessException ex) {
             java.util.logging.Logger.getLogger(ProfesoresPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(MostrarIncidencias.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButtonUrgenciaActionPerformed
-    public void consultarUrgencia() {  
+    public void consultarUrgencia() {
         PreparedStatement ps = null;
         conectar = new Conectar();
         Connection conexion = conectar.getConexion();
@@ -302,79 +235,18 @@ public class MostrarIncidencias extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, e);
         }
     }
-     public void filtrarUrgencia() throws SQLException {
-        DefaultTableModel dtm = new DefaultTableModel();
-        //Creamos las columnas que tendra la tabla
-        dtm.setColumnIdentifiers(new String[]{"Numero de incidencia","Creada por", "Descripcion", "Descripcion tecnica", "Horas de reparacion", "Estado", "Lazmiento", "Inicio reparacion", "Fin reparacion", "Nivel", "Clase", "Edificio", "Observaciones"});
-        //Elemento para ordenar la tabla
-        TableRowSorter<TableModel> elQueOrdena = new TableRowSorter<TableModel>(dtm);
-        //Ordenamos la tabla segun las columnas
-        jTableIncidencias.setRowSorter(elQueOrdena);
 
-        //Añadimos las columnas a la tabla
-        jTableIncidencias.setModel(dtm);
-
-        conectar = new Conectar();
-        Connection conexion = conectar.getConexion();
-        String[] incidencia = new String[13];
-        if (conexion != null) {
-
-            try {
-                Statement s = conexion.createStatement();
-                ResultSet rs = s.executeQuery("select inc.id_incidencia,p.nombre_completo,inc.descripcion,inc.desc_tecnica,inc.horas,\n" +
-"est.estado,inc.fecha,inc.fecha_ini_rep,inc.fecha_fin_rep,ur.urgencia,\n" +
-"                        ub.ubicacion,ed.edificio,inc.observaciones\n" +
-"                        from man_incidencias inc\n" +
-"                        inner join fp_profesor p on p.id_profesor=inc.id_profesor_crea\n" +
-"                        inner join man_estado est on est.id_estado = inc.id_estado\n" +
-"                        inner join man_urgencia ur on ur.id_urgencia=inc.nivel_urgencia\n" +
-"                        inner join man_ubicacion ub on ub.id_ubicacion=inc.id_ubicacion\n" +
-"                        inner join man_edificio ed on ed.id_edificio=ub.id_edificio\n" +
-"                        where ur.urgencia='"+opcionUrgencia+"';");
-
-                while (rs.next()) {
-                    //dtm.addRow(rs);
-                    incidencia[0] = rs.getString(1);
-                    incidencia[1] = rs.getString(2);
-                    incidencia[2] = rs.getString(3);
-                    incidencia[3] = rs.getString(4);
-                    incidencia[4] = rs.getString(5);
-                    incidencia[5] = rs.getString(6);
-                    incidencia[6] = rs.getString(7);
-                    incidencia[7] = rs.getString(8);
-                    incidencia[8] = rs.getString(9);
-                    incidencia[9] = rs.getString(10);
-                    incidencia[10] = rs.getString(11);
-                    incidencia[11] = rs.getString(12);
-                    incidencia[12] = rs.getString(13);
-
-                    dtm.addRow(incidencia);
-                }
-            } catch (SQLException sQLException) {
-                JOptionPane.showMessageDialog(this, "Datos no cargados");
-            }
-            conexion.close();
-
-        } else {
-            JOptionPane.showMessageDialog(this, "Conoxion fallida");
-        }
-
-    }
-    
-     
     private void jButtonEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEstadoActionPerformed
         try {
             consultarEstado();
             if (opcionEstado != null) {
-                filtrarEstado();
+                elQueOrdena.setRowFilter(RowFilter.regexFilter("(?i)" + opcionEstado, 5));
             }
         } catch (HeadlessException ex) {
             java.util.logging.Logger.getLogger(ProfesoresPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(MostrarIncidencias.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButtonEstadoActionPerformed
-   public void consultarEstado() {
+    public void consultarEstado() {
         PreparedStatement ps = null;
         conectar = new Conectar();
         Connection conexion = conectar.getConexion();
@@ -395,74 +267,15 @@ public class MostrarIncidencias extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, e);
         }
     }
-   public void filtrarEstado() throws SQLException {
-        DefaultTableModel dtm = new DefaultTableModel();
-        //Creamos las columnas que tendra la tabla
-        dtm.setColumnIdentifiers(new String[]{"Numero de incidencia","Creada por", "Descripcion", "Descripcion tecnica", "Horas de reparacion", "Estado", "Lazmiento", "Inicio reparacion", "Fin reparacion", "Nivel", "Clase", "Edificio", "Observaciones"});
-        //Elemento para ordenar la tabla
-        TableRowSorter<TableModel> elQueOrdena = new TableRowSorter<TableModel>(dtm);
-        //Ordenamos la tabla segun las columnas
-        jTableIncidencias.setRowSorter(elQueOrdena);
-
-        //Añadimos las columnas a la tabla
-        jTableIncidencias.setModel(dtm);
-
-        conectar = new Conectar();
-        Connection conexion = conectar.getConexion();
-        String[] incidencia = new String[13];
-        if (conexion != null) {
-
-            try {
-                Statement s = conexion.createStatement();
-                ResultSet rs = s.executeQuery("select inc.id_incidencia,p.nombre_completo,inc.descripcion,inc.desc_tecnica,inc.horas,\n" +
-"est.estado,inc.fecha,inc.fecha_ini_rep,inc.fecha_fin_rep,ur.urgencia,\n" +
-"                        ub.ubicacion,ed.edificio,inc.observaciones\n" +
-"                        from man_incidencias inc\n" +
-"                        inner join fp_profesor p on p.id_profesor=inc.id_profesor_crea\n" +
-"                        inner join man_estado est on est.id_estado = inc.id_estado\n" +
-"                        inner join man_urgencia ur on ur.id_urgencia=inc.nivel_urgencia\n" +
-"                        inner join man_ubicacion ub on ub.id_ubicacion=inc.id_ubicacion\n" +
-"                        inner join man_edificio ed on ed.id_edificio=ub.id_edificio\n" +
-"                        where est.estado='"+opcionEstado+"';");
-
-                while (rs.next()) {
-                    //dtm.addRow(rs);
-                    incidencia[0] = rs.getString(1);
-                    incidencia[1] = rs.getString(2);
-                    incidencia[2] = rs.getString(3);
-                    incidencia[3] = rs.getString(4);
-                    incidencia[4] = rs.getString(5);
-                    incidencia[5] = rs.getString(6);
-                    incidencia[6] = rs.getString(7);
-                    incidencia[7] = rs.getString(8);
-                    incidencia[8] = rs.getString(9);
-                    incidencia[9] = rs.getString(10);
-                    incidencia[10] = rs.getString(11);
-                    incidencia[11] = rs.getString(12);
-                    incidencia[12] = rs.getString(13);
-
-                    dtm.addRow(incidencia);
-                }
-            } catch (SQLException sQLException) {
-                JOptionPane.showMessageDialog(this, "Datos no cargados");
-            }
-            conexion.close();
-
-        } else {
-            JOptionPane.showMessageDialog(this, "Conoxion fallida");
-        }
-
-    }
-    
-    
+    //FIN FILTROS
     
     
     public void rellenoTabla() throws SQLException {
         DefaultTableModel dtm = new DefaultTableModel();
         //Creamos las columnas que tendra la tabla
-        dtm.setColumnIdentifiers(new String[]{"Numero de incidencia","Creada por", "Descripcion", "Descripcion tecnica", "Horas de reparacion", "Estado", "Lazmiento", "Inicio reparacion", "Fin reparacion", "Nivel", "Clase", "Edificio", "Observaciones"});
+        dtm.setColumnIdentifiers(new String[]{"Numero de incidencia", "Creada por", "Descripcion", "Descripcion tecnica", "Horas de reparacion", "Estado", "Lazmiento", "Inicio reparacion", "Fin reparacion", "Nivel", "Clase", "Edificio", "Observaciones"});
         //Elemento para ordenar la tabla
-        TableRowSorter<TableModel> elQueOrdena = new TableRowSorter<TableModel>(dtm);
+        elQueOrdena = new TableRowSorter<TableModel>(dtm);
         //Ordenamos la tabla segun las columnas
         jTableIncidencias.setRowSorter(elQueOrdena);
 
@@ -515,7 +328,7 @@ public class MostrarIncidencias extends javax.swing.JDialog {
 
     }
 
-   private void crearPopupMenu() throws SQLException {
+    private void crearPopupMenu() throws SQLException {
         JPopupMenu popupMenu = new JPopupMenu();
         JMenuItem modificar = new JMenuItem("Reparar esta incidencia");
 
@@ -537,26 +350,20 @@ public class MostrarIncidencias extends javax.swing.JDialog {
     }
 
     public void modificarIncidencia() throws SQLException {
-       int cuentaFilasSeleccionadas = jTableIncidencias.getSelectedRowCount();
+        int cuentaFilasSeleccionadas = jTableIncidencias.getSelectedRowCount();
         if (cuentaFilasSeleccionadas == 0) {
             JOptionPane.showMessageDialog(this, "No hay filas seleccionadas", "Error", JOptionPane.WARNING_MESSAGE);
         } else {
             int fila = jTableIncidencias.getSelectedRow();
             String idIncidencia = jTableIncidencias.getModel().getValueAt(fila, 0).toString();
-            System.out.println(idIncidencia);
 
-            
-            
-            ModificaIncidencia modificarMiIncidencia = new ModificaIncidencia(this, true,idIncidencia,rolUsu);
+            ModificaIncidencia modificarMiIncidencia = new ModificaIncidencia(this, true, idIncidencia, rolUsu);
             modificarMiIncidencia.setVisible(true);
-            
+
             rellenoTabla();
 
-            
         }
     }
-
-    
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -568,7 +375,5 @@ public class MostrarIncidencias extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableIncidencias;
     // End of variables declaration//GEN-END:variables
-    
-
 
 }

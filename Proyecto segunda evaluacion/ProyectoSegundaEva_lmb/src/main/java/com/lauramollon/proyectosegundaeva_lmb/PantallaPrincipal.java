@@ -77,13 +77,13 @@ public class PantallaPrincipal extends javax.swing.JDialog {
             jMenuIncidencias.setVisible(true);
             //SI EL USUARIO ES TECNICO
         } else if (usuRol.equals("tecnico")) {
-            jMenuItemProfesores.setVisible(false);
+            jMenuItemProfesores.setVisible(true);
             jMenuItemIncidencias.setVisible(true);
             jMenuItemEstadisticaMes.setVisible(false);
             jMenuIncidencias.setVisible(true);
             //SI EL USUARIO ES PROFESOR
         } else if (usuRol.equals("profesor")) {
-            jMenuItemProfesores.setVisible(false);
+            jMenuItemProfesores.setVisible(true);
             jMenuItemIncidencias.setVisible(false);
             jMenuItemEstadisticaMes.setVisible(false);
             jMenuIncidencias.setVisible(false);
@@ -219,7 +219,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
 
         try {
             //Si se presiona el item se abre la pantalla de mostrar todos los profesores (dependiende del usuario)
-            ProfesoresPrincipal pantallaProfesores = new ProfesoresPrincipal(this, true);
+            ProfesoresPrincipal pantallaProfesores = new ProfesoresPrincipal(this, true,usuRol);
             pantallaProfesores.setVisible(true);
         } catch (SQLException ex) {
             Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);

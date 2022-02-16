@@ -25,6 +25,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -39,17 +40,34 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
     Conectar conectar = null;
     Object opcionDepartamento = "";
     Object opcionRol="";
+    String usuRol = "";
+    TableRowSorter<TableModel> elQueOrdena;
+    
 
     /**
      * Creates new form Profesores_principal
      */
-    public ProfesoresPrincipal(javax.swing.JDialog parent, boolean modal) throws SQLException {
+    public ProfesoresPrincipal(javax.swing.JDialog parent, boolean modal,String rol) throws SQLException {
         super(parent, modal);
         initComponents();
+        
+        usuRol=rol;
 
+        controlUsuarios();
         rellenoTabla();
-        crearPopupMenu();
 
+
+    }
+    public void controlUsuarios() throws SQLException {
+        if (usuRol.equals("root")) {
+            jButtonInsertar.setEnabled(true);
+            crearPopupMenu();
+        }else if (usuRol.equals("tecnico")){
+            jButtonInsertar.setEnabled(false);
+        }else if (usuRol.equals("profesor")){
+            jButtonInsertar.setEnabled(false);
+;
+        }
     }
 
     public void rellenoTabla() throws SQLException {
@@ -57,7 +75,7 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
         //Creamos las columnas que tendra la tabla
         dtm.setColumnIdentifiers(new String[]{"Usuario", "Nombre completo", "Email", "Activo", "Rol", "Departamento"});
         //Elemento para ordenar la tabla
-        TableRowSorter<TableModel> elQueOrdena = new TableRowSorter<TableModel>(dtm);
+        elQueOrdena = new TableRowSorter<TableModel>(dtm);
         //Ordenamos la tabla segun las columnas
         jTableProfesores.setRowSorter(elQueOrdena);
 
@@ -103,6 +121,7 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
         jButtonInsertar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableProfesores = new javax.swing.JTable();
@@ -226,12 +245,10 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
 
     }//GEN-LAST:event_jButtonInsertarActionPerformed
 
+    
+    //FILTROS
     private void jButtonQuitarFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonQuitarFiltroActionPerformed
-        try {
-            rellenoTabla();
-        } catch (SQLException ex) {
-            java.util.logging.Logger.getLogger(ProfesoresPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        elQueOrdena.setRowFilter(RowFilter.regexFilter("", 0));
     }//GEN-LAST:event_jButtonQuitarFiltroActionPerformed
 
     
@@ -239,7 +256,7 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
         try {
             consultarRol();
             if (opcionRol != null) {
-                filtrarPorRol();
+                 elQueOrdena.setRowFilter(RowFilter.regexFilter("(?i)" + opcionRol, 4));
             }
         } catch (HeadlessException ex) {
             java.util.logging.Logger.getLogger(ProfesoresPrincipal.class.getName()).log(Level.SEVERE, null, ex);
@@ -249,8 +266,7 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
 
 
     }//GEN-LAST:event_jButtonRolActionPerformed
-
-     public void consultarRol() throws SQLException {
+    public void consultarRol() throws SQLException {
          PreparedStatement ps = null;
         conectar = new Conectar();
         Connection conexion = conectar.getConexion();
@@ -271,72 +287,18 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, e);
         }
     }
-
-     public void filtrarPorRol() throws HeadlessException, SQLException {
-
-        DefaultTableModel dtm = new DefaultTableModel();
-        //Creamos las columnas que tendra la tabla
-        dtm.setColumnIdentifiers(new String[]{"Usuario", "Nombre completo", "Email", "Activo", "Rol", "Departamento"});
-        //Elemento para ordenar la tabla
-        TableRowSorter<TableModel> elQueOrdena = new TableRowSorter<TableModel>(dtm);
-        //Ordenamos la tabla segun las columnas
-        jTableProfesores.setRowSorter(elQueOrdena);
-
-        //Añadimos las columnas a la tabla
-        jTableProfesores.setModel(dtm);
-
-        conectar = new Conectar();
-        Connection conexion = conectar.getConexion();
-        String[] profes = new String[6];
-        if (conexion != null) {
-
-            try {
-                Statement s = conexion.createStatement();
-                ResultSet rs = null;
-
-                rs = s.executeQuery("select p.login,p.nombre_completo,p.email,if(p.activo=1,\"Si\",\"No\"),r.rol,d.departamento_corto from fp_profesor p inner join fp_rol r on r.id_rol=p.id_rol inner join fp_departamento d on d.id_departamento=p.id_departamento where r.rol='" + opcionRol + "' ;");
-
-                while (rs.next()) {
-                    //dtm.addRow(rs);
-                    profes[0] = rs.getString(1);
-                    profes[1] = rs.getString(2);
-                    profes[2] = rs.getString(3);
-                    profes[3] = rs.getString(4);
-                    profes[4] = rs.getString(5);
-                    profes[5] = rs.getString(6);
-
-                    dtm.addRow(profes);
-                }
-
-            } catch (SQLException sQLException) {
-                JOptionPane.showMessageDialog(this, "Datos no cargados");
-
-            }
-
-            conexion.close();
-
-        } else {
-            JOptionPane.showMessageDialog(this, "Conoxion fallida");
-        }
-
-    }
-   
-    
     
     private void jButtonDepartamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDepartamentoActionPerformed
         try {
             consultarDepartamento();
             if (opcionDepartamento != null) {
-                filtrarPorDepartamento();
+                elQueOrdena.setRowFilter(RowFilter.regexFilter("(?i)" + opcionDepartamento, 5));
             }
         } catch (HeadlessException ex) {
             java.util.logging.Logger.getLogger(ProfesoresPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            java.util.logging.Logger.getLogger(ProfesoresPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
 
     }//GEN-LAST:event_jButtonDepartamentoActionPerformed
-
     public void consultarDepartamento() {
         PreparedStatement ps = null;
         conectar = new Conectar();
@@ -359,56 +321,6 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
         }
     }
 
-    public void filtrarPorDepartamento() throws HeadlessException, SQLException {
-
-        DefaultTableModel dtm = new DefaultTableModel();
-        //Creamos las columnas que tendra la tabla
-        dtm.setColumnIdentifiers(new String[]{"Usuario", "Nombre completo", "Email", "Activo", "Rol", "Departamento"});
-        //Elemento para ordenar la tabla
-        TableRowSorter<TableModel> elQueOrdena = new TableRowSorter<TableModel>(dtm);
-        //Ordenamos la tabla segun las columnas
-        jTableProfesores.setRowSorter(elQueOrdena);
-
-        //Añadimos las columnas a la tabla
-        jTableProfesores.setModel(dtm);
-
-        conectar = new Conectar();
-        Connection conexion = conectar.getConexion();
-        String[] profes = new String[6];
-        if (conexion != null) {
-
-            try {
-                Statement s = conexion.createStatement();
-                ResultSet rs = null;
-
-                rs = s.executeQuery("select p.login,p.nombre_completo,p.email,if(p.activo=1,\"Si\",\"No\"),r.rol,d.departamento_corto from fp_profesor p inner join fp_rol r on r.id_rol=p.id_rol inner join fp_departamento d on d.id_departamento=p.id_departamento where d.departamento_corto='" + opcionDepartamento + "' ;");
-
-                while (rs.next()) {
-                    //dtm.addRow(rs);
-                    profes[0] = rs.getString(1);
-                    profes[1] = rs.getString(2);
-                    profes[2] = rs.getString(3);
-                    profes[3] = rs.getString(4);
-                    profes[4] = rs.getString(5);
-                    profes[5] = rs.getString(6);
-
-                    dtm.addRow(profes);
-                }
-
-            } catch (SQLException sQLException) {
-                JOptionPane.showMessageDialog(this, "Datos no cargados");
-
-            }
-
-            conexion.close();
-
-        } else {
-            JOptionPane.showMessageDialog(this, "Conoxion fallida");
-        }
-
-    }
-    
-
     private void jButtonActividadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonActividadActionPerformed
 
         try {
@@ -416,86 +328,30 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
             actividad[0] = "Activo";
             actividad[1] = "Inactivo";
 
-            Object opcion = JOptionPane.showInputDialog(null, "Selecciona la actividad por la que quieres filtrar", "Elegir", JOptionPane.QUESTION_MESSAGE, null, actividad, actividad[0]);
+            Object opcionRol = JOptionPane.showInputDialog(null, "Selecciona la actividad por la que quieres filtrar", "Elegir", JOptionPane.QUESTION_MESSAGE, null, actividad, actividad[0]);
 
             //ERROR
-            if (opcion != null) {
-                filtrarPorActividad(opcion);
+            if (opcionRol != null) {
+                 elQueOrdena.setRowFilter(RowFilter.regexFilter("(?i)" + opcionRol, 3));
             }
 
         } catch (HeadlessException ex) {
 
-        } catch (SQLException ex) {
-            java.util.logging.Logger.getLogger(ProfesoresPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-
+        } 
     }//GEN-LAST:event_jButtonActividadActionPerformed
-    public void filtrarPorActividad(Object opcion) throws HeadlessException, SQLException {
-        if (!opcion.equals(null)) {
-            DefaultTableModel dtm = new DefaultTableModel();
-            //Creamos las columnas que tendra la tabla
-            dtm.setColumnIdentifiers(new String[]{"Usuario", "Nombre completo", "Email", "Activo", "Rol", "Departamento"});
-            //Elemento para ordenar la tabla
-            TableRowSorter<TableModel> elQueOrdena = new TableRowSorter<TableModel>(dtm);
-            //Ordenamos la tabla segun las columnas
-            jTableProfesores.setRowSorter(elQueOrdena);
-
-            //Añadimos las columnas a la tabla
-            jTableProfesores.setModel(dtm);
-
-            conectar = new Conectar();
-            Connection conexion = conectar.getConexion();
-            String[] profes = new String[6];
-            if (conexion != null) {
-
-                try {
-                    Statement s = conexion.createStatement();
-                    ResultSet rs = null;
-
-                    if (opcion.equals("Activo")) {
-                        rs = s.executeQuery("select p.login,p.nombre_completo,p.email,if(p.activo=1,\"Si\",\"No\"),r.rol,d.departamento_corto from fp_profesor p inner join fp_rol r on r.id_rol=p.id_rol inner join fp_departamento d on d.id_departamento=p.id_departamento where activo=1 ;");
-                    } else if (opcion.equals("Inactivo")) {
-                        rs = s.executeQuery("select p.login,p.nombre_completo,p.email,if(p.activo=1,\"Si\",\"No\"),r.rol,d.departamento_corto from fp_profesor p inner join fp_rol r on r.id_rol=p.id_rol inner join fp_departamento d on d.id_departamento=p.id_departamento where activo=0 ;");
-                    }
-
-                    while (rs.next()) {
-                        //dtm.addRow(rs);
-                        profes[0] = rs.getString(1);
-                        profes[1] = rs.getString(2);
-                        profes[2] = rs.getString(3);
-                        profes[3] = rs.getString(4);
-                        profes[4] = rs.getString(5);
-                        profes[5] = rs.getString(6);
-
-                        dtm.addRow(profes);
-                    }
-
-                } catch (SQLException sQLException) {
-                    JOptionPane.showMessageDialog(this, "Datos no cargados");
-
-                }
-
-                conexion.close();
-
-            } else {
-                JOptionPane.showMessageDialog(this, "Conoxion fallida");
-            }
-        } else {
-            rellenoTabla();
-            
-        }
-    }
-
+    
+    //FIN FILTROS
+    
+    //POPUP MENU
     private void crearPopupMenu() throws SQLException {
-        JPopupMenu popupMenu = new JPopupMenu();
+        JPopupMenu popupMenu= new JPopupMenu();
         JMenuItem bajaProfesor = new JMenuItem("Baja/alta de este profesor");
         JMenu rolProfesor = new JMenu("Cambiar rol de este profesor ");
         JMenuItem root = new JMenuItem("Poner como root");
         JMenuItem tecnico = new JMenuItem("Poner como tecnico");
         JMenuItem profesor = new JMenuItem("Poner como profesor");
         JMenuItem contraseñaProfesor = new JMenuItem("Cambiar contraseña de este profesor");
-
+        
         popupMenu.add(bajaProfesor);
 
         popupMenu.add(rolProfesor);
@@ -504,8 +360,13 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
         rolProfesor.add(profesor);
 
         popupMenu.add(contraseñaProfesor);
+        
+        popupMenu.setEnabled(true);
+        
 
+        
         jTableProfesores.setComponentPopupMenu(popupMenu);
+        
 
         bajaProfesor.addActionListener(new ActionListener() {
             @Override
@@ -764,7 +625,7 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
             }
         }
     }
-
+    //FIN POPUP MENU
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonActividad;
@@ -773,8 +634,11 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
     private javax.swing.JButton jButtonQuitarFiltro;
     private javax.swing.JButton jButtonRol;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableProfesores;
     // End of variables declaration//GEN-END:variables
+
+    
 
 }

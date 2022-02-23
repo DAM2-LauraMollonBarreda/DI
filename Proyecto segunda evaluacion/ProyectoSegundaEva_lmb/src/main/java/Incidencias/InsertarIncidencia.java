@@ -5,6 +5,8 @@
  */
 package Incidencias;
 
+import Email.EnviarCorreo;
+import Profesores.ProfesoresPrincipal;
 import baseDatos.Conectar;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,6 +16,8 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -38,8 +42,7 @@ public class InsertarIncidencia extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         usu = usuario;
-        
-     
+
         consultarUbicacion(jComboBoxUbicacion);
         consultarEstado(jComboBoxEstado);
         consultarUrgencia(jComboBoxUrgencia);
@@ -301,7 +304,20 @@ public class InsertarIncidencia extends javax.swing.JDialog {
             System.out.println(ex);
         }
 
-        dispose();
+        int resp = JOptionPane.showConfirmDialog(null, "¿Quieres enviar un correo para avisar a los tecnico?", "¿DESEAS ENVIAR UN CORREO?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        //Si la respuesta es sí(YES_OPTION)   
+        if (resp == JOptionPane.YES_OPTION) {
+            EnviarCorreo enviarCorreo;
+            try {
+                enviarCorreo = new EnviarCorreo(this, true);
+                enviarCorreo.setVisible(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(InsertarIncidencia.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            dispose();
+        } else {
+            dispose();
+        }
 
 
     }//GEN-LAST:event_jButtonInsertarIncidenciaActionPerformed

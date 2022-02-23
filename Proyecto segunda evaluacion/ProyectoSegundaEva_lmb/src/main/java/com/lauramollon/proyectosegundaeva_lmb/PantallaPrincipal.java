@@ -5,6 +5,7 @@
  */
 package com.lauramollon.proyectosegundaeva_lmb;
 
+import Email.EnviarCorreo;
 import Incidencias.Estadistica;
 import Incidencias.InsertarIncidencia;
 import Incidencias.ModificaIncidencia;
@@ -12,28 +13,38 @@ import Incidencias.MostrarIncidencias;
 import Profesores.ProfesoresPrincipal;
 import baseDatos.Conectar;
 import java.awt.Component;
+import java.awt.ComponentOrientation;
 import static java.awt.Frame.MAXIMIZED_BOTH;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
 
 /**
  *
@@ -54,12 +65,18 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         //Guardamos en la variables creadas a nivel de clase los datos que traemos desde la pantalla de autenticacion
         usuRol = rol;
         usuario = usu;
+        
+        
 
         initComponents();
+        
+        
+        
         //PARA ACOPLAR LA PANTALLA A TODO NUESTRO MONITOR
         //this.setBounds(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds()); 
 
         controlUsuarios();
+        rellenoComboAnexo();
         rellenoTabla();
         crearPopupMenu();
         autoagustarColumnas(jTableMisIncidencias);
@@ -75,18 +92,24 @@ public class PantallaPrincipal extends javax.swing.JDialog {
             jMenuItemIncidencias.setVisible(true);
             jMenuItemEstadisticaMes.setVisible(true);
             jMenuIncidencias.setVisible(true);
+            jComboBoxEstadosInci.setVisible(true);
+            jLabelAnexo.setVisible(true);
             //SI EL USUARIO ES TECNICO
         } else if (usuRol.equals("tecnico")) {
             jMenuItemProfesores.setVisible(true);
             jMenuItemIncidencias.setVisible(true);
             jMenuItemEstadisticaMes.setVisible(false);
             jMenuIncidencias.setVisible(true);
+            jComboBoxEstadosInci.setVisible(false);
+            jLabelAnexo.setVisible(false);
             //SI EL USUARIO ES PROFESOR
         } else if (usuRol.equals("profesor")) {
             jMenuItemProfesores.setVisible(true);
             jMenuItemIncidencias.setVisible(false);
             jMenuItemEstadisticaMes.setVisible(false);
             jMenuIncidencias.setVisible(false);
+            jComboBoxEstadosInci.setVisible(false);
+            jLabelAnexo.setVisible(false);
 
         }
     }
@@ -104,12 +127,17 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableMisIncidencias = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
+        jLabelAnexo = new javax.swing.JLabel();
+        jComboBoxEstadosInci = new javax.swing.JComboBox<>();
+        jButtonImprimir = new javax.swing.JButton();
         jMenuBar = new javax.swing.JMenuBar();
         jMenuGo = new javax.swing.JMenu();
         jMenuIncidencias = new javax.swing.JMenu();
         jMenuItemIncidencias = new javax.swing.JMenuItem();
         jMenuItemEstadisticaMes = new javax.swing.JMenuItem();
+        jMenuItemImprimirIncidencias = new javax.swing.JMenuItem();
         jMenuItemProfesores = new javax.swing.JMenuItem();
+        jMenuItemEnviarCorreo = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -141,6 +169,15 @@ public class PantallaPrincipal extends javax.swing.JDialog {
 
         jLabel1.setText("Tus incidencias son...");
 
+        jLabelAnexo.setText("Anexo de incidencias, dependiendo del estado ");
+
+        jButtonImprimir.setText("Imprimir");
+        jButtonImprimir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonImprimirActionPerformed(evt);
+            }
+        });
+
         jMenuGo.setText("Ir a..");
         jMenuGo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -166,6 +203,14 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         });
         jMenuIncidencias.add(jMenuItemEstadisticaMes);
 
+        jMenuItemImprimirIncidencias.setText("Imprimir incidencias");
+        jMenuItemImprimirIncidencias.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemImprimirIncidenciasActionPerformed(evt);
+            }
+        });
+        jMenuIncidencias.add(jMenuItemImprimirIncidencias);
+
         jMenuGo.add(jMenuIncidencias);
 
         jMenuItemProfesores.setText("Profesores");
@@ -176,6 +221,14 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         });
         jMenuGo.add(jMenuItemProfesores);
 
+        jMenuItemEnviarCorreo.setText("Enviar correo");
+        jMenuItemEnviarCorreo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemEnviarCorreoActionPerformed(evt);
+            }
+        });
+        jMenuGo.add(jMenuItemEnviarCorreo);
+
         jMenuBar.add(jMenuGo);
 
         setJMenuBar(jMenuBar);
@@ -185,15 +238,24 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButtonInsertarIncidencia, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(42, 42, 42)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1299, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(48, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1299, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButtonInsertarIncidencia, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabelAnexo)
+                                    .addComponent(jComboBoxEstadosInci, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonImprimir)))
+                        .addGap(6, 6, 6)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -203,9 +265,15 @@ public class PantallaPrincipal extends javax.swing.JDialog {
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 471, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(81, 81, 81)
+                .addGap(18, 18, 18)
                 .addComponent(jButtonInsertarIncidencia)
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabelAnexo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jComboBoxEstadosInci, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonImprimir))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
 
         pack();
@@ -219,7 +287,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
 
         try {
             //Si se presiona el item se abre la pantalla de mostrar todos los profesores (dependiende del usuario)
-            ProfesoresPrincipal pantallaProfesores = new ProfesoresPrincipal(this, true,usuRol);
+            ProfesoresPrincipal pantallaProfesores = new ProfesoresPrincipal(this, true, usuRol);
             pantallaProfesores.setVisible(true);
         } catch (SQLException ex) {
             Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
@@ -230,7 +298,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
     private void jMenuItemIncidenciasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemIncidenciasActionPerformed
         try {
             //Si se presiona el item se abre la pantalla de mostrar todas las incidencias (dependiendo del usuario)
-            MostrarIncidencias pantallaIncidencias = new MostrarIncidencias(this, true,usuRol);
+            MostrarIncidencias pantallaIncidencias = new MostrarIncidencias(this, true, usuRol);
             pantallaIncidencias.setVisible(true);
         } catch (SQLException ex) {
             Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
@@ -240,7 +308,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
     private void jButtonInsertarIncidenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInsertarIncidenciaActionPerformed
         try {
             //Si se presiona el boton se abre la pantalla de insertar incidencia
-            InsertarIncidencia pantallaIncidenciaInsertar = new InsertarIncidencia(this, true,usuario);
+            InsertarIncidencia pantallaIncidenciaInsertar = new InsertarIncidencia(this, true, usuario);
             pantallaIncidenciaInsertar.setVisible(true);
             rellenoTabla();
         } catch (SQLException ex) {
@@ -262,11 +330,70 @@ public class PantallaPrincipal extends javax.swing.JDialog {
 
     }//GEN-LAST:event_jTableMisIncidenciasKeyReleased
 
+    private void jMenuItemEnviarCorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemEnviarCorreoActionPerformed
+        try {
+            //Si se presiona el item se habre la pantalla del correo
+            EnviarCorreo pantallaEnviarCorreo = new EnviarCorreo(this, true);
+            pantallaEnviarCorreo.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(MostrarIncidencias.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jMenuItemEnviarCorreoActionPerformed
+
+    private void jMenuItemImprimirIncidenciasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemImprimirIncidenciasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItemImprimirIncidenciasActionPerformed
+
+    private void jButtonImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImprimirActionPerformed
+        try {
+            //Cargar driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            //Llamamos a la clase conectar
+            conectar = new Conectar();
+            //Creamos la conxion
+            Connection conexion = conectar.getConexion();
+            Map parametros = new HashMap();
+
+            String esta = jComboBoxEstadosInci.getSelectedItem().toString();
+            String[] estados = esta.split("-");
+            String idEstado = estados[0];
+
+            parametros.put("estado", idEstado);
+
+            JasperPrint print = JasperFillManager.fillReport(".\\src\\main\\java\\Informes\\DetalleIncidencia.jasper", parametros, conexion);
+
+            JFileChooser chooser = new JFileChooser();
+
+            //Para que solo de deje escojer archivos pdf
+            chooser.setAcceptAllFileFilterUsed(false);
+            //Ponemos la opcion de pdf en el file chooser 
+            FileNameExtensionFilter filtro = new FileNameExtensionFilter("*.pdf", "pdf");
+            chooser.setFileFilter(filtro);
+
+            //Abrimos el JFileChooser y guardamos el resultado en seleccion
+            int seleccion = chooser.showOpenDialog(this);
+            //Si el usuario ha pulsado la opción Aceptar
+            if (seleccion == JFileChooser.APPROVE_OPTION) {
+                //Guarda la factura creada en el informe en la ruta elegida por el usuario
+                JasperExportManager.exportReportToPdfFile(print, chooser.getSelectedFile().getAbsolutePath() + ".pdf");
+                //Muestra un dialogo
+                JOptionPane.showMessageDialog(this, "Las incidencias han sido imprimidas");
+            } else {
+                JOptionPane.showMessageDialog(this, "No hay fichero selecionado", "Error!", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
+            Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButtonImprimirActionPerformed
+
     public void rellenoTabla() throws SQLException {
         //Creamos el modelo de la tabla
         DefaultTableModel dtm = new DefaultTableModel();
         //Creamos las columnas que tendra la tabla
-        dtm.setColumnIdentifiers(new String[]{"Numero incidencia","Creada por", "Descripcion", "Descripcion tecnica", "Horas de reparacion", "Estado", "Lazmiento", "Inicio reparacion", "Fin reparacion", "Nivel", "Clase", "Edificio", "Observaciones"});
+        dtm.setColumnIdentifiers(new String[]{"Numero incidencia", "Creada por", "Descripcion", "Descripcion tecnica", "Horas de reparacion", "Estado", "Lazmiento", "Inicio reparacion", "Fin reparacion", "Nivel", "Clase", "Edificio", "Observaciones"});
         //Elemento para ordenar la tabla
         TableRowSorter<TableModel> elQueOrdena = new TableRowSorter<TableModel>(dtm);
         //Ordenamos la tabla segun las columnas
@@ -300,7 +427,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
                 //Mientras queden datos 
                 while (rs.next()) {
                     //Guardamos los datos en el array creado antes
-                    
+
                     incidencia[0] = rs.getString(1);
                     incidencia[1] = rs.getString(2);
                     incidencia[2] = rs.getString(3);
@@ -314,12 +441,12 @@ public class PantallaPrincipal extends javax.swing.JDialog {
                     incidencia[10] = rs.getString(11);
                     incidencia[11] = rs.getString(12);
                     incidencia[12] = rs.getString(13);
-                    
+
                     //Metemos en las filas del modelo (tabla) los datos extraidos
                     dtm.addRow(incidencia);
                 }
             } catch (SQLException sQLException) {
-                
+
                 JOptionPane.showMessageDialog(this, "Datos no cargados");
             }
             conexion.close();
@@ -385,8 +512,8 @@ public class PantallaPrincipal extends javax.swing.JDialog {
 
     public void modificarIncidencia() throws SQLException {
         //Guarmamos la fila que esta seleccionada en una variable
-       int cuentaFilasSeleccionadas = jTableMisIncidencias.getSelectedRowCount();
-       //Si no hay fila seleccionada
+        int cuentaFilasSeleccionadas = jTableMisIncidencias.getSelectedRowCount();
+        //Si no hay fila seleccionada
         if (cuentaFilasSeleccionadas == 0) {
             //Muestra mensaje de error
             JOptionPane.showMessageDialog(this, "No hay filas seleccionadas", "Error", JOptionPane.WARNING_MESSAGE);
@@ -395,24 +522,49 @@ public class PantallaPrincipal extends javax.swing.JDialog {
             int fila = jTableMisIncidencias.getSelectedRow();
             //Guarda el valor de la fila en una variable
             String idIncidencia = jTableMisIncidencias.getModel().getValueAt(fila, 0).toString();
-            
+
             //Pasamos a la pantalla de modicar la incidencia y le pasamos el id de la incidencia y el rol
-            ModificaIncidencia modificarMiIncidencia = new ModificaIncidencia(this, true,idIncidencia,usuRol);
+            ModificaIncidencia modificarMiIncidencia = new ModificaIncidencia(this, true, idIncidencia, usuRol);
             modificarMiIncidencia.setVisible(true);
-            
+
             rellenoTabla();
 
-            
         }
     }
 
+    public void rellenoComboAnexo() throws SQLException {
+
+        PreparedStatement ps = null;
+        conectar = new Conectar();
+        Connection conexion = conectar.getConexion();
+        String sql = "SELECT id_estado,estado FROM mantenimiento_mollon.man_estado;";
+        try {
+            ps = conexion.prepareStatement(sql);
+            ResultSet result = ps.executeQuery();
+
+            while (result.next()) {
+                jComboBoxEstadosInci.addItem(result.getString("id_estado") + "-" + result.getString("estado"));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+
+        conexion.close();
+
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonImprimir;
     private javax.swing.JButton jButtonInsertarIncidencia;
+    private javax.swing.JComboBox<String> jComboBoxEstadosInci;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabelAnexo;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JMenu jMenuGo;
     private javax.swing.JMenu jMenuIncidencias;
+    private javax.swing.JMenuItem jMenuItemEnviarCorreo;
     private javax.swing.JMenuItem jMenuItemEstadisticaMes;
+    private javax.swing.JMenuItem jMenuItemImprimirIncidencias;
     private javax.swing.JMenuItem jMenuItemIncidencias;
     private javax.swing.JMenuItem jMenuItemProfesores;
     private javax.swing.JScrollPane jScrollPane1;

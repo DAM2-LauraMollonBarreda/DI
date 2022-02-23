@@ -69,6 +69,12 @@ public class Pantalla extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jComboBoxPedido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxPedidoActionPerformed(evt);
+            }
+        });
+
         jButtonAceptar.setText("Aceptar");
         jButtonAceptar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -156,6 +162,10 @@ public class Pantalla extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_jButtonAceptarActionPerformed
+
+    private void jComboBoxPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxPedidoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxPedidoActionPerformed
 
     /**
      * @param args the command line arguments

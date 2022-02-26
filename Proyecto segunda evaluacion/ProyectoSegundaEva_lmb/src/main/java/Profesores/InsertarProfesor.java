@@ -57,33 +57,51 @@ public class InsertarProfesor extends javax.swing.JDialog {
         jComboBoxRol = new javax.swing.JComboBox<>();
         jButtonInsertar = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
+        jLabel1.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jLabel1.setText("Usuario");
 
+        jTextFieldUsuario.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
+
+        jLabel5.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jLabel5.setText("Contraseña");
 
+        jTextFieldContraseña.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
+
+        jLabel2.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jLabel2.setText("Nombre completo");
 
+        jTextFieldNombreCompleto.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
+
+        jLabel3.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jLabel3.setText("Email");
 
+        jTextFieldEmail.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
+
+        jComboBoxDepartamento.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jComboBoxDepartamento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxDepartamentoActionPerformed(evt);
             }
         });
 
+        jCheckBoxActivo.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jCheckBoxActivo.setText("Activo");
 
+        jLabel4.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jLabel4.setText("Rol");
 
+        jComboBoxRol.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jComboBoxRol.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxRolActionPerformed(evt);
             }
         });
 
+        jButtonInsertar.setFont(new java.awt.Font("Lucida Sans", 1, 14)); // NOI18N
         jButtonInsertar.setText("Insertar profesor");
         jButtonInsertar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -91,7 +109,12 @@ public class InsertarProfesor extends javax.swing.JDialog {
             }
         });
 
+        jLabel6.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jLabel6.setText("Departamento");
+
+        jLabel7.setFont(new java.awt.Font("Lucida Sans", 1, 24)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 204, 0));
+        jLabel7.setText("Nuevo profesor");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -108,34 +131,37 @@ public class InsertarProfesor extends javax.swing.JDialog {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(44, 44, 44)
                                 .addComponent(jCheckBoxActivo)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 228, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 319, Short.MAX_VALUE)
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jComboBoxRol, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(40, 40, 40))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(109, 109, 109)
-                        .addComponent(jTextFieldUsuario)
-                        .addGap(45, 45, 45))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
                             .addComponent(jLabel5)
                             .addComponent(jLabel2)
-                            .addComponent(jLabel6))
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel1))
                         .addGap(62, 62, 62)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldUsuario, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jTextFieldNombreCompleto)
                             .addComponent(jTextFieldEmail)
                             .addComponent(jTextFieldContraseña)
                             .addComponent(jComboBoxDepartamento, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(45, 45, 45))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(89, 89, 89)
+                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(39, 39, 39)
+                .addGap(25, 25, 25)
+                .addComponent(jLabel7)
+                .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jTextFieldUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -160,12 +186,13 @@ public class InsertarProfesor extends javax.swing.JDialog {
                     .addComponent(jComboBoxRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jCheckBoxActivo)
                     .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addComponent(jButtonInsertar)
-                .addGap(25, 25, 25))
+                .addGap(29, 29, 29))
         );
 
-        pack();
+        setSize(new java.awt.Dimension(624, 454));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jComboBoxDepartamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxDepartamentoActionPerformed
@@ -277,6 +304,7 @@ public class InsertarProfesor extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JTextField jTextFieldContraseña;
     private javax.swing.JTextField jTextFieldEmail;
     private javax.swing.JTextField jTextFieldNombreCompleto;

@@ -51,15 +51,11 @@ where id_estado=$P{estado};;]]>
 	<title>
 		<band height="199" splitType="Stretch">
 			<textField>
-				<reportElement x="34" y="111" width="124" height="20" uuid="81428c30-862c-44c3-b73c-bf469223cd72"/>
+				<reportElement x="210" y="34" width="124" height="20" uuid="81428c30-862c-44c3-b73c-bf469223cd72"/>
 				<textFieldExpression><![CDATA["IES Segundo de Chomon"]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="10" y="0" width="205" height="111" uuid="c06dfae8-2978-40a2-99ac-35ee26fe39c6"/>
-				<imageExpression><![CDATA["D:\\Users\\damA\\Documents\\DI\\Proyecto segunda evaluacion\\ProyectoSegundaEva_lmb\\src\\main\\java\\Informes\\edificio_Chomon.jpg"]]></imageExpression>
-			</image>
 			<staticText>
-				<reportElement x="261" y="50" width="227" height="20" uuid="cfabcb70-6edf-4406-950e-e03fbdca526e"/>
+				<reportElement x="158" y="14" width="227" height="20" uuid="cfabcb70-6edf-4406-950e-e03fbdca526e"/>
 				<textElement>
 					<font size="14"/>
 				</textElement>

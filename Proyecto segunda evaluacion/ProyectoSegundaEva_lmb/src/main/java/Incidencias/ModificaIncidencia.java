@@ -96,9 +96,13 @@ public class ModificaIncidencia extends javax.swing.JDialog {
         jLabelUrgencia = new javax.swing.JLabel();
         jLabelUbicacion = new javax.swing.JLabel();
         jDateChooserFecha = new com.toedter.calendar.JDateChooser();
+        jLabel11 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
+        jComboBoxUrgencia.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
+
+        jButtonModificarIncidencia.setFont(new java.awt.Font("Lucida Sans", 1, 14)); // NOI18N
         jButtonModificarIncidencia.setText("Modificar incidencia");
         jButtonModificarIncidencia.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -107,37 +111,55 @@ public class ModificaIncidencia extends javax.swing.JDialog {
         });
 
         jTextFieldDescripcion.setColumns(20);
+        jTextFieldDescripcion.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jTextFieldDescripcion.setLineWrap(true);
         jTextFieldDescripcion.setRows(5);
         jScrollPane2.setViewportView(jTextFieldDescripcion);
 
+        jLabel2.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jLabel2.setText("Duracion reparacion");
 
         jTextFieldObservaciones.setColumns(20);
+        jTextFieldObservaciones.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jTextFieldObservaciones.setLineWrap(true);
         jTextFieldObservaciones.setRows(5);
         jScrollPane3.setViewportView(jTextFieldObservaciones);
 
+        jLabel3.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jLabel3.setText("Estado");
 
+        jLabel5.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jLabel5.setText("Urgencia");
 
+        jLabel6.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jLabel6.setText("Ubicacion");
 
+        jLabel7.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jLabel7.setText("Observaciones");
 
+        jComboBoxEstado.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
+
+        jComboBoxUbicacion.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
+
+        jLabel4.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jLabel4.setText("Descripcion tecnica");
 
+        jLabel8.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jLabel8.setText("Descripcion");
 
+        jLabel9.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jLabel9.setText("Usuario que crea la incidencia");
 
+        jLabel10.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jLabel10.setText("Fecha creacion");
 
+        jLabel12.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jLabel12.setText("Fecha inicio de reparacion");
 
+        jLabel13.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jLabel13.setText("Fecha de fin de reparacion");
 
+        jTextFieldUsuario.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jTextFieldUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldUsuarioActionPerformed(evt);
@@ -145,15 +167,31 @@ public class ModificaIncidencia extends javax.swing.JDialog {
         });
 
         jTextFieldDescripcionTec.setColumns(20);
+        jTextFieldDescripcionTec.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jTextFieldDescripcionTec.setLineWrap(true);
         jTextFieldDescripcionTec.setRows(5);
         jScrollPane4.setViewportView(jTextFieldDescripcionTec);
 
+        jDateChooserFechaIncio.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
+
+        jDateChooserFechaFin.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
+
+        jTextFieldHoras.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
+
+        jLabelEstado.setFont(new java.awt.Font("Lucida Sans Typewriter", 0, 11)); // NOI18N
         jLabelEstado.setForeground(new java.awt.Color(255, 51, 51));
 
+        jLabelUrgencia.setFont(new java.awt.Font("Lucida Sans Typewriter", 0, 11)); // NOI18N
         jLabelUrgencia.setForeground(new java.awt.Color(255, 51, 51));
 
+        jLabelUbicacion.setFont(new java.awt.Font("Lucida Sans Typewriter", 0, 11)); // NOI18N
         jLabelUbicacion.setForeground(new java.awt.Color(255, 51, 51));
+
+        jDateChooserFecha.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
+
+        jLabel11.setFont(new java.awt.Font("Lucida Sans", 1, 24)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 204, 0));
+        jLabel11.setText("Modificar incidencia...");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -196,7 +234,7 @@ public class ModificaIncidencia extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 9, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -211,14 +249,21 @@ public class ModificaIncidencia extends javax.swing.JDialog {
                 .addComponent(jTextFieldUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(239, 239, 239))
             .addGroup(layout.createSequentialGroup()
-                .addGap(152, 152, 152)
-                .addComponent(jButtonModificarIncidencia, javax.swing.GroupLayout.PREFERRED_SIZE, 515, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(193, 193, 193)
+                        .addComponent(jButtonModificarIncidencia, javax.swing.GroupLayout.PREFERRED_SIZE, 515, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(50, 50, 50)
+                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(39, 39, 39)
+                .addGap(58, 58, 58)
+                .addComponent(jLabel11)
+                .addGap(50, 50, 50)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9))
@@ -267,18 +312,18 @@ public class ModificaIncidencia extends javax.swing.JDialog {
                                             .addComponent(jLabel6)))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(30, 30, 30)
-                                        .addComponent(jLabel7)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButtonModificarIncidencia)
-                                .addGap(30, 30, 30))
+                                        .addComponent(jLabel7))))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jDateChooserFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(32, 32, 32)
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(126, Short.MAX_VALUE))))))
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 24, Short.MAX_VALUE)
+                        .addComponent(jButtonModificarIncidencia)
+                        .addGap(28, 28, 28))))
         );
 
-        pack();
+        setSize(new java.awt.Dimension(959, 699));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonModificarIncidenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarIncidenciaActionPerformed
@@ -386,6 +431,7 @@ public class ModificaIncidencia extends javax.swing.JDialog {
     private com.toedter.calendar.JDateChooser jDateChooserFechaFin;
     private com.toedter.calendar.JDateChooser jDateChooserFechaIncio;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;

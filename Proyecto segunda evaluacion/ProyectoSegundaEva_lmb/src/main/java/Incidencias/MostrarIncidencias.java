@@ -77,9 +77,11 @@ public class MostrarIncidencias extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         jButtonUrgencia = new javax.swing.JButton();
         jButtonEstado = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
+        jTableIncidencias.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jTableIncidencias.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -95,6 +97,7 @@ public class MostrarIncidencias extends javax.swing.JDialog {
         jTableIncidencias.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jScrollPane1.setViewportView(jTableIncidencias);
 
+        jButtonProfesor.setFont(new java.awt.Font("Lucida Sans", 1, 14)); // NOI18N
         jButtonProfesor.setText("Profesor");
         jButtonProfesor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -102,6 +105,7 @@ public class MostrarIncidencias extends javax.swing.JDialog {
             }
         });
 
+        jButtonQuitarFiltro.setFont(new java.awt.Font("Lucida Sans", 1, 14)); // NOI18N
         jButtonQuitarFiltro.setText("Quitar filtros");
         jButtonQuitarFiltro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -109,8 +113,11 @@ public class MostrarIncidencias extends javax.swing.JDialog {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 204, 0));
         jLabel1.setText("Filtrar por: ");
 
+        jButtonUrgencia.setFont(new java.awt.Font("Lucida Sans", 1, 14)); // NOI18N
         jButtonUrgencia.setText("Urgencia");
         jButtonUrgencia.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -118,12 +125,17 @@ public class MostrarIncidencias extends javax.swing.JDialog {
             }
         });
 
+        jButtonEstado.setFont(new java.awt.Font("Lucida Sans", 1, 14)); // NOI18N
         jButtonEstado.setText("Estado");
         jButtonEstado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonEstadoActionPerformed(evt);
             }
         });
+
+        jLabel7.setFont(new java.awt.Font("Lucida Sans", 1, 24)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 204, 0));
+        jLabel7.setText("Incidencias generales...");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -146,11 +158,17 @@ public class MostrarIncidencias extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButtonQuitarFiltro)))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(34, 34, 34)
+                .addGap(29, 29, 29)
+                .addComponent(jLabel7)
+                .addGap(30, 30, 30)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -161,10 +179,11 @@ public class MostrarIncidencias extends javax.swing.JDialog {
                         .addComponent(jButtonEstado)
                         .addComponent(jButtonProfesor)
                         .addComponent(jButtonQuitarFiltro)))
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        pack();
+        setSize(new java.awt.Dimension(1143, 621));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     //INICIO FILTROS
@@ -372,6 +391,7 @@ public class MostrarIncidencias extends javax.swing.JDialog {
     private javax.swing.JButton jButtonQuitarFiltro;
     private javax.swing.JButton jButtonUrgencia;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableIncidencias;
     // End of variables declaration//GEN-END:variables

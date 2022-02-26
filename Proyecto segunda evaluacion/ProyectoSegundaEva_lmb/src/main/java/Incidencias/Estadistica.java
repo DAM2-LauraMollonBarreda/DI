@@ -6,6 +6,9 @@
 package Incidencias;
 
 import baseDatos.Conectar;
+import java.awt.Color;
+import java.awt.GradientPaint;
+import java.awt.SystemColor;
 import java.awt.image.BufferedImage;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -18,7 +21,10 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 /**
@@ -40,7 +46,7 @@ public class Estadistica extends javax.swing.JDialog {
     }
 
     public void numeroIncidencias() throws SQLException {
-        
+
         conectar = new Conectar();
         Connection conexion = conectar.getConexion();
 
@@ -53,10 +59,15 @@ public class Estadistica extends javax.swing.JDialog {
 
                 while (rs.next()) {
                     //dtm.addRow(rs);
-                   datos.setValue(rs.getInt(2),"", rs.getString(1));
+                    datos.setValue(rs.getInt(2), "", rs.getString(1));
                 }
                 //Se crea el gráfico y se asignan algunas caracteristicas
                 JFreeChart grafico_barras = ChartFactory.createBarChart("Incidencias por mes", "Meses", "Numero incidencias", datos, PlotOrientation.VERTICAL, false, false, false);
+
+                //CAMBIAR EL COLOR DE LAS BARRAS 
+              
+                BarRenderer r = (BarRenderer) grafico_barras.getCategoryPlot().getRenderer();
+                r.setSeriesPaint(0, Color.ORANGE);
 
                 //Se guarda el grafico
                 BufferedImage image = grafico_barras.createBufferedImage(814, 542);
@@ -107,7 +118,8 @@ public class Estadistica extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        pack();
+        setSize(new java.awt.Dimension(848, 601));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     /**

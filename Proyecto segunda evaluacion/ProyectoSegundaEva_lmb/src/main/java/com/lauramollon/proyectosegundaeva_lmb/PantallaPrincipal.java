@@ -14,8 +14,10 @@ import Profesores.ProfesoresPrincipal;
 import baseDatos.Conectar;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
+import java.awt.Dimension;
 import static java.awt.Frame.MAXIMIZED_BOTH;
 import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -57,6 +59,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
     String usuario = "";
     Conectar conectar = null;
 
+
     /**
      * Creates new form PantallaPrincipal
      */
@@ -65,16 +68,12 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         //Guardamos en la variables creadas a nivel de clase los datos que traemos desde la pantalla de autenticacion
         usuRol = rol;
         usuario = usu;
-        
-        
 
         initComponents();
         
-        
-        
+
         //PARA ACOPLAR LA PANTALLA A TODO NUESTRO MONITOR
         //this.setBounds(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds()); 
-
         controlUsuarios();
         rellenoComboAnexo();
         rellenoTabla();
@@ -142,6 +141,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
+        jButtonInsertarIncidencia.setFont(new java.awt.Font("Lucida Sans Typewriter", 1, 14)); // NOI18N
         jButtonInsertarIncidencia.setText("Crear incidecia");
         jButtonInsertarIncidencia.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -149,6 +149,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
             }
         });
 
+        jTableMisIncidencias.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jTableMisIncidencias.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -159,7 +160,15 @@ public class PantallaPrincipal extends javax.swing.JDialog {
             new String [] {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jTableMisIncidencias.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 jTableMisIncidenciasKeyReleased(evt);
@@ -167,10 +176,17 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(jTableMisIncidencias);
 
+        jLabel1.setFont(new java.awt.Font("Lucida Sans", 2, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 204, 0));
         jLabel1.setText("Tus incidencias son...");
 
+        jLabelAnexo.setFont(new java.awt.Font("Lucida Sans", 2, 14)); // NOI18N
+        jLabelAnexo.setForeground(new java.awt.Color(255, 204, 0));
         jLabelAnexo.setText("Anexo de incidencias, dependiendo del estado ");
 
+        jComboBoxEstadosInci.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
+
+        jButtonImprimir.setFont(new java.awt.Font("Lucida Sans", 1, 14)); // NOI18N
         jButtonImprimir.setText("Imprimir");
         jButtonImprimir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -179,6 +195,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         });
 
         jMenuGo.setText("Ir a..");
+        jMenuGo.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jMenuGo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuGoActionPerformed(evt);
@@ -186,7 +203,9 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         });
 
         jMenuIncidencias.setText("Incidencias");
+        jMenuIncidencias.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
 
+        jMenuItemIncidencias.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jMenuItemIncidencias.setText("Mostrar");
         jMenuItemIncidencias.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -195,6 +214,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         });
         jMenuIncidencias.add(jMenuItemIncidencias);
 
+        jMenuItemEstadisticaMes.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jMenuItemEstadisticaMes.setText("Grafico de incidencias por mes");
         jMenuItemEstadisticaMes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -203,6 +223,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         });
         jMenuIncidencias.add(jMenuItemEstadisticaMes);
 
+        jMenuItemImprimirIncidencias.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jMenuItemImprimirIncidencias.setText("Imprimir incidencias");
         jMenuItemImprimirIncidencias.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -213,6 +234,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
 
         jMenuGo.add(jMenuIncidencias);
 
+        jMenuItemProfesores.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jMenuItemProfesores.setText("Profesores");
         jMenuItemProfesores.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -221,6 +243,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         });
         jMenuGo.add(jMenuItemProfesores);
 
+        jMenuItemEnviarCorreo.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jMenuItemEnviarCorreo.setText("Enviar correo");
         jMenuItemEnviarCorreo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -246,16 +269,17 @@ public class PantallaPrincipal extends javax.swing.JDialog {
                         .addContainerGap()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButtonInsertarIncidencia, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(113, 113, 113)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabelAnexo)
-                                    .addComponent(jComboBoxEstadosInci, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButtonImprimir)))
-                        .addGap(6, 6, 6)))
+                                .addComponent(jComboBoxEstadosInci, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButtonImprimir))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(1, 1, 1)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jButtonInsertarIncidencia, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabelAnexo))))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -267,16 +291,17 @@ public class PantallaPrincipal extends javax.swing.JDialog {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 471, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButtonInsertarIncidencia)
-                .addGap(18, 18, 18)
+                .addGap(13, 13, 13)
                 .addComponent(jLabelAnexo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboBoxEstadosInci, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonImprimir))
-                .addContainerGap(45, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
-        pack();
+        setSize(new java.awt.Dimension(1365, 721));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuGoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuGoActionPerformed

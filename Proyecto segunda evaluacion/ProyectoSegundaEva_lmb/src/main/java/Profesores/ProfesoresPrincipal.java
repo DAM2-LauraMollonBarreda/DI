@@ -130,9 +130,11 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
         jButtonDepartamento = new javax.swing.JButton();
         jButtonActividad = new javax.swing.JButton();
         jButtonQuitarFiltro = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
+        jButtonInsertar.setFont(new java.awt.Font("Lucida Sans", 1, 14)); // NOI18N
         jButtonInsertar.setText("Nuevo profesor");
         jButtonInsertar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -140,6 +142,7 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
             }
         });
 
+        jTableProfesores.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
         jTableProfesores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -153,8 +156,11 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
         ));
         jScrollPane1.setViewportView(jTableProfesores);
 
+        jLabel1.setFont(new java.awt.Font("Lucida Sans", 1, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 204, 0));
         jLabel1.setText("Filtrar por: ");
 
+        jButtonRol.setFont(new java.awt.Font("Lucida Sans", 1, 14)); // NOI18N
         jButtonRol.setText("Rol");
         jButtonRol.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -162,6 +168,7 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
             }
         });
 
+        jButtonDepartamento.setFont(new java.awt.Font("Lucida Sans", 1, 14)); // NOI18N
         jButtonDepartamento.setText("Departamento");
         jButtonDepartamento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -169,6 +176,7 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
             }
         });
 
+        jButtonActividad.setFont(new java.awt.Font("Lucida Sans", 1, 14)); // NOI18N
         jButtonActividad.setText("Activo/no activo");
         jButtonActividad.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -176,6 +184,7 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
             }
         });
 
+        jButtonQuitarFiltro.setFont(new java.awt.Font("Lucida Sans", 1, 14)); // NOI18N
         jButtonQuitarFiltro.setText("Quitar filtros");
         jButtonQuitarFiltro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -183,19 +192,14 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
             }
         });
 
+        jLabel7.setFont(new java.awt.Font("Lucida Sans", 1, 24)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 204, 0));
+        jLabel7.setText("Profesores...");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButtonInsertar))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 804, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(23, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(50, 50, 50)
                 .addComponent(jLabel1)
@@ -208,11 +212,24 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButtonQuitarFiltro)
                 .addGap(54, 54, 54))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButtonInsertar)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 804, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(57, 57, 57)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(35, 35, 35)
+                .addComponent(jLabel7)
+                .addGap(18, 18, 18)
                 .addComponent(jButtonInsertar)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -225,10 +242,11 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
                         .addComponent(jButtonDepartamento)
                         .addComponent(jButtonActividad)
                         .addComponent(jButtonQuitarFiltro)))
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
-        pack();
+        setSize(new java.awt.Dimension(859, 671));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonInsertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInsertarActionPerformed
@@ -634,6 +652,7 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
     private javax.swing.JButton jButtonQuitarFiltro;
     private javax.swing.JButton jButtonRol;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableProfesores;

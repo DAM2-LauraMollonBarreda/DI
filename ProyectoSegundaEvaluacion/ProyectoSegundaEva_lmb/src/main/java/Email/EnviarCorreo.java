@@ -7,6 +7,8 @@ package Email;
 
 import baseDatos.Conectar;
 import java.awt.HeadlessException;
+import java.io.File;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.help.HelpBroker;
+import javax.help.HelpSet;
 import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -49,7 +53,30 @@ public class EnviarCorreo extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         rellenoTabla();
+        ponLaAyuda();
 
+    }
+        /**
+     * Hace que el item del menu y la pulsacion de F1 visualicen la ayuda.
+     */
+    private void ponLaAyuda() {
+        try {
+            // Carga el fichero de ayuda
+            File fichero = new File("./src/main/java/help/help_set.hs");
+            URL hsURL = fichero.toURI().toURL();
+
+            // Crea el HelpSet y el HelpBroker
+            HelpSet helpset = new HelpSet(getClass().getClassLoader(), hsURL);
+            HelpBroker hb = helpset.createHelpBroker();
+
+            // Pone ayuda a item de menu al pulsarlo y a F1 en ventana
+            // principal y secundaria.
+            hb.enableHelpKey(this.getRootPane(), "ventana_secundaria", helpset);
+            hb.enableHelpOnButton(jButtonAyuda, "ventana_secundaria", helpset);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void extraerEmailSeleccionados() throws AddressException {
@@ -134,6 +161,7 @@ public class EnviarCorreo extends javax.swing.JDialog {
         jTableDestinatarios = new javax.swing.JTable();
         jLabel6 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
+        jButtonAyuda = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -195,6 +223,9 @@ public class EnviarCorreo extends javax.swing.JDialog {
         jLabel11.setForeground(new java.awt.Color(255, 204, 0));
         jLabel11.setText("Envia un correo...");
 
+        jButtonAyuda.setFont(new java.awt.Font("Liberation Sans", 1, 18)); // NOI18N
+        jButtonAyuda.setText("?");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -226,7 +257,8 @@ public class EnviarCorreo extends javax.swing.JDialog {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(113, 113, 113)))
-                                .addGap(0, 0, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 125, Short.MAX_VALUE)
+                                .addComponent(jButtonAyuda))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(13, 13, 13)
                                 .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
@@ -236,7 +268,9 @@ public class EnviarCorreo extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel11)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel11)
+                    .addComponent(jButtonAyuda))
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
@@ -339,6 +373,7 @@ public class EnviarCorreo extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAceptar;
+    private javax.swing.JButton jButtonAyuda;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;

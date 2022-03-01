@@ -63,7 +63,6 @@ public class PantallaPrincipal extends javax.swing.JDialog {
     String usuario = "";
     Conectar conectar = null;
 
-
     /**
      * Creates new form PantallaPrincipal
      */
@@ -72,44 +71,44 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         //Guardamos en la variables creadas a nivel de clase los datos que traemos desde la pantalla de autenticacion
         usuRol = rol;
         usuario = usu;
-
-        initComponents();
         
+        
+        initComponents();
+        Toolkit. getDefaultToolkit(). getScreenSize();
 
-        //PARA ACOPLAR LA PANTALLA A TODO NUESTRO MONITOR
-        //this.setBounds(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds()); 
+       
         controlUsuarios();
         rellenoComboAnexo();
         rellenoTabla();
         crearPopupMenu();
-        autoagustarColumnas(jTableMisIncidencias);
+       
         jTableMisIncidencias.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         ponLaAyuda();
 
     }
-    
-    	/**
-	 * Hace que el item del menu y la pulsacion de F1 visualicen la ayuda.
-	 */
-	private void ponLaAyuda() {
-		try {
-			// Carga el fichero de ayuda
-			File fichero = new File("/src/main/java/help/help_set.hs");
-			URL hsURL = fichero.toURI().toURL();
 
-			// Crea el HelpSet y el HelpBroker
-			HelpSet helpset = new HelpSet(getClass().getClassLoader(), hsURL);
-			HelpBroker hb = helpset.createHelpBroker();
+    /**
+     * Hace que el item del menu y la pulsacion de F1 visualicen la ayuda.
+     */
+    private void ponLaAyuda() {
+        try {
+            // Carga el fichero de ayuda
+            File fichero = new File("./src/main/java/help/help_set.hs");
+            URL hsURL = fichero.toURI().toURL();
 
-			// Pone ayuda a item de menu al pulsarlo y a F1 en ventana
-			// principal y secundaria.
-			hb.enableHelpOnButton(jMenuItemAyuda, "aplicacion", helpset);
-			
+            // Crea el HelpSet y el HelpBroker
+            HelpSet helpset = new HelpSet(getClass().getClassLoader(), hsURL);
+            HelpBroker hb = helpset.createHelpBroker();
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+            // Pone ayuda a item de menu al pulsarlo y a F1 en ventana
+            // principal y secundaria.
+            hb.enableHelpOnButton(jButtonAyuda, "aplicacion", helpset);
+            hb.enableHelpKey(this.getRootPane(), "aplicacion", helpset);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     //METODO PARA OCULTAR DEPENDIENDO DEL USUARIO QUE ES EL QUE ESTA CONECTADO
     public void controlUsuarios() {
@@ -157,6 +156,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         jLabelAnexo = new javax.swing.JLabel();
         jComboBoxEstadosInci = new javax.swing.JComboBox<>();
         jButtonImprimir = new javax.swing.JButton();
+        jButtonAyuda = new javax.swing.JButton();
         jMenuBar = new javax.swing.JMenuBar();
         jMenuGo = new javax.swing.JMenu();
         jMenuIncidencias = new javax.swing.JMenu();
@@ -165,8 +165,6 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         jMenuItemImprimirIncidencias = new javax.swing.JMenuItem();
         jMenuItemProfesores = new javax.swing.JMenuItem();
         jMenuItemEnviarCorreo = new javax.swing.JMenuItem();
-        jMenuHelp = new javax.swing.JMenu();
-        jMenuItemAyuda = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -221,6 +219,14 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         jButtonImprimir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonImprimirActionPerformed(evt);
+            }
+        });
+
+        jButtonAyuda.setFont(new java.awt.Font("Lucida Sans", 1, 18)); // NOI18N
+        jButtonAyuda.setText("?");
+        jButtonAyuda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAyudaActionPerformed(evt);
             }
         });
 
@@ -284,25 +290,6 @@ public class PantallaPrincipal extends javax.swing.JDialog {
 
         jMenuBar.add(jMenuGo);
 
-        jMenuHelp.setText("Ayuda");
-        jMenuHelp.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
-        jMenuHelp.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuHelpActionPerformed(evt);
-            }
-        });
-
-        jMenuItemAyuda.setFont(new java.awt.Font("Lucida Sans", 0, 14)); // NOI18N
-        jMenuItemAyuda.setText("Ayuda");
-        jMenuItemAyuda.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemAyudaActionPerformed(evt);
-            }
-        });
-        jMenuHelp.add(jMenuItemAyuda);
-
-        jMenuBar.add(jMenuHelp);
-
         setJMenuBar(jMenuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -310,15 +297,14 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(42, 42, 42)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1299, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonAyuda))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(113, 113, 113)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jComboBoxEstadosInci, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -327,16 +313,21 @@ public class PantallaPrincipal extends javax.swing.JDialog {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(1, 1, 1)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButtonInsertarIncidencia, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabelAnexo))))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(jButtonInsertarIncidencia, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabelAnexo))))
+                        .addGap(59, 59, 59))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 985, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 17, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
+                .addGap(4, 4, 4)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jButtonAyuda))
+                .addGap(14, 14, 14)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 471, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButtonInsertarIncidencia)
@@ -346,10 +337,10 @@ public class PantallaPrincipal extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboBoxEstadosInci, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonImprimir))
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(1365, 721));
+        setSize(new java.awt.Dimension(1028, 721));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -463,13 +454,9 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jButtonImprimirActionPerformed
 
-    private void jMenuItemAyudaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAyudaActionPerformed
+    private void jButtonAyudaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAyudaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItemAyudaActionPerformed
-
-    private void jMenuHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuHelpActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuHelpActionPerformed
+    }//GEN-LAST:event_jButtonAyudaActionPerformed
 
     public void rellenoTabla() throws SQLException {
         //Creamos el modelo de la tabla
@@ -636,6 +623,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonAyuda;
     private javax.swing.JButton jButtonImprimir;
     private javax.swing.JButton jButtonInsertarIncidencia;
     private javax.swing.JComboBox<String> jComboBoxEstadosInci;
@@ -643,9 +631,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
     private javax.swing.JLabel jLabelAnexo;
     private javax.swing.JMenuBar jMenuBar;
     private javax.swing.JMenu jMenuGo;
-    private javax.swing.JMenu jMenuHelp;
     private javax.swing.JMenu jMenuIncidencias;
-    private javax.swing.JMenuItem jMenuItemAyuda;
     private javax.swing.JMenuItem jMenuItemEnviarCorreo;
     private javax.swing.JMenuItem jMenuItemEstadisticaMes;
     private javax.swing.JMenuItem jMenuItemImprimirIncidencias;

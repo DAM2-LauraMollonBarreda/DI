@@ -2,17 +2,16 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ff19c08f-64c9-46c8-8c2e-4cd79f9b9b39">
 	<property name="ireport.zoom" value="1.3310000000000004"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="8"/>
+	<property name="ireport.y" value="40"/>
 	<parameter name="estado" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT * 
-FROM mantenimiento_mollon.man_incidencias
-where id_estado=$P{estado};;]]>
+		<![CDATA[SELECT i.id_incidencia,i.descripcion, i.desc_tecnica, i.fecha_fin_rep, e.estado,u.urgencia
+FROM man_incidencias as i
+INNER JOIN man_estado as e on e.id_estado=i.id_estado
+INNER JOIN man_urgencia as u on u.id_urgencia=i.nivel_urgencia
+where e.id_estado=$P{estado};]]>
 	</queryString>
 	<field name="id_incidencia" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="id_profesor_crea" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="descripcion" class="java.lang.String">
@@ -21,28 +20,13 @@ where id_estado=$P{estado};;]]>
 	<field name="desc_tecnica" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="horas" class="java.lang.Float">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="id_estado" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="fecha" class="java.time.LocalDateTime">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="fecha_ini_rep" class="java.sql.Date">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
 	<field name="fecha_fin_rep" class="java.sql.Date">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="nivel_urgencia" class="java.lang.Integer">
+	<field name="estado" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="id_ubicacion" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="observaciones" class="java.lang.String">
+	<field name="urgencia" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<background>
@@ -94,7 +78,7 @@ where id_estado=$P{estado};;]]>
 				<textFieldExpression><![CDATA[$F{id_incidencia}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="186" y="15" width="100" height="20" uuid="88914694-78fc-449c-ad13-aac04620d54f"/>
+				<reportElement x="186" y="15" width="100" height="85" uuid="88914694-78fc-449c-ad13-aac04620d54f"/>
 				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -108,6 +92,36 @@ where id_estado=$P{estado};;]]>
 		</band>
 	</detail>
 	<summary>
-		<band height="271" splitType="Stretch"/>
+		<band height="271" splitType="Stretch">
+			<bar3DChart>
+				<chart>
+					<reportElement x="72" y="65" width="375" height="178" uuid="242aa377-80a9-4e98-9da2-e9a9c4484ed8"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{urgencia}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{urgencia}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{id_incidencia}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<bar3DPlot>
+					<plot/>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</bar3DPlot>
+			</bar3DChart>
+			<textField>
+				<reportElement x="119" y="19" width="288" height="20" uuid="cc4f7ba0-ec23-44dc-8a79-87b05a3340b8"/>
+				<textFieldExpression><![CDATA["Urgencia de las incidencias con estado " + $F{estado}]]></textFieldExpression>
+			</textField>
+		</band>
 	</summary>
 </jasperReport>

@@ -9,6 +9,7 @@ com\lauramollon\proyectosegundaeva_lmb\PantallaPrincipal$9.class
 com\lauramollon\proyectosegundaeva_lmb\PantallaPrincipal$2.class
 Profesores\ProfesoresPrincipal$10.class
 Profesores\ProfesoresPrincipal$2.class
+ModificarIncidencia.class
 com\lauramollon\proyectosegundaeva_lmb\Autenticacion_pantalla$1.class
 Profesores\InsertarProfesor$2.class
 Profesores\ProfesoresPrincipal$6.class
@@ -32,6 +33,7 @@ com\lauramollon\proyectosegundaeva_lmb\PantallaPrincipal$7.class
 Profesores\ProfesoresPrincipal$7.class
 Email\EnviarCorreo$1.class
 Incidencias\InsertarIncidencia$1.class
+com\lauramollon\proyectosegundaeva_lmb\PantallaPrincipal$11.class
 com\lauramollon\proyectosegundaeva_lmb\PantallaPrincipal$1.class
 Incidencias\MostrarIncidencias$1.class
 Incidencias\MostrarIncidencias.class

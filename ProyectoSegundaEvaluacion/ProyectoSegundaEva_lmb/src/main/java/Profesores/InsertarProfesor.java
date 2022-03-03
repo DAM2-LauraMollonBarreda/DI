@@ -6,13 +6,23 @@
 package Profesores;
 
 import baseDatos.Conectar;
+import com.opencsv.CSVReader;
 import java.awt.HeadlessException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.commons.codec.digest.DigestUtils;
 
 /**
@@ -58,6 +68,7 @@ public class InsertarProfesor extends javax.swing.JDialog {
         jButtonInsertar = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        jButtonInsertarCsv = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -116,6 +127,14 @@ public class InsertarProfesor extends javax.swing.JDialog {
         jLabel7.setForeground(new java.awt.Color(255, 204, 0));
         jLabel7.setText("Nuevo profesor");
 
+        jButtonInsertarCsv.setFont(new java.awt.Font("Lucida Sans", 1, 14)); // NOI18N
+        jButtonInsertarCsv.setText("Insertar desde archivo");
+        jButtonInsertarCsv.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonInsertarCsvActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -124,17 +143,12 @@ public class InsertarProfesor extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jButtonInsertar, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(44, 44, 44)
-                                .addComponent(jCheckBoxActivo)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 319, Short.MAX_VALUE)
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jComboBoxRol, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(44, 44, 44)
+                        .addComponent(jCheckBoxActivo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 319, Short.MAX_VALUE)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jComboBoxRol, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(40, 40, 40))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -154,7 +168,13 @@ public class InsertarProfesor extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGap(89, 89, 89)
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 124, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonInsertar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonInsertarCsv, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGap(30, 30, 30))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -186,12 +206,14 @@ public class InsertarProfesor extends javax.swing.JDialog {
                     .addComponent(jComboBoxRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jCheckBoxActivo)
                     .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jButtonInsertar)
-                .addGap(29, 29, 29))
+                .addGap(31, 31, 31)
+                .addComponent(jButtonInsertarCsv)
+                .addContainerGap(46, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(624, 454));
+        setSize(new java.awt.Dimension(624, 522));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -223,9 +245,7 @@ public class InsertarProfesor extends javax.swing.JDialog {
         String permiso = jComboBoxRol.getSelectedItem().toString();
         String[] rol = permiso.split("-");
         String idRol = rol[0];
-        
-       
-        
+
         //INSERTAR PROFESOR
         try {
             PreparedStatement ps = null;
@@ -237,16 +257,15 @@ public class InsertarProfesor extends javax.swing.JDialog {
 
             ps = conexion.prepareStatement(sql);
             ps.executeUpdate();
-            
+
             JOptionPane.showMessageDialog(this, "Datos insertados");
-            
+
             conexion.close();
 
         } catch (SQLException ex) {
-             JOptionPane.showMessageDialog(this, "No se han podido insertar los datos");
+            JOptionPane.showMessageDialog(this, "No se han podido insertar los datos");
         }
-        
-        
+
         dispose();
 
     }//GEN-LAST:event_jButtonInsertarActionPerformed
@@ -254,6 +273,73 @@ public class InsertarProfesor extends javax.swing.JDialog {
     private void jComboBoxRolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxRolActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxRolActionPerformed
+
+    private void jButtonInsertarCsvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInsertarCsvActionPerformed
+            // Conexion
+            contectar = new Conectar();
+            Connection conexion = contectar.getConexion();
+        try {
+
+            JFileChooser fileChooser = new JFileChooser();
+            //Para que solo de deje escojer archivos csv
+            fileChooser.setAcceptAllFileFilterUsed(false);
+            //Ponemos la opcion de csv en el file chooser 
+            FileNameExtensionFilter filtro = new FileNameExtensionFilter("*.csv", "csv");
+            fileChooser.setFileFilter(filtro);
+            fileChooser.showOpenDialog(fileChooser);
+
+            String ruta = fileChooser.getSelectedFile().getAbsolutePath();
+
+            CSVReader reader = new CSVReader(new FileReader(ruta));
+
+
+            // Hacemos una lista de strings para guardar lo del archivo
+            List<String[]> entrada = reader.readAll();
+
+            // Creamos un array para separar una linea del csv
+            String[] espa;
+
+
+            for (int j = 1; j < entrada.size(); j++) {
+
+                // Recogemos los datos y los metemos en el array separador dividido por comas
+                String[] palabra = new String[6];
+                palabra = entrada.get(j);
+                espa = palabra[0].split(",");
+
+                // Le pasamos la consulta              
+                String sql = "insert into fp_profesor (login,password,nombre_completo,email,activo,id_rol,id_departamento)\n"
+                        + "values (?,?,?,?,?,?,?);";
+
+                PreparedStatement ps = null;
+                ps = conexion.prepareStatement(sql);
+
+                ps.setString(1, espa[0]);
+                ps.setString(2, "");
+                ps.setString(3, espa[1]);
+                ps.setString(4, espa[2]);
+                ps.setString(5, espa[3]);
+                ps.setString(6, espa[4]);
+                ps.setString(7, espa[5]);
+
+                // Ejecutamos la consulta
+                ps.executeUpdate();
+
+            }
+                JOptionPane.showMessageDialog(this, "Datos insertados");
+                conexion.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(InsertarProfesor.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(InsertarProfesor.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(InsertarProfesor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        dispose();
+
+
+    }//GEN-LAST:event_jButtonInsertarCsvActionPerformed
 
     public void consultarDepartamento(JComboBox comboBox) {
         PreparedStatement ps = null;
@@ -295,6 +381,7 @@ public class InsertarProfesor extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonInsertar;
+    private javax.swing.JButton jButtonInsertarCsv;
     private javax.swing.JCheckBox jCheckBoxActivo;
     private javax.swing.JComboBox<String> jComboBoxDepartamento;
     private javax.swing.JComboBox<String> jComboBoxRol;

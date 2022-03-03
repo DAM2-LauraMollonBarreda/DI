@@ -274,12 +274,12 @@ public class InsertarIncidencia extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(32, 32, 32)
                         .addComponent(jLabel7)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                 .addComponent(jButtonInsertarIncidencia)
                 .addGap(28, 28, 28))
         );
 
-        setSize(new java.awt.Dimension(517, 562));
+        setSize(new java.awt.Dimension(517, 561));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 

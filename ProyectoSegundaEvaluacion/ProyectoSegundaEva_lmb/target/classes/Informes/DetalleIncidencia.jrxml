@@ -2,8 +2,11 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ff19c08f-64c9-46c8-8c2e-4cd79f9b9b39">
 	<property name="ireport.zoom" value="1.3310000000000004"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="40"/>
+	<property name="ireport.y" value="6"/>
 	<parameter name="estado" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\Users\\damA\\Documents\\DI\\ProyectoSegundaEvaluacion\\ProyectoSegundaEva_lmb\\src\\main\\java\\Informes\\"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT i.id_incidencia,i.descripcion, i.desc_tecnica, i.fecha_fin_rep, e.estado,u.urgencia
 FROM man_incidencias as i
@@ -93,35 +96,18 @@ where e.id_estado=$P{estado};]]>
 	</detail>
 	<summary>
 		<band height="271" splitType="Stretch">
-			<bar3DChart>
-				<chart>
-					<reportElement x="72" y="65" width="375" height="178" uuid="242aa377-80a9-4e98-9da2-e9a9c4484ed8"/>
-					<chartTitle/>
-					<chartSubtitle/>
-					<chartLegend/>
-				</chart>
-				<categoryDataset>
-					<categorySeries>
-						<seriesExpression><![CDATA[$F{urgencia}]]></seriesExpression>
-						<categoryExpression><![CDATA[$F{urgencia}]]></categoryExpression>
-						<valueExpression><![CDATA[$F{id_incidencia}]]></valueExpression>
-					</categorySeries>
-				</categoryDataset>
-				<bar3DPlot>
-					<plot/>
-					<itemLabel/>
-					<categoryAxisFormat>
-						<axisFormat/>
-					</categoryAxisFormat>
-					<valueAxisFormat>
-						<axisFormat/>
-					</valueAxisFormat>
-				</bar3DPlot>
-			</bar3DChart>
 			<textField>
-				<reportElement x="119" y="19" width="288" height="20" uuid="cc4f7ba0-ec23-44dc-8a79-87b05a3340b8"/>
-				<textFieldExpression><![CDATA["Urgencia de las incidencias con estado " + $F{estado}]]></textFieldExpression>
+				<reportElement x="121" y="14" width="376" height="20" uuid="cc4f7ba0-ec23-44dc-8a79-87b05a3340b8"/>
+				<textElement>
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression><![CDATA[Grafico de estados de tus inicidencias actuales]]></textFieldExpression>
 			</textField>
+			<subreport>
+				<reportElement x="43" y="54" width="454" height="195" uuid="b935eaca-0383-4900-aa21-f7ad9073f684"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "DetalleIncidencia_subreport1.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</summary>
 </jasperReport>

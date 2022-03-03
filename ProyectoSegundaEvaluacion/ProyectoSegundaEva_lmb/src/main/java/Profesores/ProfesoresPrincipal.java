@@ -5,13 +5,14 @@
  */
 package Profesores;
 
-import Incidencias.InsertarIncidencia;
 import baseDatos.Conectar;
-import com.lauramollon.proyectosegundaeva_lmb.Autenticacion_pantalla;
+
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.System.Logger;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,16 +20,20 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
+import java.util.logging.Logger;
+
+import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+
 import javax.swing.RowFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+
 import org.apache.commons.codec.digest.DigestUtils;
 
 /**
@@ -39,34 +44,33 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
 
     Conectar conectar = null;
     Object opcionDepartamento = "";
-    Object opcionRol="";
+    Object opcionRol = "";
     String usuRol = "";
     TableRowSorter<TableModel> elQueOrdena;
-    
 
     /**
      * Creates new form Profesores_principal
      */
-    public ProfesoresPrincipal(javax.swing.JDialog parent, boolean modal,String rol) throws SQLException {
+    public ProfesoresPrincipal(javax.swing.JDialog parent, boolean modal, String rol) throws SQLException {
         super(parent, modal);
         initComponents();
-        
-        usuRol=rol;
+
+        usuRol = rol;
 
         controlUsuarios();
         rellenoTabla();
 
-
     }
+
     public void controlUsuarios() throws SQLException {
         if (usuRol.equals("root")) {
             jButtonInsertar.setEnabled(true);
             crearPopupMenu();
-        }else if (usuRol.equals("tecnico")){
+        } else if (usuRol.equals("tecnico")) {
             jButtonInsertar.setEnabled(false);
-        }else if (usuRol.equals("profesor")){
+        } else if (usuRol.equals("profesor")) {
             jButtonInsertar.setEnabled(false);
-;
+            ;
         }
     }
 
@@ -116,7 +120,6 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
 
     }
 
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -131,6 +134,7 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
         jButtonActividad = new javax.swing.JButton();
         jButtonQuitarFiltro = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
+        jButtonExport = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -196,6 +200,14 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
         jLabel7.setForeground(new java.awt.Color(255, 204, 0));
         jLabel7.setText("Profesores...");
 
+        jButtonExport.setFont(new java.awt.Font("Lucida Sans", 1, 14)); // NOI18N
+        jButtonExport.setText("Guardar profesores en csv");
+        jButtonExport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonExportActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -216,21 +228,26 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButtonInsertar)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 804, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 804, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButtonInsertar)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButtonExport))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(57, 57, 57)
+                        .addGap(46, 46, 46)
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(35, 35, 35)
+                .addGap(33, 33, 33)
                 .addComponent(jLabel7)
                 .addGap(18, 18, 18)
-                .addComponent(jButtonInsertar)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonInsertar)
+                    .addComponent(jButtonExport))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25)
@@ -242,7 +259,7 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
                         .addComponent(jButtonDepartamento)
                         .addComponent(jButtonActividad)
                         .addComponent(jButtonQuitarFiltro)))
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         setSize(new java.awt.Dimension(859, 671));
@@ -263,18 +280,17 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
 
     }//GEN-LAST:event_jButtonInsertarActionPerformed
 
-    
     //FILTROS
     private void jButtonQuitarFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonQuitarFiltroActionPerformed
         elQueOrdena.setRowFilter(RowFilter.regexFilter("", 0));
     }//GEN-LAST:event_jButtonQuitarFiltroActionPerformed
 
-    
+
     private void jButtonRolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRolActionPerformed
         try {
             consultarRol();
             if (opcionRol != null) {
-                 elQueOrdena.setRowFilter(RowFilter.regexFilter("(?i)" + opcionRol, 4));
+                elQueOrdena.setRowFilter(RowFilter.regexFilter("(?i)" + opcionRol, 4));
             }
         } catch (HeadlessException ex) {
             java.util.logging.Logger.getLogger(ProfesoresPrincipal.class.getName()).log(Level.SEVERE, null, ex);
@@ -285,7 +301,7 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
 
     }//GEN-LAST:event_jButtonRolActionPerformed
     public void consultarRol() throws SQLException {
-         PreparedStatement ps = null;
+        PreparedStatement ps = null;
         conectar = new Conectar();
         Connection conexion = conectar.getConexion();
         ArrayList<String> rol = new ArrayList<>();
@@ -305,7 +321,7 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(null, e);
         }
     }
-    
+
     private void jButtonDepartamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDepartamentoActionPerformed
         try {
             consultarDepartamento();
@@ -314,7 +330,7 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
             }
         } catch (HeadlessException ex) {
             java.util.logging.Logger.getLogger(ProfesoresPrincipal.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        }
 
     }//GEN-LAST:event_jButtonDepartamentoActionPerformed
     public void consultarDepartamento() {
@@ -350,26 +366,96 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
 
             //ERROR
             if (opcionRol != null) {
-                 elQueOrdena.setRowFilter(RowFilter.regexFilter("(?i)" + opcionRol, 3));
+                elQueOrdena.setRowFilter(RowFilter.regexFilter("(?i)" + opcionRol, 3));
             }
 
         } catch (HeadlessException ex) {
 
-        } 
+        }
     }//GEN-LAST:event_jButtonActividadActionPerformed
-    
+
+    private void jButtonExportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExportActionPerformed
+
+        try {
+            JFileChooser fileChooser = new JFileChooser();
+            //Para que solo de deje escojer archivos csv
+            fileChooser.setAcceptAllFileFilterUsed(false);
+            //Ponemos la opcion de csv en el file chooser
+            FileNameExtensionFilter filtro = new FileNameExtensionFilter("*.csv", "csv");
+            fileChooser.setFileFilter(filtro);
+            fileChooser.showOpenDialog(fileChooser);
+
+            String ruta = fileChooser.getSelectedFile().getAbsolutePath();
+
+            FileWriter myWriter = new FileWriter(ruta + ".csv");
+
+
+            myWriter.append("login");
+            myWriter.append(',');
+            myWriter.append("password");
+            myWriter.append(',');
+            myWriter.append("nombre_completo");
+            myWriter.append(',');
+            myWriter.append("email");
+            myWriter.append(',');
+            myWriter.append("activo");
+            myWriter.append(',');
+            myWriter.append("id_rol");
+            myWriter.append(',');
+            myWriter.append("id_departamento");
+            myWriter.append('\n');
+
+            conectar = new Conectar();
+            Connection conexion = conectar.getConexion();
+            if (conexion != null) {
+
+                Statement s = conexion.createStatement();
+                ResultSet rs = s.executeQuery("select login,password,nombre_completo,email,activo,id_rol,id_departamento from fp_profesor");
+
+                while (rs.next()) {
+
+                    myWriter.append(rs.getString(1));
+                    myWriter.append(',');
+                    myWriter.append(rs.getString(2));
+                    myWriter.append(',');
+                    myWriter.append(rs.getString(3));
+                    myWriter.append(',');
+                    myWriter.append(rs.getString(4));
+                    myWriter.append(',');
+                    myWriter.append(rs.getString(5));
+                    myWriter.append(',');
+                    myWriter.append(rs.getString(6));
+                    myWriter.append(',');
+                    myWriter.append(rs.getString(7));
+                    myWriter.append('\n');
+
+                }
+            }
+
+            conexion.close();
+
+            myWriter.flush();
+            myWriter.close();
+            JOptionPane.showMessageDialog(this, "Fichero creado");
+        } catch (IOException ex) {
+            Logger.getLogger(ProfesoresPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ProfesoresPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_jButtonExportActionPerformed
+
     //FIN FILTROS
-    
     //POPUP MENU
     private void crearPopupMenu() throws SQLException {
-        JPopupMenu popupMenu= new JPopupMenu();
+        JPopupMenu popupMenu = new JPopupMenu();
         JMenuItem bajaProfesor = new JMenuItem("Baja/alta de este profesor");
         JMenu rolProfesor = new JMenu("Cambiar rol de este profesor ");
         JMenuItem root = new JMenuItem("Poner como root");
         JMenuItem tecnico = new JMenuItem("Poner como tecnico");
         JMenuItem profesor = new JMenuItem("Poner como profesor");
         JMenuItem contraseñaProfesor = new JMenuItem("Cambiar contraseña de este profesor");
-        
+
         popupMenu.add(bajaProfesor);
 
         popupMenu.add(rolProfesor);
@@ -378,13 +464,10 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
         rolProfesor.add(profesor);
 
         popupMenu.add(contraseñaProfesor);
-        
-        popupMenu.setEnabled(true);
-        
 
-        
+        popupMenu.setEnabled(true);
+
         jTableProfesores.setComponentPopupMenu(popupMenu);
-        
 
         bajaProfesor.addActionListener(new ActionListener() {
             @Override
@@ -648,6 +731,7 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonActividad;
     private javax.swing.JButton jButtonDepartamento;
+    private javax.swing.JButton jButtonExport;
     private javax.swing.JButton jButtonInsertar;
     private javax.swing.JButton jButtonQuitarFiltro;
     private javax.swing.JButton jButtonRol;
@@ -657,7 +741,5 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableProfesores;
     // End of variables declaration//GEN-END:variables
-
-    
 
 }

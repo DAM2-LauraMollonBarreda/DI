@@ -295,17 +295,19 @@ public class InsertarProfesor extends javax.swing.JDialog {
 
             // Hacemos una lista de strings para guardar lo del archivo
             List<String[]> entrada = reader.readAll();
+            
+            System.out.println("Profesores.InsertarProfesor.jButtonInsertarCsvActionPerformed()"+entrada.size());
 
             // Creamos un array para separar una linea del csv
-            String[] espa;
+            String[] espaciado;
 
 
             for (int j = 1; j < entrada.size(); j++) {
 
                 // Recogemos los datos y los metemos en el array separador dividido por comas
-                String[] palabra = new String[6];
+                String[] palabra = new String[10];
                 palabra = entrada.get(j);
-                espa = palabra[0].split(",");
+                espaciado = palabra[0].split(",");
 
                 // Le pasamos la consulta              
                 String sql = "insert into fp_profesor (login,password,nombre_completo,email,activo,id_rol,id_departamento)\n"
@@ -314,13 +316,13 @@ public class InsertarProfesor extends javax.swing.JDialog {
                 PreparedStatement ps = null;
                 ps = conexion.prepareStatement(sql);
 
-                ps.setString(1, espa[0]);
-                ps.setString(2, "");
-                ps.setString(3, espa[1]);
-                ps.setString(4, espa[2]);
-                ps.setString(5, espa[3]);
-                ps.setString(6, espa[4]);
-                ps.setString(7, espa[5]);
+                ps.setString(1, espaciado[0]);
+                ps.setString(2, espaciado[1]);
+                ps.setString(3, espaciado[2]);
+                ps.setString(4, espaciado[3]);
+                ps.setString(5, espaciado[4]);
+                ps.setString(6, espaciado[5]);
+                ps.setString(7, espaciado[6]);
 
                 // Ejecutamos la consulta
                 ps.executeUpdate();

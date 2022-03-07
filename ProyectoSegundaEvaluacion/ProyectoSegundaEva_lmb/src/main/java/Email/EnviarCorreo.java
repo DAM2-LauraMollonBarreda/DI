@@ -15,8 +15,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.help.HelpBroker;
 import javax.help.HelpSet;
 import javax.mail.Address;
@@ -53,6 +51,7 @@ public class EnviarCorreo extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         rellenoTabla();
+        //Llamamos a un metodo para poner la ayuda
         ponLaAyuda();
 
     }
@@ -80,27 +79,33 @@ public class EnviarCorreo extends javax.swing.JDialog {
     }
 
     public void extraerEmailSeleccionados() throws AddressException {
+        //Cuenta las filas seleccionadas de la tabla 
         int cuentaFilasSeccionadas = jTableDestinatarios.getSelectedRowCount();
+        //Si las filas seleccionadas no son cero
         if (cuentaFilasSeccionadas != 0) {
             int[] filas = jTableDestinatarios.getSelectedRows();
             ArrayList<String> destinatarioArray = new ArrayList<String>();
+            //Guardamos en un array list los datos seleccionados de la tabla
             for (int i = 0; i < filas.length; i++) {
                 destinatarioArray.add(jTableDestinatarios.getModel().getValueAt(filas[i], 1).toString());
             }
-
+            
             String[] destinatarioString = new String[destinatarioArray.size()];
             destinatarioString = destinatarioArray.toArray(destinatarioString);
             destinatario = new Address[destinatarioString.length];
 
+            //Añadimos a los destinatarios los correos que han salido seleccionados
             for (int i = 0; i < destinatarioString.length; i++) {
                 destinatario[i] = new InternetAddress(destinatarioString[i]);
             }
         } else {
+            //Si no hay filas seleccionadas muestra error
             JOptionPane.showMessageDialog(null, "No hay destinatarios seleccionados", "ERROR", JOptionPane.ERROR_MESSAGE);
         }
 
     }
 
+    //Metodo para recojer de la base de datos los correos de los profesores que sean root o tecnico
     public void rellenoTabla() throws SQLException {
         DefaultTableModel dtm = new DefaultTableModel();
         //Creamos las columnas que tendra la tabla
@@ -134,7 +139,7 @@ public class EnviarCorreo extends javax.swing.JDialog {
                 JOptionPane.showMessageDialog(this, "Datos no cargados");
 
             }
-
+            //Cerramos la conexion
             conexion.close();
 
         } else {
@@ -304,7 +309,7 @@ public class EnviarCorreo extends javax.swing.JDialog {
     }//GEN-LAST:event_jTextFieldAsuntoActionPerformed
 
     private void jButtonAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAceptarActionPerformed
-
+        //Recojemos todos los datos del form
         String remitente = jTextFieldRemitente.getText();
         try {
             extraerEmailSeleccionados();
@@ -314,20 +319,26 @@ public class EnviarCorreo extends javax.swing.JDialog {
         String asunto = jTextFieldAsunto.getText();
         String cuerpo = jTextAreaMensaje.getText();
 
+        //Llamamos al metodo para pedir la contraseña
         crearJOptionContraseña();
 
+        //Si no hay insertada contraseña muestra error
         if (contraseña.equals("")) {
             JOptionPane.showMessageDialog(null, "La contraseña esta vacia", "ERROR", JOptionPane.ERROR_MESSAGE);
         } else {
+            //Si hay contraseña creada envia el correo, llamando al metodo
             enviarConGMail(remitente, destinatario, asunto, cuerpo, contraseña);
         }
-
+        
+        //cierra la pestaña
         dispose();
 
 
     }//GEN-LAST:event_jButtonAceptarActionPerformed
 
+    //Metodo para crear el joption pane para pedir la contraseña
     public void crearJOptionContraseña() throws HeadlessException {
+        
         JPanel panel = new JPanel();
         JLabel label = new JLabel("Escribe la contraseña de tu correo:");
         JPasswordField pass = new JPasswordField(20);
@@ -335,10 +346,12 @@ public class EnviarCorreo extends javax.swing.JDialog {
         panel.add(pass);
         String[] options = new String[]{"OK", "Cancel"};
         int option = JOptionPane.showOptionDialog(null, panel, "Introduce la contraseña", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
+        //Guardamos la contraseña metida en una variable local
         contraseña = pass.getText();
 
     }
 
+    //Metodo para enviar un correo
     public static void enviarConGMail(String remitente, Address[] destinatarioArray, String asunto, String cuerpo, String clave) {
 
         Properties props = System.getProperties();

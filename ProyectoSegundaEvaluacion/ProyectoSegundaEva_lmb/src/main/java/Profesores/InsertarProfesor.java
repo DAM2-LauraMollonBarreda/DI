@@ -275,10 +275,10 @@ public class InsertarProfesor extends javax.swing.JDialog {
     }//GEN-LAST:event_jComboBoxRolActionPerformed
 
     private void jButtonInsertarCsvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInsertarCsvActionPerformed
+            try {
             // Conexion
             contectar = new Conectar();
             Connection conexion = contectar.getConexion();
-        try {
 
             JFileChooser fileChooser = new JFileChooser();
             //Para que solo de deje escojer archivos csv
@@ -287,57 +287,52 @@ public class InsertarProfesor extends javax.swing.JDialog {
             FileNameExtensionFilter filtro = new FileNameExtensionFilter("*.csv", "csv");
             fileChooser.setFileFilter(filtro);
             fileChooser.showOpenDialog(fileChooser);
+          
+            if (fileChooser.getSelectedFile() != null) {
+                String ruta = fileChooser.getSelectedFile().getAbsolutePath();
+                CSVReader csvReader = new CSVReader(new FileReader(ruta));
 
-            String ruta = fileChooser.getSelectedFile().getAbsolutePath();
+                List<String[]> datos = csvReader.readAll();
+                for (int i = 1; i < datos.size(); i++) {
+                    String[] get = datos.get(i);
+                    String sql = "insert into fp_profesor (login,password,nombre_completo,email,activo,id_rol,id_departamento)\n"
+                            + "values (?,?,?,?,?,?,?);";
 
-            CSVReader reader = new CSVReader(new FileReader(ruta));
+                    PreparedStatement ps = null;
+                    ps = conexion.prepareStatement(sql);
 
+                    ps.setString(1, get[0]);
+                    ps.setString(2, get[1]);
+                    ps.setString(3, get[2]);
+                    ps.setString(4, get[3]);
+                    ps.setString(5, get[4]);
+                    ps.setString(6, get[5]);
+                    ps.setString(7, get[6]);
 
-            // Hacemos una lista de strings para guardar lo del archivo
-            List<String[]> entrada = reader.readAll();
+                    // Ejecutamos la consulta
+                    ps.executeUpdate();
 
-            // Creamos un array para separar una linea del csv
-            String[] espa;
+                }
 
-
-            for (int j = 1; j < entrada.size(); j++) {
-
-                // Recogemos los datos y los metemos en el array separador dividido por comas
-                String[] palabra = new String[6];
-                palabra = entrada.get(j);
-                espa = palabra[0].split(",");
-
-                // Le pasamos la consulta              
-                String sql = "insert into fp_profesor (login,password,nombre_completo,email,activo,id_rol,id_departamento)\n"
-                        + "values (?,?,?,?,?,?,?);";
-
-                PreparedStatement ps = null;
-                ps = conexion.prepareStatement(sql);
-
-                ps.setString(1, espa[0]);
-                ps.setString(2, "");
-                ps.setString(3, espa[1]);
-                ps.setString(4, espa[2]);
-                ps.setString(5, espa[3]);
-                ps.setString(6, espa[4]);
-                ps.setString(7, espa[5]);
-
-                // Ejecutamos la consulta
-                ps.executeUpdate();
-
-            }
-                JOptionPane.showMessageDialog(this, "Datos insertados");
+                csvReader.close();
                 conexion.close();
+                JOptionPane.showMessageDialog(this, "Profesores insertados");
+                dispose();
+            }else{
+                dispose();
+                conexion.close();
+            }
+
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(InsertarProfesor.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(InsertarProfesor.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Archivo no encontrado, error al insertar");
+            dispose();
         } catch (IOException ex) {
-            Logger.getLogger(InsertarProfesor.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "No se han podido insertar los datos");
+            dispose();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "No se han podido insertar los datos, hay algun dato duplicado");
+            dispose();
         }
-
-        dispose();
-
 
     }//GEN-LAST:event_jButtonInsertarCsvActionPerformed
 

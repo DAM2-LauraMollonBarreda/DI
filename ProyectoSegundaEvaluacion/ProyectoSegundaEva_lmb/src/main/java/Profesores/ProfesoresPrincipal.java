@@ -6,6 +6,7 @@
 package Profesores;
 
 import baseDatos.Conectar;
+import java.awt.Component;
 
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
@@ -23,14 +24,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JPopupMenu;
+import javax.swing.JTable;
 
 import javax.swing.RowFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -68,9 +75,10 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
             crearPopupMenu();
         } else if (usuRol.equals("tecnico")) {
             jButtonInsertar.setEnabled(false);
+            jButtonExport.setEnabled(false);
         } else if (usuRol.equals("profesor")) {
             jButtonInsertar.setEnabled(false);
-            ;
+            jButtonExport.setEnabled(false);
         }
     }
 
@@ -118,6 +126,34 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Conoxion fallida");
         }
 
+        autoagustarColumnas(jTableProfesores);
+    }
+
+    private void autoagustarColumnas(JTable table) {
+        //Se obtiene el modelo de la columna
+        TableColumnModel columnModel = table.getColumnModel();
+        //Se obtiene el total de las columnas
+        for (int column = 0; column < table.getColumnCount(); column++) {
+            //Establecemos un valor minimo para el ancho de la columna
+            int width = 60; //Min Width
+            //Obtenemos el numero de filas de la tabla
+            for (int row = 0; row < table.getRowCount(); row++) {
+                //Obtenemos el renderizador de la tabla
+                TableCellRenderer renderer = table.getCellRenderer(row, column);
+                //Creamos un objeto para preparar el renderer
+                Component comp = table.prepareRenderer(renderer, row, column);
+                //Establecemos el width segun el valor maximo del ancho de la columna
+                width = Math.max(comp.getPreferredSize().width + 1, width);
+
+            }
+            //Se establece una condicion para no sobrepasar el valor de 300
+            //Esto es Opcional
+            if (width > 300) {
+                width = 300;
+            }
+            //Se establece el ancho de la columna
+            columnModel.getColumn(column).setPreferredWidth(width);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -388,7 +424,6 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
             String ruta = fileChooser.getSelectedFile().getAbsolutePath();
 
             FileWriter myWriter = new FileWriter(ruta + ".csv");
-
 
             myWriter.append("login");
             myWriter.append(',');
@@ -694,7 +729,7 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
         if (cuentaFilasSeleccionadas == 0) {
             JOptionPane.showMessageDialog(this, "No hay filas seleccionadas", "Error", JOptionPane.WARNING_MESSAGE);
         } else {
-            int resultado = JOptionPane.showConfirmDialog(this, "¿Esta seguro que desea resetear la contraseña a la de por defecto?", "¿Seguro?", JOptionPane.YES_NO_CANCEL_OPTION);
+            int resultado = JOptionPane.showConfirmDialog(this, "¿Esta seguro que desea cambiar la contraseña?", "¿Seguro?", JOptionPane.YES_NO_CANCEL_OPTION);
             if (resultado == JOptionPane.YES_OPTION) {
                 int fila = jTableProfesores.getSelectedRow();
                 String login = jTableProfesores.getModel().getValueAt(fila, 0).toString();
@@ -704,14 +739,23 @@ public class ProfesoresPrincipal extends javax.swing.JDialog {
                     conectar = new Conectar();
                     Connection conexion = conectar.getConexion();
 
-                    String pass = DigestUtils.md5Hex("iesChomon");
+                    JPanel panel = new JPanel();
+                    JLabel label = new JLabel("Escribe la contraseña de tu correo:");
+                    JPasswordField password = new JPasswordField(20);
+                    panel.add(label);
+                    panel.add(password);
+                    String[] options = new String[]{"OK", "Cancel"};
+                    int option = JOptionPane.showOptionDialog(null, panel, "Introduce la contraseña", JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
+                    String contra = password.getText();
+
+                    String pass = DigestUtils.md5Hex(contra);
 
                     String sql = "UPDATE fp_profesor SET password='" + pass + "' WHERE login='" + login + "';";
 
                     ps = conexion.prepareStatement(sql);
                     ps.executeUpdate();
 
-                    JOptionPane.showMessageDialog(this, "Ya tiene la contraseña cambiada, recuerda ahora la contraseña es iesChomon");
+                    JOptionPane.showMessageDialog(this, "Ya tiene la contraseña cambiada");
 
                     conexion.close();
 

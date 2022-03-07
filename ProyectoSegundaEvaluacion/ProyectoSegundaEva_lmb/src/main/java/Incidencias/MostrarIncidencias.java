@@ -8,6 +8,7 @@ package Incidencias;
 import Profesores.InsertarProfesor;
 import Profesores.ProfesoresPrincipal;
 import baseDatos.Conectar;
+import java.awt.Component;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -28,6 +29,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import org.jfree.chart.ChartFactory;
@@ -187,6 +190,7 @@ public class MostrarIncidencias extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     //INICIO FILTROS
+        //Boton que llama al metodo de conultar profesor y hace un filtro
     private void jButtonProfesorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonProfesorActionPerformed
         try {
             consultarProfesor();
@@ -195,9 +199,12 @@ public class MostrarIncidencias extends javax.swing.JDialog {
             }
         } catch (HeadlessException ex) {
             java.util.logging.Logger.getLogger(ProfesoresPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MostrarIncidencias.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButtonProfesorActionPerformed
-    public void consultarProfesor() {
+        //Metodo que consulta los profesores y los mete en un combo box y muestra un jOption pane
+    public void consultarProfesor() throws SQLException {
         PreparedStatement ps = null;
         conectar = new Conectar();
         Connection conexion = conectar.getConexion();
@@ -216,13 +223,16 @@ public class MostrarIncidencias extends javax.swing.JDialog {
             conexion.close();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
+            conexion.close();
         }
     }
 
+        //Boton para quitar los filtros aplicados
     private void jButtonQuitarFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonQuitarFiltroActionPerformed
         elQueOrdena.setRowFilter(RowFilter.regexFilter("", 0));
     }//GEN-LAST:event_jButtonQuitarFiltroActionPerformed
 
+        //Boton que llama al metodo de conultar urgencia y hace un filtro
     private void jButtonUrgenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUrgenciaActionPerformed
         try {
             consultarUrgencia();
@@ -231,9 +241,12 @@ public class MostrarIncidencias extends javax.swing.JDialog {
             }
         } catch (HeadlessException ex) {
             java.util.logging.Logger.getLogger(ProfesoresPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MostrarIncidencias.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButtonUrgenciaActionPerformed
-    public void consultarUrgencia() {
+        //Metodo que consulta la urgencia y las mete en un combo box y muestra un jOption pane
+    public void consultarUrgencia() throws SQLException {
         PreparedStatement ps = null;
         conectar = new Conectar();
         Connection conexion = conectar.getConexion();
@@ -252,9 +265,11 @@ public class MostrarIncidencias extends javax.swing.JDialog {
             conexion.close();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
+            conexion.close();
         }
     }
 
+        //Boton que llama al metodo de conultar estado y hace un filtro
     private void jButtonEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEstadoActionPerformed
         try {
             consultarEstado();
@@ -263,9 +278,12 @@ public class MostrarIncidencias extends javax.swing.JDialog {
             }
         } catch (HeadlessException ex) {
             java.util.logging.Logger.getLogger(ProfesoresPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MostrarIncidencias.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButtonEstadoActionPerformed
-    public void consultarEstado() {
+        //Metodo que consulta un estado y los mete en un combo box y muestra un jOption pane
+    public void consultarEstado() throws SQLException {
         PreparedStatement ps = null;
         conectar = new Conectar();
         Connection conexion = conectar.getConexion();
@@ -284,11 +302,12 @@ public class MostrarIncidencias extends javax.swing.JDialog {
             conexion.close();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
+            conexion.close();
         }
     }
     //FIN FILTROS
-    
-    
+
+    //Metodo para crear la tabla 
     public void rellenoTabla() throws SQLException {
         DefaultTableModel dtm = new DefaultTableModel();
         //Creamos las columnas que tendra la tabla
@@ -300,7 +319,8 @@ public class MostrarIncidencias extends javax.swing.JDialog {
 
         //Añadimos las columnas a la tabla
         jTableIncidencias.setModel(dtm);
-
+        
+        //Creamos la conexion y hacemos la consulta de todas las incidencias
         conectar = new Conectar();
         Connection conexion = conectar.getConexion();
         String[] incidencia = new String[13];
@@ -319,7 +339,7 @@ public class MostrarIncidencias extends javax.swing.JDialog {
                         + "inner join man_edificio ed on ed.id_edificio=ub.id_edificio;");
 
                 while (rs.next()) {
-                    //dtm.addRow(rs);
+                    //Mentemos lo extrado de la base de datos en un array
                     incidencia[0] = rs.getString(1);
                     incidencia[1] = rs.getString(2);
                     incidencia[2] = rs.getString(3);
@@ -334,6 +354,7 @@ public class MostrarIncidencias extends javax.swing.JDialog {
                     incidencia[11] = rs.getString(12);
                     incidencia[12] = rs.getString(13);
 
+                    //Y lo insertamos en la base de datos
                     dtm.addRow(incidencia);
                 }
             } catch (SQLException sQLException) {
@@ -343,10 +364,43 @@ public class MostrarIncidencias extends javax.swing.JDialog {
 
         } else {
             JOptionPane.showMessageDialog(this, "Conoxion fallida");
+            conexion.close();
         }
+        autoagustarColumnas(jTableIncidencias);
 
     }
 
+    //Metodo para hacer que los datos se ajusten a las columnas en las que estan
+    private void autoagustarColumnas(JTable table) {
+        //Se obtiene el modelo de la columna
+        TableColumnModel columnModel = table.getColumnModel();
+        //Se obtiene el total de las columnas
+        for (int column = 0; column < table.getColumnCount(); column++) {
+            //Establecemos un valor minimo para el ancho de la columna
+            int width = 60; //Min Width
+            //Obtenemos el numero de filas de la tabla
+            for (int row = 0; row < table.getRowCount(); row++) {
+                //Obtenemos el renderizador de la tabla
+                TableCellRenderer renderer = table.getCellRenderer(row, column);
+                //Creamos un objeto para preparar el renderer
+                Component comp = table.prepareRenderer(renderer, row, column);
+                //Establecemos el width segun el valor maximo del ancho de la columna
+                width = Math.max(comp.getPreferredSize().width + 1, width);
+
+            }
+            //Se establece una condicion para no sobrepasar el valor de 300
+            //Esto es Opcional
+            if (width > 300) {
+                width = 300;
+            }
+            //Se establece el ancho de la columna
+            columnModel.getColumn(column).setPreferredWidth(width);
+        }
+    }
+
+    
+    
+    //Creamos un popMenu que habre la pantalla de modifcar incidencia
     private void crearPopupMenu() throws SQLException {
         JPopupMenu popupMenu = new JPopupMenu();
         JMenuItem modificar = new JMenuItem("Reparar esta incidencia");
@@ -368,6 +422,7 @@ public class MostrarIncidencias extends javax.swing.JDialog {
 
     }
 
+    //Metodo que abre la pantalla de modificar incidencias si hay filas selecionadas
     public void modificarIncidencia() throws SQLException {
         int cuentaFilasSeleccionadas = jTableIncidencias.getSelectedRowCount();
         if (cuentaFilasSeleccionadas == 0) {

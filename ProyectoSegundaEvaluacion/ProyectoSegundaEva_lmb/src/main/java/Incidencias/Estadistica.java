@@ -45,6 +45,7 @@ public class Estadistica extends javax.swing.JDialog {
 
     }
 
+   
     public void numeroIncidencias() throws SQLException {
 
         conectar = new Conectar();
@@ -65,7 +66,6 @@ public class Estadistica extends javax.swing.JDialog {
                 JFreeChart grafico_barras = ChartFactory.createBarChart("Incidencias por mes", "Meses", "Numero incidencias", datos, PlotOrientation.VERTICAL, false, false, false);
 
                 //CAMBIAR EL COLOR DE LAS BARRAS 
-              
                 BarRenderer r = (BarRenderer) grafico_barras.getCategoryPlot().getRenderer();
                 r.setSeriesPaint(0, Color.ORANGE);
 
@@ -76,6 +76,7 @@ public class Estadistica extends javax.swing.JDialog {
                 grafico.setIcon(new ImageIcon(image));
 
                 pack();
+                //Pinta el grafico
                 repaint();
             } catch (SQLException sQLException) {
                 JOptionPane.showMessageDialog(this, "Datos no cargados");

@@ -328,6 +328,7 @@ public class ModificaIncidencia extends javax.swing.JDialog {
 
     private void jButtonModificarIncidenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonModificarIncidenciaActionPerformed
 
+        //Recojemos los datos que hay en cada uno de los componentes y los guardamos en variables
         String strDateTimeFormat = "YYYY-MM-dd hh:mm:ss"; // El formato de fecha está especificado  
         SimpleDateFormat objdateTimeSDF = new SimpleDateFormat(strDateTimeFormat); // La cadena de formato de fecha se pasa como un argumento al objeto 
 
@@ -373,6 +374,7 @@ public class ModificaIncidencia extends javax.swing.JDialog {
         String observacionesIns = jTextFieldObservaciones.getText();
 
         
+        //Creamos la conexion y hacemos un update con los campos recojidos
         try {
             conectar = new Conectar();
             Connection conexion = conectar.getConexion();
@@ -455,6 +457,7 @@ public class ModificaIncidencia extends javax.swing.JDialog {
     private javax.swing.JTextField jTextFieldUsuario;
     // End of variables declaration//GEN-END:variables
 
+    //Buscamos la incidencia creada antes
     private void buscarIncidencia() throws SQLException {
         conectar = new Conectar();
         Connection conexion = conectar.getConexion();
@@ -463,6 +466,7 @@ public class ModificaIncidencia extends javax.swing.JDialog {
 
             try {
                 Statement s = conexion.createStatement();
+                //Consultar cada uno de los campos con el idIncidencia que le pasamos desde la otra pantalla
                 ResultSet rs = s.executeQuery("select p.nombre_completo,inc.descripcion,inc.desc_tecnica,inc.horas, \n"
                         + "est.estado,inc.fecha,inc.fecha_ini_rep,inc.fecha_fin_rep,ur.urgencia,\n"
                         + "ub.ubicacion,inc.observaciones\n"
@@ -474,7 +478,7 @@ public class ModificaIncidencia extends javax.swing.JDialog {
                         + "where inc.id_incidencia='" + idIn + "'");
 
                 while (rs.next()) {
-                    //dtm.addRow(rs);
+                    //Metemos en las variables locales los datos recojidos de la consulta
                     usu = rs.getString(1);
                     descripcion = rs.getString(2);
                     descTecnica = rs.getString(3);
@@ -495,12 +499,13 @@ public class ModificaIncidencia extends javax.swing.JDialog {
 
         } else {
             JOptionPane.showMessageDialog(this, "Conoxion fallida");
+            conexion.close();
         }
 
     }
 
+    //Metemos la informacion que tenia la incidencia anteriormente
     private void atribuirVariables() {
-
         jTextFieldUsuario.setText(usu);
         jTextFieldDescripcion.setText(descripcion);
         jTextFieldDescripcionTec.setText(descTecnica);
@@ -512,9 +517,9 @@ public class ModificaIncidencia extends javax.swing.JDialog {
         jLabelUrgencia.setText("La urgencia anterior era: " + urgencia);
         jLabelUbicacion.setText("La ubicaiocn anterior era: " + ubicacion);
         jTextFieldObservaciones.setText(observaciones);
-
     }
 
+    //Metodo para consultar la ubicacion
     public void consultarUbicacion(JComboBox comboBox) {
         PreparedStatement ps = null;
         conectar = new Conectar();
@@ -534,6 +539,7 @@ public class ModificaIncidencia extends javax.swing.JDialog {
         }
     }
 
+    //Metodo para consultar las urgencias y meterlos en un combo box
     public void consultarUrgencia(JComboBox comboBox) {
         PreparedStatement ps = null;
         conectar = new Conectar();
@@ -553,6 +559,7 @@ public class ModificaIncidencia extends javax.swing.JDialog {
         }
     }
 
+    //Metodo para consultar los estados y meterlos en un combo box
     public void consultarEstado(JComboBox comboBox) {
         PreparedStatement ps = null;
         conectar = new Conectar();
@@ -572,6 +579,7 @@ public class ModificaIncidencia extends javax.swing.JDialog {
         }
     }
 
+    //Metodo para mostrar o no los botones dependiendo del usuario que ha entrado
     private void activarBotones() {
         //SI EL USUARO ES ROOT
         if (rolUsu.equals("root")) {

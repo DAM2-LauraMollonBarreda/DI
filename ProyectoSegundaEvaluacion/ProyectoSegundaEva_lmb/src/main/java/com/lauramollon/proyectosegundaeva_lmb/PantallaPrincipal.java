@@ -24,11 +24,13 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -62,6 +64,9 @@ public class PantallaPrincipal extends javax.swing.JDialog {
     String usuRol = "";
     String usuario = "";
     Conectar conectar = null;
+    SimpleDateFormat fechaLarga=new SimpleDateFormat("dd-MM-yyyy");
+    SimpleDateFormat fechaCorta=new SimpleDateFormat("dd-MM-yy");
+    boolean selectFecha;
 
     /**
      * Creates new form PantallaPrincipal
@@ -84,6 +89,10 @@ public class PantallaPrincipal extends javax.swing.JDialog {
        
         jTableMisIncidencias.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         ponLaAyuda();
+        
+        
+        
+        
 
     }
 
@@ -120,6 +129,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
             jMenuIncidencias.setVisible(true);
             jComboBoxEstadosInci.setVisible(true);
             jLabelAnexo.setVisible(true);
+            jButtonImprimir.setVisible(true);
             //SI EL USUARIO ES TECNICO
         } else if (usuRol.equals("tecnico")) {
             jMenuItemProfesores.setVisible(true);
@@ -128,6 +138,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
             jMenuIncidencias.setVisible(true);
             jComboBoxEstadosInci.setVisible(false);
             jLabelAnexo.setVisible(false);
+            jButtonImprimir.setVisible(false);
             //SI EL USUARIO ES PROFESOR
         } else if (usuRol.equals("profesor")) {
             jMenuItemProfesores.setVisible(true);
@@ -136,6 +147,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
             jMenuIncidencias.setVisible(false);
             jComboBoxEstadosInci.setVisible(false);
             jLabelAnexo.setVisible(false);
+            jButtonImprimir.setVisible(false);
 
         }
     }
@@ -157,6 +169,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         jComboBoxEstadosInci = new javax.swing.JComboBox<>();
         jButtonImprimir = new javax.swing.JButton();
         jButtonAyuda = new javax.swing.JButton();
+        jCheckBoxFormatoFecha = new javax.swing.JCheckBox();
         jMenuBar = new javax.swing.JMenuBar();
         jMenuGo = new javax.swing.JMenu();
         jMenuIncidencias = new javax.swing.JMenu();
@@ -227,6 +240,19 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         jButtonAyuda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonAyudaActionPerformed(evt);
+            }
+        });
+
+        jCheckBoxFormatoFecha.setFont(new java.awt.Font("Lucida Sans", 0, 11)); // NOI18N
+        jCheckBoxFormatoFecha.setText("Formato de fecha largo");
+        jCheckBoxFormatoFecha.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jCheckBoxFormatoFechaMouseClicked(evt);
+            }
+        });
+        jCheckBoxFormatoFecha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxFormatoFechaActionPerformed(evt);
             }
         });
 
@@ -302,6 +328,8 @@ public class PantallaPrincipal extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jCheckBoxFormatoFecha)
+                        .addGap(45, 45, 45)
                         .addComponent(jButtonAyuda))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -326,7 +354,8 @@ public class PantallaPrincipal extends javax.swing.JDialog {
                 .addGap(4, 4, 4)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jButtonAyuda))
+                    .addComponent(jButtonAyuda)
+                    .addComponent(jCheckBoxFormatoFecha))
                 .addGap(14, 14, 14)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 471, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -458,6 +487,19 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButtonAyudaActionPerformed
 
+    private void jCheckBoxFormatoFechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxFormatoFechaActionPerformed
+
+    }//GEN-LAST:event_jCheckBoxFormatoFechaActionPerformed
+
+    private void jCheckBoxFormatoFechaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jCheckBoxFormatoFechaMouseClicked
+        try {
+            selectFecha = jCheckBoxFormatoFecha.isSelected();
+            rellenoTabla();
+        } catch (SQLException ex) {
+            Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jCheckBoxFormatoFechaMouseClicked
+
     public void rellenoTabla() throws SQLException {
         //Creamos el modelo de la tabla
         DefaultTableModel dtm = new DefaultTableModel();
@@ -503,7 +545,13 @@ public class PantallaPrincipal extends javax.swing.JDialog {
                     incidencia[3] = rs.getString(4);
                     incidencia[4] = rs.getString(5);
                     incidencia[5] = rs.getString(6);
-                    incidencia[6] = rs.getString(7);
+                    if (selectFecha==true) {
+                        Date fecha = rs.getDate(7);
+                        incidencia[6] = fechaLarga.format(fecha);
+                    }else if (selectFecha==false){
+                        Date fecha = rs.getDate(7);
+                        incidencia[6] = fechaCorta.format(fecha);
+                    }
                     incidencia[7] = rs.getString(8);
                     incidencia[8] = rs.getString(9);
                     incidencia[9] = rs.getString(10);
@@ -524,6 +572,8 @@ public class PantallaPrincipal extends javax.swing.JDialog {
             //Si la conexion esta mal echa muestra mensaje por pantalla
             JOptionPane.showMessageDialog(this, "Conoxion fallida");
         }
+        
+        autoagustarColumnas(jTableMisIncidencias);
 
     }
 
@@ -533,7 +583,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
         //Se obtiene el total de las columnas
         for (int column = 0; column < table.getColumnCount(); column++) {
             //Establecemos un valor minimo para el ancho de la columna
-            int width = 150; //Min Width
+            int width = 60; //Min Width
             //Obtenemos el numero de filas de la tabla
             for (int row = 0; row < table.getRowCount(); row++) {
                 //Obtenemos el renderizador de la tabla
@@ -626,6 +676,7 @@ public class PantallaPrincipal extends javax.swing.JDialog {
     private javax.swing.JButton jButtonAyuda;
     private javax.swing.JButton jButtonImprimir;
     private javax.swing.JButton jButtonInsertarIncidencia;
+    private javax.swing.JCheckBox jCheckBoxFormatoFecha;
     private javax.swing.JComboBox<String> jComboBoxEstadosInci;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelAnexo;

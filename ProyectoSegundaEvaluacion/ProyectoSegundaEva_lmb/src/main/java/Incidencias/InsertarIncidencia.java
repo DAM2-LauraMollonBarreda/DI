@@ -43,6 +43,7 @@ public class InsertarIncidencia extends javax.swing.JDialog {
         initComponents();
         usu = usuario;
 
+        //Metodo para meter en los combo box
         consultarUbicacion(jComboBoxUbicacion);
         consultarEstado(jComboBoxEstado);
         consultarUrgencia(jComboBoxUrgencia);
@@ -50,7 +51,8 @@ public class InsertarIncidencia extends javax.swing.JDialog {
 
     }
 
-    public void consultarUbicacion(JComboBox comboBox) {
+    public void consultarUbicacion(JComboBox comboBox) throws SQLException {
+        //Creamos la consulta y la conexion para obtener la ubicacion
         PreparedStatement ps = null;
         contectar = new Conectar();
         Connection conexion = contectar.getConexion();
@@ -60,16 +62,20 @@ public class InsertarIncidencia extends javax.swing.JDialog {
             ResultSet result = ps.executeQuery();
 
             while (result.next()) {
+                //Metemos los datos extraidos a un combo box
                 comboBox.addItem(result.getString("id_ubicacion") + "-" + result.getString("ubicacion"));
             }
 
+            //Cerramos la conexion
             conexion.close();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
+            conexion.close();
         }
     }
 
-    public void consultarUrgencia(JComboBox comboBox) {
+    public void consultarUrgencia(JComboBox comboBox) throws SQLException {
+        //Creamos la consulta y la conexion para obtener la urgencia
         PreparedStatement ps = null;
         contectar = new Conectar();
         Connection conexion = contectar.getConexion();
@@ -79,16 +85,20 @@ public class InsertarIncidencia extends javax.swing.JDialog {
             ResultSet result = ps.executeQuery();
 
             while (result.next()) {
+                //Metemos los datos extraidos en un combo box
                 comboBox.addItem(result.getString("id_urgencia") + "-" + result.getString("urgencia"));
             }
 
+            //Cerramos la conexion
             conexion.close();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
+            conexion.close();
         }
     }
 
-    public void consultarEstado(JComboBox comboBox) {
+    public void consultarEstado(JComboBox comboBox) throws SQLException {
+        //Creamos la consulta y la conexion para constar los estados
         PreparedStatement ps = null;
         contectar = new Conectar();
         Connection conexion = contectar.getConexion();
@@ -98,17 +108,20 @@ public class InsertarIncidencia extends javax.swing.JDialog {
             ResultSet result = ps.executeQuery();
 
             while (result.next()) {
+                //Metemos los datos extraidos en un combo box
                 comboBox.addItem(result.getString("id_estado") + "-" + result.getString("estado"));
             }
 
+            //Cerramos la conexion
             conexion.close();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
+            conexion.close();
         }
     }
 
     public void consultarId() throws SQLException {
-
+        //Metodo para saber el id del profesor que esta insertando la incidencia
         contectar = new Conectar();
         Connection conexion = contectar.getConexion();
         String[] idArray = new String[1];
@@ -132,6 +145,7 @@ public class InsertarIncidencia extends javax.swing.JDialog {
 
         } else {
             JOptionPane.showMessageDialog(this, "Conoxion fallida");
+            conexion.close();
         }
 
     }
@@ -285,6 +299,7 @@ public class InsertarIncidencia extends javax.swing.JDialog {
 
     private void jButtonInsertarIncidenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInsertarIncidenciaActionPerformed
 
+        //Cojemos los datos y los guardamos en variables
         String descripcion = jTextFieldDescripcion.getText();
 
         Date objDate = new Date(); // Sistema actual La fecha y la hora se asignan a objDate 
@@ -307,12 +322,14 @@ public class InsertarIncidencia extends javax.swing.JDialog {
         String[] urgencia = urg.split("-");
         String idUrgencia = urgencia[0];
 
-        //INSERTAR PROFESOR
+
         try {
+            //Creamos la conexion
             PreparedStatement ps = null;
             contectar = new Conectar();
             Connection conexion = contectar.getConexion();
-
+            
+            //Insertamos en la base de datos los datos que hemos recojido
             String sql = "INSERT INTO mantenimiento_mollon.man_incidencias (id_profesor_crea, descripcion, id_estado, fecha, nivel_urgencia, id_ubicacion, observaciones)"
                     + " VALUES ('" + id + "', '" + descripcion + "',  '" + idEstado + "', '" + fechaCreacion + "', '" + idUbicacion + "', '" + idUbicacion + "', '" + observaciones + "');";
 
@@ -321,6 +338,7 @@ public class InsertarIncidencia extends javax.swing.JDialog {
 
             JOptionPane.showMessageDialog(this, "Incidencia creada con el usuario " + usu);
 
+            //Cerramos la conexion
             conexion.close();
 
         } catch (SQLException ex) {
@@ -328,6 +346,7 @@ public class InsertarIncidencia extends javax.swing.JDialog {
             System.out.println(ex);
         }
 
+        //Preguntamos si el usuario quiere enviar un correo en caso de que quiera enviarlo, se llama a la pantalla de enviar correo
         int resp = JOptionPane.showConfirmDialog(null, "¿Quieres enviar un correo para avisar a los tecnico?", "¿DESEAS ENVIAR UN CORREO?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         //Si la respuesta es sí(YES_OPTION)   
         if (resp == JOptionPane.YES_OPTION) {

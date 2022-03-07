@@ -58,6 +58,7 @@ public class Autenticacion_pantalla extends javax.swing.JFrame {
         jButtonEntrar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Lucida Sans", 3, 18)); // NOI18N
         jLabel1.setText(" IES SEGUNDO DE CHOMON");
@@ -178,6 +179,7 @@ public class Autenticacion_pantalla extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "No puedes dejar campos vacios");
         }
 
+        dispose();
 
     }//GEN-LAST:event_jButtonEntrarActionPerformed
 

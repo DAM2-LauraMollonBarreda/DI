@@ -275,7 +275,9 @@ public class InsertarProfesor extends javax.swing.JDialog {
     }//GEN-LAST:event_jComboBoxRolActionPerformed
 
     private void jButtonInsertarCsvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInsertarCsvActionPerformed
-            try {
+
+        try {
+
             // Conexion
             contectar = new Conectar();
             Connection conexion = contectar.getConexion();
@@ -315,12 +317,15 @@ public class InsertarProfesor extends javax.swing.JDialog {
                 }
 
                 csvReader.close();
+
+
                 conexion.close();
                 JOptionPane.showMessageDialog(this, "Profesores insertados");
                 dispose();
             }else{
                 dispose();
                 conexion.close();
+
             }
 
         } catch (FileNotFoundException ex) {

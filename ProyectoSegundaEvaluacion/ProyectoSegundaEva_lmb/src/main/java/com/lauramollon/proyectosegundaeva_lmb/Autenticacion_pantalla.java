@@ -10,6 +10,8 @@ import com.jtattoo.plaf.bernstein.BernsteinLookAndFeel;
 import com.jtattoo.plaf.mint.MintLookAndFeel;
 import com.mysql.cj.xdevapi.Result;
 import java.awt.HeadlessException;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,6 +19,7 @@ import java.sql.Statement;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -36,7 +39,7 @@ public class Autenticacion_pantalla extends javax.swing.JFrame {
      * Creates new form Autenticacion_pantalla
      */
     public Autenticacion_pantalla() {
-        initComponents(); 
+        initComponents();
 
     }
 
@@ -58,6 +61,7 @@ public class Autenticacion_pantalla extends javax.swing.JFrame {
         jButtonEntrar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setIconImages(null);
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Lucida Sans", 3, 18)); // NOI18N
@@ -273,7 +277,7 @@ public class Autenticacion_pantalla extends javax.swing.JFrame {
 
                 try {
                     UIManager.setLookAndFeel(new MintLookAndFeel());
-                } catch (UnsupportedLookAndFeelException ex) { 
+                } catch (UnsupportedLookAndFeelException ex) {
                     Logger.getLogger(Autenticacion_pantalla.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
@@ -282,6 +286,8 @@ public class Autenticacion_pantalla extends javax.swing.JFrame {
         });
 
     }
+
+ 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonEntrar;
